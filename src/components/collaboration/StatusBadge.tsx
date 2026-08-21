@@ -23,7 +23,7 @@ export function StatusBadge({
     <select
       value={status}
       onChange={(e) => onChange(e.target.value as AssignmentStatus)}
-      className="rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs font-semibold text-ink focus:border-accent focus:outline-none"
+      className="rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs font-semibold text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
     >
       {ORDER.map((s) => (
         <option key={s} value={s}>

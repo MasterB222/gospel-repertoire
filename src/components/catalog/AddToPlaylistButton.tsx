@@ -92,7 +92,7 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
               placeholder="Nouvelle playlist..."
-              className="flex-1 rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+              className="flex-1 rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
             <Button onClick={handleCreate} className="!px-3">
               <Plus size={15} />

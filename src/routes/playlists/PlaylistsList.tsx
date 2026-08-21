@@ -9,8 +9,10 @@ import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { createPlaylist, deletePlaylist, listPlaylists } from "../../lib/library";
 import type { Playlist } from "../../types/library";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function PlaylistsList() {
+  useDocumentTitle("Playlists");
   const { profile } = useAuth();
   const { showToast } = useToast();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -57,7 +59,7 @@ export function PlaylistsList() {
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCreate()}
           placeholder="Nom de la nouvelle playlist..."
-          className="flex-1 rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+          className="flex-1 rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
         <Button onClick={handleCreate}>
           <Plus size={15} />

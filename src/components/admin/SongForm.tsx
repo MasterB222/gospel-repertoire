@@ -6,7 +6,7 @@ import type { SongInput } from "../../lib/admin";
 import type { Artist, Category, Difficulty, Song, SongStatus } from "../../types/catalog";
 
 const fieldClasses =
-  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none";
+  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 const labelClasses = "mb-1 block text-xs font-semibold text-muted";
 
 function toInput(song?: Song): SongInput {

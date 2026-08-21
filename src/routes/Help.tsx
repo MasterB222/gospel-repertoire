@@ -1,5 +1,6 @@
 import { LifeBuoy, Mail } from "lucide-react";
 import { Card } from "../components/ui/Card";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const SECTIONS = [
   {
@@ -36,6 +37,7 @@ const SECTIONS = [
 ];
 
 export function Help() {
+  useDocumentTitle("Aide");
   return (
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center gap-2">

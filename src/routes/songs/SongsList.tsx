@@ -6,9 +6,12 @@ import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Button } from "../../components/ui/Button";
 import { listSongs } from "../../lib/catalog";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Song } from "../../types/catalog";
 
 type SortKey = "recent" | "az" | "artist";
+
+const PAGE_SIZE = 24;
 
 const EMPTY_FILTERS = {
   artist: "",
@@ -22,9 +25,10 @@ const EMPTY_FILTERS = {
 };
 
 const selectClasses =
-  "rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none";
+  "rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 export function SongsList() {
+  useDocumentTitle("Répertoire");
   const [searchParams] = useSearchParams();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
@@ -32,6 +36,7 @@ export function SongsList() {
   const [query, setQuery] = useState(() => searchParams.get("q") ?? "");
   const [filters, setFilters] = useState(EMPTY_FILTERS);
   const [sortBy, setSortBy] = useState<SortKey>("recent");
+  const [visibleCount, setVisibleCount] = useState(PAGE_SIZE);
 
   async function load() {
     setLoading(true);
@@ -97,6 +102,11 @@ export function SongsList() {
     return result;
   }, [songs, query, filters, sortBy]);
 
+  useEffect(() => {
+    setVisibleCount(PAGE_SIZE);
+  }, [query, filters, sortBy]);
+
+  const visible = filtered.slice(0, visibleCount);
   const hasActiveFilters = query || Object.values(filters).some(Boolean);
 
   function resetFilters() {
@@ -121,7 +131,7 @@ export function SongsList() {
             value={query}
             onChange={(e) => setQuery(e.target.value)}
             placeholder="Rechercher par titre, artiste, paroles..."
-            className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           />
         </div>
 
@@ -266,11 +276,20 @@ export function SongsList() {
       )}
 
       {!loading && !error && filtered.length > 0 && (
-        <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
-          {filtered.map((song) => (
-            <SongCard key={song.id} song={song} queue={filtered} />
-          ))}
-        </div>
+        <>
+          <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
+            {visible.map((song) => (
+              <SongCard key={song.id} song={song} queue={filtered} />
+            ))}
+          </div>
+          {visibleCount < filtered.length && (
+            <div className="mt-6 flex justify-center">
+              <Button variant="secondary" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
+                Charger plus ({filtered.length - visibleCount} restantes)
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </div>
   );

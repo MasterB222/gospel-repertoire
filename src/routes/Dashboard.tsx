@@ -16,6 +16,7 @@ import {
   updateAssignmentStatus,
 } from "../lib/collaboration";
 import type { Assignment, Comment, Group, GroupMember } from "../types/collaboration";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
@@ -197,6 +198,7 @@ function MemberDashboard({ userId }: { userId: string }) {
 }
 
 export function Dashboard() {
+  useDocumentTitle("Dashboard");
   const { profile } = useAuth();
   if (!profile) return null;
   const isChef = profile.role === "chef_choeur" || profile.role === "admin";

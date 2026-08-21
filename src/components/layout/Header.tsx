@@ -31,7 +31,7 @@ export function Header() {
           value={query}
           onChange={(e) => setQuery(e.target.value)}
           placeholder="Rechercher une chanson, un artiste..."
-          className="w-full max-w-md rounded-lg border border-border bg-surface-raised py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+          className="w-full max-w-md rounded-lg border border-border bg-surface-raised py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
       </form>
 

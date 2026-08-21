@@ -6,12 +6,14 @@ import { SongCard } from "../../components/catalog/SongCard";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getCategory, listSongsByCategory } from "../../lib/catalog";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Category, Song } from "../../types/catalog";
 
 export function CategoryDetail() {
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<Category | null | undefined>(undefined);
   const [songs, setSongs] = useState<Song[]>([]);
+  useDocumentTitle(category?.name);
 
   useEffect(() => {
     if (!id) return;

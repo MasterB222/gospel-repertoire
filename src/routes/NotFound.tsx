@@ -1,8 +1,10 @@
 import { Link } from "react-router-dom";
 import { SearchX } from "lucide-react";
 import { EmptyState } from "../components/ui/EmptyState";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function NotFound() {
+  useDocumentTitle("Page introuvable");
   return (
     <EmptyState
       icon={SearchX}

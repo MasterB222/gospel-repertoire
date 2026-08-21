@@ -4,6 +4,7 @@ import { supabase } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { useToast } from "../../context/ToastContext";
 import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const ROLES = [
   { value: "chanteur", label: "Chanteur" },
@@ -15,6 +16,7 @@ const ROLES = [
 ] as const;
 
 export function Register() {
+  useDocumentTitle("Inscription");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");

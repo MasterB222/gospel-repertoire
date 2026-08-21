@@ -3,8 +3,10 @@ import { Link } from "react-router-dom";
 import { supabase } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function ForgotPassword() {
+  useDocumentTitle("Mot de passe oublié");
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);

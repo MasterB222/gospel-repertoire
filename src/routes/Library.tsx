@@ -9,8 +9,10 @@ import { listFavoriteSongs, listHistory, listPlaylists } from "../lib/library";
 import type { Song } from "../types/catalog";
 import type { HistoryEntry } from "../types/library";
 import type { Playlist } from "../types/library";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Library() {
+  useDocumentTitle("Ma bibliothèque");
   const { profile } = useAuth();
   const [favorites, setFavorites] = useState<Song[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);

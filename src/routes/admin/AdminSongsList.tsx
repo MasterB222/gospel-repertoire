@@ -52,7 +52,7 @@ export function AdminSongsList() {
         value={query}
         onChange={(e) => setQuery(e.target.value)}
         placeholder="Rechercher une chanson..."
-        className="mb-4 w-full max-w-sm rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+        className="mb-4 w-full max-w-sm rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       />
 
       {loading ? (

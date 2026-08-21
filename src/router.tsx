@@ -1,3 +1,4 @@
+import { lazy, Suspense, type ReactNode } from "react";
 import { createBrowserRouter } from "react-router-dom";
 import { AppLayout } from "./components/layout/AppLayout";
 import { Home } from "./routes/Home";
@@ -5,16 +6,13 @@ import { Login } from "./routes/auth/Login";
 import { Register } from "./routes/auth/Register";
 import { ForgotPassword } from "./routes/auth/ForgotPassword";
 import { RequireAuth } from "./routes/RequireAuth";
+import { RequireAdmin } from "./routes/RequireAdmin";
 import { SongsList } from "./routes/songs/SongsList";
 import { SongDetail } from "./routes/songs/SongDetail";
 import { ArtistsList } from "./routes/artists/ArtistsList";
 import { ArtistDetail } from "./routes/artists/ArtistDetail";
 import { CategoriesList } from "./routes/categories/CategoriesList";
 import { CategoryDetail } from "./routes/categories/CategoryDetail";
-import { SongEditor } from "./routes/songs/SongEditor";
-import { RehearseMode } from "./routes/songs/RehearseMode";
-import { PresentMode } from "./routes/songs/PresentMode";
-import { LearnMode } from "./routes/songs/LearnMode";
 import { Dashboard } from "./routes/Dashboard";
 import { Favorites } from "./routes/Favorites";
 import { Library } from "./routes/Library";
@@ -23,17 +21,38 @@ import { Profile } from "./routes/Profile";
 import { Settings } from "./routes/Settings";
 import { PlaylistsList } from "./routes/playlists/PlaylistsList";
 import { PlaylistDetail } from "./routes/playlists/PlaylistDetail";
-import { RequireAdmin } from "./routes/RequireAdmin";
-import { AdminDashboard } from "./routes/admin/AdminDashboard";
-import { AdminSongsList } from "./routes/admin/AdminSongsList";
-import { AdminSongEditor } from "./routes/admin/AdminSongEditor";
-import { AdminArtists } from "./routes/admin/AdminArtists";
-import { AdminCategories } from "./routes/admin/AdminCategories";
-import { AdminUsers } from "./routes/admin/AdminUsers";
 import { Explore } from "./routes/Explore";
 import { Partitions } from "./routes/Partitions";
 import { Help } from "./routes/Help";
 import { NotFound } from "./routes/NotFound";
+import { Skeleton } from "./components/ui/Skeleton";
+
+// Écrans plus lourds ou moins fréquemment visités : chargés à la demande
+// pour réduire le bundle initial (éditeur, modes plein écran, administration).
+const SongEditor = lazy(() => import("./routes/songs/SongEditor").then((m) => ({ default: m.SongEditor })));
+const RehearseMode = lazy(() => import("./routes/songs/RehearseMode").then((m) => ({ default: m.RehearseMode })));
+const PresentMode = lazy(() => import("./routes/songs/PresentMode").then((m) => ({ default: m.PresentMode })));
+const LearnMode = lazy(() => import("./routes/songs/LearnMode").then((m) => ({ default: m.LearnMode })));
+const AdminDashboard = lazy(() => import("./routes/admin/AdminDashboard").then((m) => ({ default: m.AdminDashboard })));
+const AdminSongsList = lazy(() => import("./routes/admin/AdminSongsList").then((m) => ({ default: m.AdminSongsList })));
+const AdminSongEditor = lazy(() => import("./routes/admin/AdminSongEditor").then((m) => ({ default: m.AdminSongEditor })));
+const AdminArtists = lazy(() => import("./routes/admin/AdminArtists").then((m) => ({ default: m.AdminArtists })));
+const AdminCategories = lazy(() => import("./routes/admin/AdminCategories").then((m) => ({ default: m.AdminCategories })));
+const AdminUsers = lazy(() => import("./routes/admin/AdminUsers").then((m) => ({ default: m.AdminUsers })));
+const AdminLayout = lazy(() => import("./routes/admin/AdminLayout").then((m) => ({ default: m.AdminLayout })));
+
+function RouteFallback() {
+  return (
+    <div className="space-y-3 p-4">
+      <Skeleton className="h-8 w-1/3" />
+      <Skeleton className="h-40 w-full" />
+    </div>
+  );
+}
+
+function lazyPage(node: ReactNode) {
+  return <Suspense fallback={<RouteFallback />}>{node}</Suspense>;
+}
 
 export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
@@ -41,35 +60,19 @@ export const router = createBrowserRouter([
   { path: "/forgot-password", element: <ForgotPassword /> },
   {
     path: "/songs/:id/edit",
-    element: (
-      <RequireAuth>
-        <SongEditor />
-      </RequireAuth>
-    ),
+    element: <RequireAuth>{lazyPage(<SongEditor />)}</RequireAuth>,
   },
   {
     path: "/songs/:id/rehearse",
-    element: (
-      <RequireAuth>
-        <RehearseMode />
-      </RequireAuth>
-    ),
+    element: <RequireAuth>{lazyPage(<RehearseMode />)}</RequireAuth>,
   },
   {
     path: "/songs/:id/present",
-    element: (
-      <RequireAuth>
-        <PresentMode />
-      </RequireAuth>
-    ),
+    element: <RequireAuth>{lazyPage(<PresentMode />)}</RequireAuth>,
   },
   {
     path: "/songs/:id/learn",
-    element: (
-      <RequireAuth>
-        <LearnMode />
-      </RequireAuth>
-    ),
+    element: <RequireAuth>{lazyPage(<LearnMode />)}</RequireAuth>,
   },
   {
     path: "/",
@@ -152,59 +155,16 @@ export const router = createBrowserRouter([
       },
       {
         path: "admin",
-        element: (
-          <RequireAdmin>
-            <AdminDashboard />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/songs",
-        element: (
-          <RequireAdmin>
-            <AdminSongsList />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/songs/create",
-        element: (
-          <RequireAdmin>
-            <AdminSongEditor />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/songs/:id/edit",
-        element: (
-          <RequireAdmin>
-            <AdminSongEditor />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/artists",
-        element: (
-          <RequireAdmin>
-            <AdminArtists />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/categories",
-        element: (
-          <RequireAdmin>
-            <AdminCategories />
-          </RequireAdmin>
-        ),
-      },
-      {
-        path: "admin/users",
-        element: (
-          <RequireAdmin>
-            <AdminUsers />
-          </RequireAdmin>
-        ),
+        element: <RequireAdmin>{lazyPage(<AdminLayout />)}</RequireAdmin>,
+        children: [
+          { index: true, element: <AdminDashboard /> },
+          { path: "songs", element: <AdminSongsList /> },
+          { path: "songs/create", element: <AdminSongEditor /> },
+          { path: "songs/:id/edit", element: <AdminSongEditor /> },
+          { path: "artists", element: <AdminArtists /> },
+          { path: "categories", element: <AdminCategories /> },
+          { path: "users", element: <AdminUsers /> },
+        ],
       },
       { path: "*", element: <NotFound /> },
     ],

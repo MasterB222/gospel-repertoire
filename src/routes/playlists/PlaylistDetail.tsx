@@ -20,6 +20,7 @@ import {
 import type { Playlist, PlaylistSong } from "../../types/library";
 import type { Song } from "../../types/catalog";
 import { Music2 } from "lucide-react";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function PlaylistDetail() {
   const { id } = useParams<{ id: string }>();
@@ -27,6 +28,7 @@ export function PlaylistDetail() {
   const { playSong } = usePlayer();
   const { showToast } = useToast();
   const [playlist, setPlaylist] = useState<Playlist | null | undefined>(undefined);
+  useDocumentTitle(playlist?.name);
   const [songs, setSongs] = useState<PlaylistSong[]>([]);
   const [editingName, setEditingName] = useState(false);
   const [draftName, setDraftName] = useState("");
@@ -178,7 +180,7 @@ export function PlaylistDetail() {
             value={search}
             onChange={(e) => setSearch(e.target.value)}
             placeholder="Chercher une chanson à ajouter..."
-            className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+            className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           />
         </div>
         {search.trim() && (

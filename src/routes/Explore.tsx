@@ -8,8 +8,10 @@ import { Skeleton } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { listArtists, listCategories, listSongs } from "../lib/catalog";
 import type { Artist, Category, Song } from "../types/catalog";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Explore() {
+  useDocumentTitle("Explorer");
   const [songs, setSongs] = useState<Song[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);

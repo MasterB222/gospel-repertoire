@@ -5,9 +5,11 @@ import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Button } from "../../components/ui/Button";
 import { listArtists, listSongs } from "../../lib/catalog";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Artist, Song } from "../../types/catalog";
 
 export function ArtistsList() {
+  useDocumentTitle("Artistes");
   const [artists, setArtists] = useState<Artist[]>([]);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);

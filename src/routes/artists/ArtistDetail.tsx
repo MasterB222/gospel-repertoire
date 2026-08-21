@@ -6,12 +6,14 @@ import { SongCard } from "../../components/catalog/SongCard";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getArtist, listSongsByArtist } from "../../lib/catalog";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Artist, Song } from "../../types/catalog";
 
 export function ArtistDetail() {
   const { id } = useParams<{ id: string }>();
   const [artist, setArtist] = useState<Artist | null | undefined>(undefined);
   const [songs, setSongs] = useState<Song[]>([]);
+  useDocumentTitle(artist?.name);
 
   useEffect(() => {
     if (!id) return;

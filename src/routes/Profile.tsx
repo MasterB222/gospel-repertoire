@@ -7,6 +7,7 @@ import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { updateProfile } from "../lib/profile";
 import { listFavoriteSongs, listHistory, listPlaylists } from "../lib/library";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 const ROLE_LABELS: Record<string, string> = {
   admin: "Responsable",
@@ -18,6 +19,7 @@ const ROLE_LABELS: Record<string, string> = {
 };
 
 export function Profile() {
+  useDocumentTitle("Profil");
   const { profile, refreshProfile } = useAuth();
   const { showToast } = useToast();
   const [firstName, setFirstName] = useState("");
@@ -90,7 +92,7 @@ export function Profile() {
             <input
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
           </div>
           <div>
@@ -98,7 +100,7 @@ export function Profile() {
             <input
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none"
+              className="w-full rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
           </div>
         </div>

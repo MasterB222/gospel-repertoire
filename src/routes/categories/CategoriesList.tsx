@@ -5,9 +5,11 @@ import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Button } from "../../components/ui/Button";
 import { listCategories, listSongs } from "../../lib/catalog";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Category, Song } from "../../types/catalog";
 
 export function CategoriesList() {
+  useDocumentTitle("Catégories");
   const [categories, setCategories] = useState<Category[]>([]);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);

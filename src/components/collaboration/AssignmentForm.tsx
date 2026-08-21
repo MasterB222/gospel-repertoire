@@ -5,7 +5,7 @@ import type { Group } from "../../types/collaboration";
 import type { Section } from "../../types/editor";
 
 const fieldClasses =
-  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink focus:border-accent focus:outline-none";
+  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 interface AssignmentFormProps {
   sections: Section[];

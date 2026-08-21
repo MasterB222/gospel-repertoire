@@ -7,8 +7,10 @@ import { useTheme } from "../context/ThemeContext";
 import { useToast } from "../context/ToastContext";
 import { updateProfile } from "../lib/profile";
 import { supabase } from "../lib/supabaseClient";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Settings() {
+  useDocumentTitle("Paramètres");
   const { profile, session, refreshProfile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();

@@ -29,7 +29,7 @@ export function CommentThread({ comments, onAdd }: { comments: Comment[]; onAdd:
           value={text}
           onChange={(e) => setText(e.target.value)}
           placeholder='ex. "Attention à la note SI ici"'
-          className="flex-1 rounded-lg border border-border bg-surface-raised px-2.5 py-1.5 text-xs text-ink placeholder:text-muted focus:border-accent focus:outline-none"
+          className="flex-1 rounded-lg border border-border bg-surface-raised px-2.5 py-1.5 text-xs text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
         <button
           onClick={() => {

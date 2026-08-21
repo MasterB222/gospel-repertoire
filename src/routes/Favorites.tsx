@@ -5,9 +5,11 @@ import { Skeleton } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { useAuth } from "../context/AuthContext";
 import { listFavoriteSongs } from "../lib/library";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import type { Song } from "../types/catalog";
 
 export function Favorites() {
+  useDocumentTitle("Favoris");
   const { profile } = useAuth();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);

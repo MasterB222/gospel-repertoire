@@ -5,8 +5,10 @@ import { Skeleton } from "../components/ui/Skeleton";
 import { EmptyState } from "../components/ui/EmptyState";
 import { listSongs } from "../lib/catalog";
 import type { Song } from "../types/catalog";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Partitions() {
+  useDocumentTitle("Partitions");
   const [songs, setSongs] = useState<Song[] | null>(null);
 
   useEffect(() => {

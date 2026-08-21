@@ -7,12 +7,14 @@ import { EmptyState } from "../components/ui/EmptyState";
 import { useAuth } from "../context/AuthContext";
 import { listHistory } from "../lib/library";
 import type { HistoryEntry } from "../types/library";
+import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" });
 }
 
 export function HistoryPage() {
+  useDocumentTitle("Historique");
   const { profile } = useAuth();
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
