@@ -13,7 +13,17 @@ import { ArtistDetail } from "./routes/artists/ArtistDetail";
 import { CategoriesList } from "./routes/categories/CategoriesList";
 import { CategoryDetail } from "./routes/categories/CategoryDetail";
 import { SongEditor } from "./routes/songs/SongEditor";
+import { RehearseMode } from "./routes/songs/RehearseMode";
+import { PresentMode } from "./routes/songs/PresentMode";
+import { LearnMode } from "./routes/songs/LearnMode";
 import { Dashboard } from "./routes/Dashboard";
+import { Favorites } from "./routes/Favorites";
+import { Library } from "./routes/Library";
+import { HistoryPage } from "./routes/History";
+import { Profile } from "./routes/Profile";
+import { Settings } from "./routes/Settings";
+import { PlaylistsList } from "./routes/playlists/PlaylistsList";
+import { PlaylistDetail } from "./routes/playlists/PlaylistDetail";
 
 const PHASE_2 = "Phase 2 — Répertoire de base";
 const PHASE_6 = "Phase 6 — Compte utilisateur";
@@ -32,6 +42,30 @@ export const router = createBrowserRouter([
     element: (
       <RequireAuth>
         <SongEditor />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/songs/:id/rehearse",
+    element: (
+      <RequireAuth>
+        <RehearseMode />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/songs/:id/present",
+    element: (
+      <RequireAuth>
+        <PresentMode />
+      </RequireAuth>
+    ),
+  },
+  {
+    path: "/songs/:id/learn",
+    element: (
+      <RequireAuth>
+        <LearnMode />
       </RequireAuth>
     ),
   },
@@ -60,31 +94,59 @@ export const router = createBrowserRouter([
       },
       {
         path: "playlists",
-        element: <RequireAuth>{placeholder("Playlists", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <PlaylistsList />
+          </RequireAuth>
+        ),
       },
       {
         path: "playlists/:id",
-        element: <RequireAuth>{placeholder("Détail playlist", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <PlaylistDetail />
+          </RequireAuth>
+        ),
       },
       {
         path: "favorites",
-        element: <RequireAuth>{placeholder("Favoris", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Favorites />
+          </RequireAuth>
+        ),
       },
       {
         path: "library",
-        element: <RequireAuth>{placeholder("Ma bibliothèque", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Library />
+          </RequireAuth>
+        ),
       },
       {
         path: "history",
-        element: <RequireAuth>{placeholder("Historique", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <HistoryPage />
+          </RequireAuth>
+        ),
       },
       {
         path: "profile",
-        element: <RequireAuth>{placeholder("Profil", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Profile />
+          </RequireAuth>
+        ),
       },
       {
         path: "settings",
-        element: <RequireAuth>{placeholder("Paramètres", PHASE_6)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Settings />
+          </RequireAuth>
+        ),
       },
       {
         path: "admin",

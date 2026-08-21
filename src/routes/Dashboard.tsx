@@ -175,13 +175,20 @@ function MemberDashboard({ userId }: { userId: string }) {
       ) : (
         <div className="space-y-2">
           {assignments.map((a) => (
-            <AssignmentCard
-              key={a.id}
-              assignment={a}
-              showSongTitle
-              canEditStatus
-              onStatusChange={(status) => handleStatusChange(a.id, status)}
-            />
+            <div key={a.id} className="space-y-1.5">
+              <AssignmentCard
+                assignment={a}
+                showSongTitle
+                canEditStatus
+                onStatusChange={(status) => handleStatusChange(a.id, status)}
+              />
+              <Link
+                to={`/songs/${a.song_id}/learn?assignment=${a.id}`}
+                className="inline-block text-xs font-semibold text-accent hover:underline"
+              >
+                Ouvrir en mode Apprentissage →
+              </Link>
+            </div>
           ))}
         </div>
       )}

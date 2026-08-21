@@ -13,10 +13,14 @@ import {
   Pencil,
   Play,
   Video,
+  Repeat,
+  Presentation,
   type LucideIcon,
 } from "lucide-react";
 import clsx from "clsx";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
+import { FavoriteButton } from "../../components/catalog/FavoriteButton";
+import { AddToPlaylistButton } from "../../components/catalog/AddToPlaylistButton";
 import { usePlayer } from "../../context/PlayerContext";
 import { extractYouTubeId } from "../../lib/youtube";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -25,6 +29,7 @@ import { AssignmentCard } from "../../components/collaboration/AssignmentCard";
 import { AssignmentForm } from "../../components/collaboration/AssignmentForm";
 import { CommentThread } from "../../components/collaboration/CommentThread";
 import { getSong } from "../../lib/catalog";
+import { recordHistory } from "../../lib/library";
 import {
   addComment,
   createAssignment,
@@ -148,7 +153,7 @@ function formatDate(iso: string) {
 
 export function SongDetail() {
   const { id } = useParams<{ id: string }>();
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { playSong } = usePlayer();
   const [song, setSong] = useState<Song | null | undefined>(undefined);
   const [tab, setTab] = useState<TabKey>("presentation");
@@ -161,6 +166,11 @@ export function SongDetail() {
       .then(setSong)
       .catch(() => setSong(null));
   }, [id]);
+
+  useEffect(() => {
+    if (!id || !profile) return;
+    recordHistory(profile.id, id).catch(() => {});
+  }, [id, profile]);
 
   if (song === undefined) {
     return (
@@ -237,6 +247,29 @@ export function SongDetail() {
               <Play size={15} className="ml-0.5" />
               Écouter
             </button>
+            <AddToPlaylistButton songId={song.id} />
+            <FavoriteButton
+              songId={song.id}
+              className="h-10 w-10 border border-border hover:border-accent"
+            />
+            {song.structure.length > 0 && (
+              <>
+                <Link
+                  to={`/songs/${song.id}/rehearse`}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
+                >
+                  <Repeat size={15} />
+                  Mode Répétition
+                </Link>
+                <Link
+                  to={`/songs/${song.id}/present`}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
+                >
+                  <Presentation size={15} />
+                  Mode Présentation
+                </Link>
+              </>
+            )}
           </div>
         </div>
       </div>
@@ -260,7 +293,18 @@ export function SongDetail() {
       </div>
 
       <div className="py-6">
-        {!activeTab.available ? (
+        {tab === "learning" ? (
+          <EmptyState
+            icon={GraduationCap}
+            title="Mode Apprentissage"
+            description="Accessible depuis une assignation précise : ouvre « Mes assignations » sur ton dashboard, puis « Ouvrir en mode Apprentissage »."
+            action={
+              <Link to="/dashboard" className="text-sm font-semibold text-accent hover:underline">
+                Aller au dashboard
+              </Link>
+            }
+          />
+        ) : !activeTab.available ? (
           <EmptyState
             icon={activeTab.icon}
             title={`${activeTab.label} — bientôt disponible`}

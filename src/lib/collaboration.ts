@@ -7,6 +7,12 @@ const ASSIGNMENT_SELECT =
 const COMMENT_SELECT = "*, author:profiles(id,first_name,last_name)";
 const MEMBER_SELECT = "*, profile:profiles(id,first_name,last_name)";
 
+export async function getAssignment(id: string): Promise<Assignment | null> {
+  const { data, error } = await supabase.from("assignments").select(ASSIGNMENT_SELECT).eq("id", id).maybeSingle();
+  if (error) throw error;
+  return data as unknown as Assignment | null;
+}
+
 export async function listGroups(): Promise<Group[]> {
   const { data, error } = await supabase.from("groups").select("*").order("name");
   if (error) throw error;
