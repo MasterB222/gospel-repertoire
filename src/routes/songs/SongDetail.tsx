@@ -44,8 +44,18 @@ import type { Assignment, AssignmentStatus, Comment } from "../../types/collabor
 import { Music2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
+import { formatChordDisplay } from "../../lib/music";
+import { NashvilleNumber } from "../../components/editor/MeasureCard";
+import type { NoteNotation } from "../../types/editor";
 
 type TabKey = "presentation" | "lyrics" | "chords" | "sheet" | "structure" | "learning" | "assignments" | "history";
+
+const NOTATION_OPTIONS: { value: NoteNotation; label: string }[] = [
+  { value: "letters", label: "C D E" },
+  { value: "solfege", label: "do ré mi" },
+  { value: "nashville", label: "1 2 3" },
+];
 
 const TABS: { key: TabKey; label: string; icon: LucideIcon }[] = [
   { key: "presentation", label: "Présentation", icon: Info },
@@ -158,8 +168,10 @@ export function SongDetail() {
   const { isAuthenticated, profile } = useAuth();
   const { playSong } = usePlayer();
   const [song, setSong] = useState<Song | null | undefined>(undefined);
+  useDocumentTitle(song?.title);
   const [tab, setTab] = useState<TabKey>("presentation");
   const [showVideo, setShowVideo] = useState(false);
+  const [structureNotation, setStructureNotation] = useState<NoteNotation>("letters");
   const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
@@ -399,6 +411,20 @@ export function SongDetail() {
             />
           ) : (
             <div className="max-w-2xl space-y-4">
+              <div className="flex items-center rounded-lg border border-border p-0.5 text-xs">
+                {NOTATION_OPTIONS.map((opt) => (
+                  <button
+                    key={opt.value}
+                    onClick={() => setStructureNotation(opt.value)}
+                    className={clsx(
+                      "rounded-md px-2.5 py-1 transition-colors",
+                      structureNotation === opt.value ? "bg-accent text-[#2A0F1E] font-semibold" : "text-ink hover:bg-surface-raised"
+                    )}
+                  >
+                    {opt.label}
+                  </button>
+                ))}
+              </div>
               {visibleSections.map((section) => (
                 <div key={section.id} className="rounded-xl border border-border p-4">
                   <div className="mb-2 flex items-center justify-between">
@@ -411,7 +437,26 @@ export function SongDetail() {
                     {section.measures.map((m) => (
                       <div key={m.number} className="rounded-lg bg-surface-raised px-2.5 py-1.5 text-xs">
                         <span className="text-muted">#{m.number}</span>{" "}
-                        {m.chord && <span className="font-semibold text-accent">{m.chord}</span>}{" "}
+                        {m.chord &&
+                          (structureNotation === "nashville" ? (
+                            <span className="font-semibold text-accent">
+                              <NashvilleNumber
+                                text={formatChordDisplay(m.chord, structureNotation, song.original_key)}
+                                mark={m.nashvilleMark}
+                              />
+                              {m.chord2 && (
+                                <NashvilleNumber
+                                  text={formatChordDisplay(m.chord2, structureNotation, song.original_key)}
+                                  mark={m.nashvilleMark2}
+                                />
+                              )}
+                            </span>
+                          ) : (
+                            <span className="font-semibold text-accent">
+                              {formatChordDisplay(m.chord, structureNotation, song.original_key)}
+                              {m.chord2 && ` · ${formatChordDisplay(m.chord2, structureNotation, song.original_key)}`}
+                            </span>
+                          ))}{" "}
                         <span className="text-ink">{m.lyrics}</span>
                       </div>
                     ))}

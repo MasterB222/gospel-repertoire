@@ -1,14 +1,16 @@
 import { useState } from "react";
 import { X } from "lucide-react";
+import clsx from "clsx";
 import { ANNOTATION_MARKERS } from "../../lib/annotationMarkers";
-import type { Annotation, AnnotationType, Measure, Section } from "../../types/editor";
+import { createEmptyNashvilleMark, type Annotation, type AnnotationType, type Measure, type NashvilleMark, type NoteNotation, type Section } from "../../types/editor";
 
 const fieldClasses =
-  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none";
+  "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
 interface PropertiesPanelProps {
   section: Section | null;
   measure: Measure | null;
+  notation: NoteNotation;
   authorName: string;
   onUpdateMeasure: (patch: Partial<Measure>) => void;
   onAddAnnotation: (annotation: Omit<Annotation, "id" | "author">) => void;
@@ -16,9 +18,67 @@ interface PropertiesPanelProps {
   onUpdateSectionAssignment: (text: string) => void;
 }
 
+function NashvilleMarkEditor({
+  label,
+  mark,
+  onChange,
+}: {
+  label: string;
+  mark: NashvilleMark;
+  onChange: (mark: NashvilleMark) => void;
+}) {
+  return (
+    <div className="flex items-center justify-between gap-2 rounded-lg bg-surface-raised px-2 py-1.5 text-xs">
+      <span className="text-muted">{label}</span>
+      <div className="flex items-center gap-1">
+        <button
+          type="button"
+          title="Tenue (losange)"
+          onClick={() => onChange({ ...mark, hold: !mark.hold })}
+          className={clsx(
+            "rounded px-1.5 py-0.5",
+            mark.hold ? "bg-accent text-[#2A0F1E] font-semibold" : "border border-border text-ink hover:border-accent"
+          )}
+        >
+          ◇
+        </button>
+        <button
+          type="button"
+          title="Anticipation (push)"
+          onClick={() => onChange({ ...mark, push: !mark.push })}
+          className={clsx(
+            "rounded px-1.5 py-0.5",
+            mark.push ? "bg-accent text-[#2A0F1E] font-semibold" : "border border-border text-ink hover:border-accent"
+          )}
+        >
+          ^
+        </button>
+        <button
+          type="button"
+          title="Retirer une barre rythmique"
+          onClick={() => onChange({ ...mark, slashes: Math.max(0, mark.slashes - 1) })}
+          className="rounded border border-border px-1.5 py-0.5 text-ink hover:border-accent"
+        >
+          −
+        </button>
+        <span className="w-6 text-center font-semibold text-accent">{"/".repeat(mark.slashes) || "0"}</span>
+        <button
+          type="button"
+          title="Ajouter une barre rythmique"
+          onClick={() => onChange({ ...mark, slashes: Math.min(3, mark.slashes + 1) })}
+          className="rounded border border-border px-1.5 py-0.5 text-ink hover:border-accent"
+        >
+          +
+        </button>
+      </div>
+    </div>
+  );
+}
+
 export function PropertiesPanel({
   section,
   measure,
+  notation,
   onUpdateMeasure,
   onAddAnnotation,
   onRemoveAnnotation,
@@ -65,6 +125,54 @@ export function PropertiesPanel({
               className={fieldClasses}
             />
           </div>
+
+          {notation === "nashville" && (
+            <div className="space-y-2 rounded-lg border border-border p-2.5">
+              <p className="text-xs font-semibold text-muted">Rythme Nashville</p>
+              <NashvilleMarkEditor
+                label={measure.chord ? "Accord 1" : "Accord"}
+                mark={measure.nashvilleMark ?? createEmptyNashvilleMark()}
+                onChange={(mark) => onUpdateMeasure({ nashvilleMark: mark })}
+              />
+
+              {measure.chord2 !== undefined ? (
+                <>
+                  <div>
+                    <label className="mb-1.5 block text-xs font-semibold text-muted">Accord 2 (mesure fractionnée)</label>
+                    <div className="flex gap-1.5">
+                      <input
+                        value={measure.chord2}
+                        onChange={(e) => onUpdateMeasure({ chord2: e.target.value })}
+                        placeholder="ex. F..."
+                        className={fieldClasses}
+                      />
+                      <button
+                        type="button"
+                        onClick={() => onUpdateMeasure({ chord2: undefined, nashvilleMark2: undefined })}
+                        className="shrink-0 rounded-lg border border-border px-2 text-xs text-ink hover:border-accent"
+                      >
+                        Retirer
+                      </button>
+                    </div>
+                  </div>
+                  <NashvilleMarkEditor
+                    label="Accord 2"
+                    mark={measure.nashvilleMark2 ?? createEmptyNashvilleMark()}
+                    onChange={(mark) => onUpdateMeasure({ nashvilleMark2: mark })}
+                  />
+                </>
+              ) : (
+                <button
+                  type="button"
+                  onClick={() => onUpdateMeasure({ chord2: "" })}
+                  className="w-full rounded-lg border border-dashed border-border py-1.5 text-xs text-muted hover:border-accent hover:text-accent"
+                >
+                  + Fractionner la mesure (2 accords)
+                </button>
+              )}
+            </div>
+          )}
+
           <div>
             <label className="mb-1.5 block text-xs font-semibold text-muted">Paroles</label>
             <textarea

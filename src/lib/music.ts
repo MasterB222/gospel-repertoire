@@ -93,6 +93,63 @@ export function transposeChordLine(line: string, semitones: number): string {
     .join("");
 }
 
+const DEGREE_LABELS = ["1", "b2", "2", "b3", "3", "4", "#4", "5", "b6", "6", "b7", "7"];
+
+function keyRootIndex(key: string): number {
+  const match = key.trim().match(/^([A-Ga-g]|do|ré|re|mi|fa|sol|la|si)([#b]?)/i);
+  if (!match) return -1;
+  const normalized = parseNoteToken(match[1] + (match[2] ?? ""));
+  if (!normalized) return -1;
+  return CHROMATIC.indexOf(normalized);
+}
+
+function degreeLabel(root: string, accidental: string, keyIndex: number): string {
+  const normalized = shiftRoot(root, accidental, 0);
+  const idx = CHROMATIC.indexOf(normalized);
+  if (idx === -1 || keyIndex === -1) return root.toUpperCase() + accidental;
+  const diff = ((idx - keyIndex) % 12 + 12) % 12;
+  return DEGREE_LABELS[diff];
+}
+
+/** Convertit un accord (ex: "Em7", "D/F#") en degré Nashville relatif à la tonalité (ex: "6m7", "5/3"). */
+export function chordToNashville(chord: string, key: string): string {
+  if (!chord.trim()) return chord;
+  const match = chord.trim().match(CHORD_RE);
+  if (!match) return chord;
+  const [, root, accidental, suffix, , bassRoot, bassAccidental] = match;
+  const keyIndex = keyRootIndex(key);
+  if (keyIndex === -1) return chord;
+  const degree = degreeLabel(root, accidental, keyIndex);
+  const bassDegree = bassRoot ? degreeLabel(bassRoot, bassAccidental ?? "", keyIndex) : "";
+  return `${degree}${suffix ?? ""}${bassDegree ? "/" + bassDegree : ""}`;
+}
+
+/** Convertit un accord en notation solfège française (ex: "Em7" -> "Mim7", "D/F#" -> "Ré/Fa#"). */
+export function chordToSolfege(chord: string): string {
+  if (!chord.trim()) return chord;
+  const match = chord.trim().match(CHORD_RE);
+  if (!match) return chord;
+  const [, root, accidental, suffix, , bassRoot, bassAccidental] = match;
+  const rootLetter = FLAT_TO_SHARP[root.toUpperCase() + accidental] ?? root.toUpperCase() + accidental;
+  const rootSyllable = LETTER_TO_SOLFEGE[rootLetter] ?? root;
+  const rootDisplay = rootSyllable.charAt(0).toUpperCase() + rootSyllable.slice(1);
+  let bassDisplay = "";
+  if (bassRoot) {
+    const bassLetter = FLAT_TO_SHARP[bassRoot.toUpperCase() + (bassAccidental ?? "")] ?? bassRoot.toUpperCase() + (bassAccidental ?? "");
+    const bassSyllable = LETTER_TO_SOLFEGE[bassLetter] ?? bassRoot;
+    bassDisplay = bassSyllable.charAt(0).toUpperCase() + bassSyllable.slice(1);
+  }
+  return `${rootDisplay}${suffix ?? ""}${bassDisplay ? "/" + bassDisplay : ""}`;
+}
+
+/** Formate un accord selon la notation choisie ("nashville" a besoin de la tonalité courante). */
+export function formatChordDisplay(chord: string, notation: NoteNotation, key: string): string {
+  if (!chord.trim()) return chord;
+  if (notation === "nashville") return chordToNashville(chord, key);
+  if (notation === "solfege") return chordToSolfege(chord);
+  return chord;
+}
+
 export function transposeKey(key: string, semitones: number): string {
   // Gère des tonalités du type "Sol majeur", "Mi mineur", "G", "Em"...
   const match = key.trim().match(/^([A-Ga-g]|do|ré|re|mi|fa|sol|la|si)([#b]?)(.*)$/i);

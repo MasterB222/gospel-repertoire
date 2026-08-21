@@ -11,7 +11,7 @@ import { EmptyState } from "../../components/ui/EmptyState";
 import { getSong, saveSongStructure } from "../../lib/catalog";
 import { useSongPresence } from "../../lib/collaboration";
 import { distributeQuickEntry, transposeChord, transposeKey } from "../../lib/music";
-import { createEmptySection, type Annotation, type Section } from "../../types/editor";
+import { createEmptySection, type Annotation, type NoteNotation, type Section } from "../../types/editor";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { Music2 } from "lucide-react";
@@ -47,7 +47,7 @@ export function SongEditor() {
   const [selectedSectionId, setSelectedSectionId] = useState<string | null>(null);
   const [selectedMeasureNumber, setSelectedMeasureNumber] = useState<number | null>(null);
 
-  const [notation, setNotation] = useState<"solfege" | "letters">("solfege");
+  const [notation, setNotation] = useState<NoteNotation>("letters");
   const [version, setVersion] = useState("1.0");
   const [versionHistory, setVersionHistory] = useState<{ version: string; author: string; at: string }[]>([]);
   const [saveStatus, setSaveStatus] = useState<"idle" | "saving" | "saved">("idle");
@@ -402,7 +402,7 @@ export function SongEditor() {
         saveStatus={saveStatus}
         version={version}
         notation={notation}
-        onToggleNotation={() => setNotation((n) => (n === "solfege" ? "letters" : "solfege"))}
+        onSetNotation={setNotation}
         onPublish={handlePublish}
         displayKey={displayKey}
         pendingConfirm={pendingSteps !== 0}
@@ -450,6 +450,8 @@ export function SongEditor() {
           <MeasureGrid
             section={selectedSection}
             selectedMeasureNumber={selectedMeasureNumber}
+            notation={notation}
+            songKey={displayKey}
             onSelectMeasure={setSelectedMeasureNumber}
             onQuickEntry={(text) => selectedSectionId && quickEntry(selectedSectionId, text)}
             onAddMeasure={() => selectedSectionId && addMeasure(selectedSectionId)}
@@ -460,6 +462,7 @@ export function SongEditor() {
           <PropertiesPanel
             section={selectedSection}
             measure={selectedMeasure}
+            notation={notation}
             authorName={profile?.first_name ?? "Anonyme"}
             onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
             onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
@@ -487,6 +490,7 @@ export function SongEditor() {
         <PropertiesPanel
           section={selectedSection}
           measure={selectedMeasure}
+          notation={notation}
           authorName={profile?.first_name ?? "Anonyme"}
           onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
           onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}

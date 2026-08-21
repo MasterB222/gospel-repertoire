@@ -1,15 +1,43 @@
 import clsx from "clsx";
-import type { Measure } from "../../types/editor";
+import type { Measure, NashvilleMark, NoteNotation } from "../../types/editor";
+import { formatChordDisplay } from "../../lib/music";
+
+export function NashvilleNumber({ text, mark }: { text: string; mark?: NashvilleMark }) {
+  return (
+    <span className="inline-flex items-center gap-0.5">
+      {mark?.push && <span className="text-[10px] font-bold leading-none text-accent">^</span>}
+      <span
+        className={clsx(
+          "relative inline-flex items-center justify-center px-1 leading-none",
+          mark?.hold && "before:absolute before:inset-[-4px] before:rotate-45 before:rounded-[2px] before:border before:border-accent"
+        )}
+      >
+        <span className="relative">{text}</span>
+      </span>
+      {mark && mark.slashes > 0 && (
+        <span className="text-xs font-semibold tracking-widest text-accent/70">{"/".repeat(mark.slashes)}</span>
+      )}
+    </span>
+  );
+}
 
 export function MeasureCard({
   measure,
   selected,
+  notation,
+  songKey,
   onClick,
 }: {
   measure: Measure;
   selected: boolean;
+  notation: NoteNotation;
+  songKey: string;
   onClick: () => void;
 }) {
+  const isNashville = notation === "nashville";
+  const chordDisplay = formatChordDisplay(measure.chord, notation, songKey);
+  const chord2Display = measure.chord2 ? formatChordDisplay(measure.chord2, notation, songKey) : "";
+
   return (
     <button
       type="button"
@@ -27,9 +55,27 @@ export function MeasureCard({
           </span>
         )}
       </div>
-      <p className="truncate text-sm font-semibold text-accent">{measure.chord || "—"}</p>
-      <p className="truncate text-xs text-ink">{measure.lyrics || " "}</p>
-      <p className="truncate text-[11px] text-muted">{measure.notes || " "}</p>
+      <p className="flex items-baseline gap-2 truncate text-sm font-semibold text-accent">
+        {!measure.chord && !measure.chord2 ? (
+          "—"
+        ) : isNashville ? (
+          <>
+            <NashvilleNumber text={chordDisplay} mark={measure.nashvilleMark} />
+            {measure.chord2 && (
+              <span className="border-b border-accent/40 pb-0.5">
+                <NashvilleNumber text={chord2Display} mark={measure.nashvilleMark2} />
+              </span>
+            )}
+          </>
+        ) : (
+          <>
+            {chordDisplay}
+            {measure.chord2 && <span className="text-muted"> · {chord2Display}</span>}
+          </>
+        )}
+      </p>
+      <p className="truncate text-xs text-ink">{measure.lyrics || " "}</p>
+      <p className="truncate text-[11px] text-muted">{measure.notes || " "}</p>
     </button>
   );
 }

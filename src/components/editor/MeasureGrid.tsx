@@ -1,17 +1,27 @@
 import { Plus } from "lucide-react";
 import { MeasureCard } from "./MeasureCard";
 import { QuickEntryBar } from "./QuickEntryBar";
-import type { Section } from "../../types/editor";
+import type { NoteNotation, Section } from "../../types/editor";
 
 interface MeasureGridProps {
   section: Section | null;
   selectedMeasureNumber: number | null;
+  notation: NoteNotation;
+  songKey: string;
   onSelectMeasure: (number: number) => void;
   onQuickEntry: (text: string) => void;
   onAddMeasure: () => void;
 }
 
-export function MeasureGrid({ section, selectedMeasureNumber, onSelectMeasure, onQuickEntry, onAddMeasure }: MeasureGridProps) {
+export function MeasureGrid({
+  section,
+  selectedMeasureNumber,
+  notation,
+  songKey,
+  onSelectMeasure,
+  onQuickEntry,
+  onAddMeasure,
+}: MeasureGridProps) {
   if (!section) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted">
@@ -35,6 +45,8 @@ export function MeasureGrid({ section, selectedMeasureNumber, onSelectMeasure, o
             key={measure.number}
             measure={measure}
             selected={selectedMeasureNumber === measure.number}
+            notation={notation}
+            songKey={songKey}
             onClick={() => onSelectMeasure(measure.number)}
           />
         ))}

@@ -8,12 +8,25 @@ export interface Annotation {
   author: string;
 }
 
+export interface NashvilleMark {
+  hold: boolean;
+  push: boolean;
+  slashes: number;
+}
+
+export function createEmptyNashvilleMark(): NashvilleMark {
+  return { hold: false, push: false, slashes: 0 };
+}
+
 export interface Measure {
   number: number;
   lyrics: string;
   chord: string;
+  chord2?: string;
   notes: string;
   annotations: Annotation[];
+  nashvilleMark?: NashvilleMark;
+  nashvilleMark2?: NashvilleMark;
 }
 
 export interface Section {
@@ -32,7 +45,7 @@ export interface VersionEntry {
   at: string;
 }
 
-export type NoteNotation = "solfege" | "letters";
+export type NoteNotation = "solfege" | "letters" | "nashville";
 
 export function createEmptyMeasure(number: number): Measure {
   return { number, lyrics: "", chord: "", notes: "", annotations: [] };

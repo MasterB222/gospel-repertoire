@@ -1,9 +1,15 @@
 import { Link } from "react-router-dom";
-import { ArrowLeft, Check, Loader2, Rocket, Type } from "lucide-react";
+import { ArrowLeft, Check, Loader2, Rocket } from "lucide-react";
 import clsx from "clsx";
 import { TransposeControl } from "./TransposeControl";
 import { PresenceAvatars } from "../collaboration/PresenceAvatars";
 import type { NoteNotation } from "../../types/editor";
+
+const NOTATION_OPTIONS: { value: NoteNotation; label: string }[] = [
+  { value: "letters", label: "C D E" },
+  { value: "solfege", label: "do ré mi" },
+  { value: "nashville", label: "1 2 3" },
+];
 
 interface EditorTopBarProps {
   songId: string;
@@ -13,7 +19,7 @@ interface EditorTopBarProps {
   saveStatus: "idle" | "saving" | "saved";
   version: string;
   notation: NoteNotation;
-  onToggleNotation: () => void;
+  onSetNotation: (notation: NoteNotation) => void;
   onPublish: () => void;
   displayKey: string;
   pendingConfirm: boolean;
@@ -51,13 +57,20 @@ export function EditorTopBar(props: EditorTopBarProps) {
           onReset={props.onReset}
         />
 
-        <button
-          onClick={props.onToggleNotation}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink hover:border-accent"
-        >
-          <Type size={13} />
-          {props.notation === "solfege" ? "do ré mi" : "C D E"}
-        </button>
+        <div className="flex items-center rounded-lg border border-border p-0.5 text-xs">
+          {NOTATION_OPTIONS.map((opt) => (
+            <button
+              key={opt.value}
+              onClick={() => props.onSetNotation(opt.value)}
+              className={clsx(
+                "rounded-md px-2 py-1 transition-colors",
+                props.notation === opt.value ? "bg-accent text-[#2A0F1E] font-semibold" : "text-ink hover:bg-surface-raised"
+              )}
+            >
+              {opt.label}
+            </button>
+          ))}
+        </div>
 
         <div className="ml-auto flex items-center gap-3">
           <PresenceAvatars users={props.presentUsers} />
