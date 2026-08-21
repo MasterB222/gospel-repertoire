@@ -9,6 +9,7 @@ export interface Profile {
   first_name: string;
   last_name: string;
   role: UserRole;
+  note_notation: "solfege" | "letters";
 }
 
 interface AuthContextValue {

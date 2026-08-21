@@ -6,9 +6,15 @@ import { Register } from "./routes/auth/Register";
 import { ForgotPassword } from "./routes/auth/ForgotPassword";
 import { Placeholder } from "./routes/Placeholder";
 import { RequireAuth } from "./routes/RequireAuth";
+import { SongsList } from "./routes/songs/SongsList";
+import { SongDetail } from "./routes/songs/SongDetail";
+import { ArtistsList } from "./routes/artists/ArtistsList";
+import { ArtistDetail } from "./routes/artists/ArtistDetail";
+import { CategoriesList } from "./routes/categories/CategoriesList";
+import { CategoryDetail } from "./routes/categories/CategoryDetail";
+import { SongEditor } from "./routes/songs/SongEditor";
 
 const PHASE_2 = "Phase 2 — Répertoire de base";
-const PHASE_3 = "Phase 3 — Éditeur de chanson";
 const PHASE_4 = "Phase 4 — Collaboration & assignations";
 const PHASE_6 = "Phase 6 — Compte utilisateur";
 const PHASE_7 = "Phase 7 — Administration";
@@ -22,24 +28,26 @@ export const router = createBrowserRouter([
   { path: "/register", element: <Register /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
   {
+    path: "/songs/:id/edit",
+    element: (
+      <RequireAuth>
+        <SongEditor />
+      </RequireAuth>
+    ),
+  },
+  {
     path: "/",
     element: <AppLayout />,
     children: [
       { index: true, element: <Home /> },
       { path: "search", element: placeholder("Recherche", PHASE_2) },
       { path: "explore", element: placeholder("Explorer", PHASE_2) },
-      { path: "songs", element: placeholder("Répertoire", PHASE_2) },
-      { path: "songs/:id", element: placeholder("Détail chanson", PHASE_2) },
-      {
-        path: "songs/:id/edit",
-        element: (
-          <RequireAuth>{placeholder("Éditeur de chanson", PHASE_3)}</RequireAuth>
-        ),
-      },
-      { path: "artists", element: placeholder("Artistes", PHASE_2) },
-      { path: "artists/:id", element: placeholder("Détail artiste", PHASE_2) },
-      { path: "categories", element: placeholder("Catégories", PHASE_2) },
-      { path: "categories/:id", element: placeholder("Détail catégorie", PHASE_2) },
+      { path: "songs", element: <SongsList /> },
+      { path: "songs/:id", element: <SongDetail /> },
+      { path: "artists", element: <ArtistsList /> },
+      { path: "artists/:id", element: <ArtistDetail /> },
+      { path: "categories", element: <CategoriesList /> },
+      { path: "categories/:id", element: <CategoryDetail /> },
       { path: "partitions", element: placeholder("Partitions", PHASE_2) },
       { path: "help", element: placeholder("Aide", PHASE_6) },
       {
