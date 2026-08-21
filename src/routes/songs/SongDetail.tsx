@@ -17,10 +17,22 @@ import clsx from "clsx";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { AssignmentCard } from "../../components/collaboration/AssignmentCard";
+import { AssignmentForm } from "../../components/collaboration/AssignmentForm";
+import { CommentThread } from "../../components/collaboration/CommentThread";
 import { getSong } from "../../lib/catalog";
+import {
+  addComment,
+  createAssignment,
+  listAssignmentsForSong,
+  listCommentsForSong,
+  updateAssignmentStatus,
+} from "../../lib/collaboration";
 import type { Song } from "../../types/catalog";
+import type { Assignment, AssignmentStatus, Comment } from "../../types/collaboration";
 import { Music2 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
+import { useToast } from "../../context/ToastContext";
 
 type TabKey = "presentation" | "lyrics" | "chords" | "sheet" | "structure" | "learning" | "assignments" | "history";
 
@@ -29,11 +41,102 @@ const TABS: { key: TabKey; label: string; icon: LucideIcon; available: boolean; 
   { key: "lyrics", label: "Paroles", icon: AlignLeft, available: true },
   { key: "chords", label: "Accords", icon: Guitar, available: true },
   { key: "structure", label: "Structure", icon: ListTree, available: true },
+  { key: "assignments", label: "Assignations", icon: Users, available: true },
   { key: "history", label: "Historique", icon: History, available: true },
   { key: "sheet", label: "Partition", icon: FileMusic, available: false, phase: "Phase 5 — Multimédia" },
-  { key: "learning", label: "Apprentissage", icon: GraduationCap, available: false, phase: "Phase 4 — Collaboration" },
-  { key: "assignments", label: "Assignations", icon: Users, available: false, phase: "Phase 4 — Collaboration" },
+  { key: "learning", label: "Apprentissage", icon: GraduationCap, available: false, phase: "Phase 6 — Compte utilisateur" },
 ];
+
+function AssignmentsPanel({ song }: { song: Song }) {
+  const { profile } = useAuth();
+  const { showToast } = useToast();
+  const [assignments, setAssignments] = useState<Assignment[]>([]);
+  const [comments, setComments] = useState<Comment[]>([]);
+  const [loading, setLoading] = useState(true);
+  const isChef = profile?.role === "chef_choeur" || profile?.role === "admin";
+
+  function load() {
+    setLoading(true);
+    Promise.all([listAssignmentsForSong(song.id), listCommentsForSong(song.id)])
+      .then(([a, c]) => {
+        setAssignments(a);
+        setComments(c);
+      })
+      .finally(() => setLoading(false));
+  }
+
+  useEffect(load, [song.id]);
+
+  async function handleStatusChange(id: string, status: AssignmentStatus) {
+    try {
+      await updateAssignmentStatus(id, status);
+      setAssignments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
+    } catch {
+      showToast("Échec de la mise à jour du statut.", "error");
+    }
+  }
+
+  async function handleCreate(input: {
+    section_id: string | null;
+    measure_number: number | null;
+    assignee_group_id: string | null;
+    assignee_user_id: string | null;
+    part: string;
+  }) {
+    if (!profile) return;
+    try {
+      await createAssignment({ ...input, song_id: song.id, created_by: profile.id });
+      showToast("Assignation créée.", "success");
+      load();
+    } catch {
+      showToast("Échec de la création de l'assignation.", "error");
+    }
+  }
+
+  async function handleAddComment(text: string) {
+    if (!profile) return;
+    try {
+      await addComment({ song_id: song.id, section_id: null, measure_number: null, author_id: profile.id, text });
+      load();
+    } catch {
+      showToast("Échec de l'envoi du commentaire.", "error");
+    }
+  }
+
+  if (loading) return <Skeleton className="h-40 w-full max-w-2xl" />;
+
+  return (
+    <div className="max-w-2xl space-y-6">
+      <div>
+        <h3 className="mb-2 font-serif text-base font-semibold text-ink">Assignations</h3>
+        {assignments.length === 0 ? (
+          <p className="text-sm text-muted">Aucune assignation pour l'instant.</p>
+        ) : (
+          <div className="space-y-2">
+            {assignments.map((a) => (
+              <AssignmentCard
+                key={a.id}
+                assignment={a}
+                canEditStatus={isChef || a.assignee_user_id === profile?.id}
+                onStatusChange={(status) => handleStatusChange(a.id, status)}
+              />
+            ))}
+          </div>
+        )}
+        {isChef && (
+          <div className="mt-3">
+            <AssignmentForm sections={song.structure} onSubmit={handleCreate} />
+          </div>
+        )}
+      </div>
+
+      <div>
+        <h3 className="mb-2 font-serif text-base font-semibold text-ink">Commentaires</h3>
+        <CommentThread comments={comments} onAdd={handleAddComment} />
+      </div>
+    </div>
+  );
+}
 
 function formatDate(iso: string) {
   return new Date(iso).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" });
@@ -161,6 +264,8 @@ export function SongDetail() {
           <pre className="max-w-2xl whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
             {song.chords || "Accords non disponibles pour cette chanson."}
           </pre>
+        ) : tab === "assignments" ? (
+          <AssignmentsPanel song={song} />
         ) : tab === "structure" ? (
           visibleSections.length === 0 ? (
             <EmptyState

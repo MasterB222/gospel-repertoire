@@ -2,6 +2,7 @@ import { Link } from "react-router-dom";
 import { ArrowLeft, Check, Loader2, Rocket, Type } from "lucide-react";
 import clsx from "clsx";
 import { TransposeControl } from "./TransposeControl";
+import { PresenceAvatars } from "../collaboration/PresenceAvatars";
 import type { NoteNotation } from "../../types/editor";
 
 interface EditorTopBarProps {
@@ -20,6 +21,7 @@ interface EditorTopBarProps {
   onStep: (direction: 1 | -1) => void;
   onAnswer: (applyToChords: boolean) => void;
   onReset: () => void;
+  presentUsers: { id: string; name: string }[];
 }
 
 export function EditorTopBar(props: EditorTopBarProps) {
@@ -58,6 +60,7 @@ export function EditorTopBar(props: EditorTopBarProps) {
         </button>
 
         <div className="ml-auto flex items-center gap-3">
+          <PresenceAvatars users={props.presentUsers} />
           <span
             className={clsx(
               "flex items-center gap-1.5 text-xs",

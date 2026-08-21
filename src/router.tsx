@@ -13,9 +13,9 @@ import { ArtistDetail } from "./routes/artists/ArtistDetail";
 import { CategoriesList } from "./routes/categories/CategoriesList";
 import { CategoryDetail } from "./routes/categories/CategoryDetail";
 import { SongEditor } from "./routes/songs/SongEditor";
+import { Dashboard } from "./routes/Dashboard";
 
 const PHASE_2 = "Phase 2 — Répertoire de base";
-const PHASE_4 = "Phase 4 — Collaboration & assignations";
 const PHASE_6 = "Phase 6 — Compte utilisateur";
 const PHASE_7 = "Phase 7 — Administration";
 
@@ -52,7 +52,11 @@ export const router = createBrowserRouter([
       { path: "help", element: placeholder("Aide", PHASE_6) },
       {
         path: "dashboard",
-        element: <RequireAuth>{placeholder("Dashboard chef de chœur", PHASE_4)}</RequireAuth>,
+        element: (
+          <RequireAuth>
+            <Dashboard />
+          </RequireAuth>
+        ),
       },
       {
         path: "playlists",

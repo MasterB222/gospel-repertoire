@@ -9,6 +9,7 @@ import { Modal } from "../../components/ui/Modal";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { getSong, saveSongStructure } from "../../lib/catalog";
+import { useSongPresence } from "../../lib/collaboration";
 import { distributeQuickEntry, transposeChord, transposeKey } from "../../lib/music";
 import { createEmptySection, type Annotation, type Section } from "../../types/editor";
 import { useAuth } from "../../context/AuthContext";
@@ -30,6 +31,10 @@ export function SongEditor() {
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { showToast } = useToast();
+  const presentUsers = useSongPresence(
+    id,
+    profile ? { id: profile.id, name: profile.first_name || "Anonyme" } : null
+  );
 
   const [songTitle, setSongTitle] = useState("");
   const [timeSignature, setTimeSignature] = useState("4/4");
@@ -405,6 +410,7 @@ export function SongEditor() {
         onStep={handleTransposeStep}
         onAnswer={handleTransposeAnswer}
         onReset={handleTransposeReset}
+        presentUsers={presentUsers}
       />
 
       <div className="flex items-center gap-2 border-b border-border px-4 py-2 md:hidden">
