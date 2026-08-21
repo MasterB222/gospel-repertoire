@@ -11,10 +11,14 @@ import {
   Users,
   History,
   Pencil,
+  Play,
+  Video,
   type LucideIcon,
 } from "lucide-react";
 import clsx from "clsx";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
+import { usePlayer } from "../../context/PlayerContext";
+import { extractYouTubeId } from "../../lib/youtube";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { AssignmentCard } from "../../components/collaboration/AssignmentCard";
@@ -145,8 +149,10 @@ function formatDate(iso: string) {
 export function SongDetail() {
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated } = useAuth();
+  const { playSong } = usePlayer();
   const [song, setSong] = useState<Song | null | undefined>(undefined);
   const [tab, setTab] = useState<TabKey>("presentation");
+  const [showVideo, setShowVideo] = useState(false);
 
   useEffect(() => {
     if (!id) return;
@@ -223,6 +229,15 @@ export function SongDetail() {
             <span>Langue : {song.language}</span>
             <span>Version {song.version}</span>
           </div>
+          <div className="mt-2 flex flex-wrap gap-2">
+            <button
+              onClick={() => playSong(song)}
+              className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-[#2A0F1E] hover:bg-accent-soft"
+            >
+              <Play size={15} className="ml-0.5" />
+              Écouter
+            </button>
+          </div>
         </div>
       </div>
 
@@ -252,9 +267,38 @@ export function SongDetail() {
             description={`Cet onglet arrivera en ${activeTab.phase}.`}
           />
         ) : tab === "presentation" ? (
-          <div className="max-w-2xl space-y-3 text-sm text-ink/90">
+          <div className="max-w-2xl space-y-4 text-sm text-ink/90">
             {song.album && <p>Album : {song.album}</p>}
             <p>{song.title} fait partie du répertoire {song.category?.name ?? "général"}.</p>
+
+            {(() => {
+              const videoId = song.youtube_url ? extractYouTubeId(song.youtube_url) : null;
+              if (!videoId) {
+                return <p className="text-muted">Aucune vidéo disponible pour cette chanson.</p>;
+              }
+              if (!showVideo) {
+                return (
+                  <button
+                    onClick={() => setShowVideo(true)}
+                    className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
+                  >
+                    <Video size={15} />
+                    Regarder sur YouTube
+                  </button>
+                );
+              }
+              return (
+                <div className="aspect-video w-full overflow-hidden rounded-xl border border-border">
+                  <iframe
+                    className="h-full w-full"
+                    src={`https://www.youtube.com/embed/${videoId}`}
+                    title={`Vidéo YouTube — ${song.title}`}
+                    allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
+                    allowFullScreen
+                  />
+                </div>
+              );
+            })()}
           </div>
         ) : tab === "lyrics" ? (
           <pre className="max-w-2xl whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
