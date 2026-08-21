@@ -1,0 +1,18 @@
+import { Link } from "react-router-dom";
+import { SearchX } from "lucide-react";
+import { EmptyState } from "../components/ui/EmptyState";
+
+export function NotFound() {
+  return (
+    <EmptyState
+      icon={SearchX}
+      title="Page introuvable"
+      description="Cette adresse ne correspond à aucune page du site."
+      action={
+        <Link to="/" className="text-sm font-semibold text-accent hover:underline">
+          Retour à l'accueil
+        </Link>
+      }
+    />
+  );
+}

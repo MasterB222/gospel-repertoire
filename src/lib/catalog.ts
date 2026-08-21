@@ -5,7 +5,11 @@ import type { Section, VersionEntry } from "../types/editor";
 const SONG_SELECT = "*, artist:artists(id,name), category:categories(id,name)";
 
 export async function listSongs(): Promise<Song[]> {
-  const { data, error } = await supabase.from("songs").select(SONG_SELECT).order("created_at", { ascending: false });
+  const { data, error } = await supabase
+    .from("songs")
+    .select(SONG_SELECT)
+    .eq("status", "publie")
+    .order("created_at", { ascending: false });
   if (error) throw error;
   return (data ?? []) as unknown as Song[];
 }
@@ -15,6 +19,7 @@ export async function listSongsByArtist(artistId: string): Promise<Song[]> {
     .from("songs")
     .select(SONG_SELECT)
     .eq("artist_id", artistId)
+    .eq("status", "publie")
     .order("title");
   if (error) throw error;
   return (data ?? []) as unknown as Song[];
@@ -25,6 +30,7 @@ export async function listSongsByCategory(categoryId: string): Promise<Song[]> {
     .from("songs")
     .select(SONG_SELECT)
     .eq("category_id", categoryId)
+    .eq("status", "publie")
     .order("title");
   if (error) throw error;
   return (data ?? []) as unknown as Song[];

@@ -17,6 +17,7 @@ import {
   Moon,
   HelpCircle,
   LogOut,
+  ShieldCheck,
   type LucideIcon,
 } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
@@ -61,7 +62,7 @@ function linkClasses(isActive: boolean) {
 }
 
 export function Sidebar() {
-  const { isAuthenticated } = useAuth();
+  const { isAuthenticated, profile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const ThemeIcon = theme === "dark" ? Sun : Moon;
 
@@ -89,6 +90,16 @@ export function Sidebar() {
                 {link.label}
               </NavLink>
             ))}
+          </div>
+        )}
+
+        {profile?.role === "admin" && (
+          <div className="mt-6">
+            <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">Administration</p>
+            <NavLink to="/admin" end className={({ isActive }) => linkClasses(isActive)}>
+              <ShieldCheck size={18} strokeWidth={1.8} aria-hidden="true" />
+              Dashboard admin
+            </NavLink>
           </div>
         )}
       </nav>

@@ -13,6 +13,7 @@ export interface Category {
 }
 
 export type Difficulty = "Facile" | "Intermédiaire" | "Avancé";
+export type SongStatus = "brouillon" | "publie";
 
 export interface Song {
   id: string;
@@ -29,6 +30,10 @@ export interface Song {
   chords: string;
   youtube_url: string;
   cover_url: string;
+  status: SongStatus;
+  tags: string[];
+  description: string;
+  partition_url: string;
   structure: import("./editor").Section[];
   default_time_signature: string;
   version: string;

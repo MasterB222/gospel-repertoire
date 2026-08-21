@@ -1,4 +1,4 @@
-import { useEffect, useState } from "react";
+import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import {
   ArrowLeft,
@@ -15,6 +15,8 @@ import {
   Video,
   Repeat,
   Presentation,
+  Download,
+  Maximize2,
   type LucideIcon,
 } from "lucide-react";
 import clsx from "clsx";
@@ -45,15 +47,15 @@ import { useToast } from "../../context/ToastContext";
 
 type TabKey = "presentation" | "lyrics" | "chords" | "sheet" | "structure" | "learning" | "assignments" | "history";
 
-const TABS: { key: TabKey; label: string; icon: LucideIcon; available: boolean; phase?: string }[] = [
-  { key: "presentation", label: "Présentation", icon: Info, available: true },
-  { key: "lyrics", label: "Paroles", icon: AlignLeft, available: true },
-  { key: "chords", label: "Accords", icon: Guitar, available: true },
-  { key: "structure", label: "Structure", icon: ListTree, available: true },
-  { key: "assignments", label: "Assignations", icon: Users, available: true },
-  { key: "history", label: "Historique", icon: History, available: true },
-  { key: "sheet", label: "Partition", icon: FileMusic, available: false, phase: "Phase 5 — Multimédia" },
-  { key: "learning", label: "Apprentissage", icon: GraduationCap, available: false, phase: "Phase 6 — Compte utilisateur" },
+const TABS: { key: TabKey; label: string; icon: LucideIcon }[] = [
+  { key: "presentation", label: "Présentation", icon: Info },
+  { key: "lyrics", label: "Paroles", icon: AlignLeft },
+  { key: "chords", label: "Accords", icon: Guitar },
+  { key: "structure", label: "Structure", icon: ListTree },
+  { key: "assignments", label: "Assignations", icon: Users },
+  { key: "history", label: "Historique", icon: History },
+  { key: "sheet", label: "Partition", icon: FileMusic },
+  { key: "learning", label: "Apprentissage", icon: GraduationCap },
 ];
 
 function AssignmentsPanel({ song }: { song: Song }) {
@@ -158,6 +160,7 @@ export function SongDetail() {
   const [song, setSong] = useState<Song | null | undefined>(undefined);
   const [tab, setTab] = useState<TabKey>("presentation");
   const [showVideo, setShowVideo] = useState(false);
+  const sheetRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {
     if (!id) return;
@@ -197,7 +200,6 @@ export function SongDetail() {
     );
   }
 
-  const activeTab = TABS.find((t) => t.key === tab)!;
   const visibleSections = song.structure.filter((s) => !s.hidden).sort((a, b) => a.order - b.order);
 
   return (
@@ -304,12 +306,6 @@ export function SongDetail() {
               </Link>
             }
           />
-        ) : !activeTab.available ? (
-          <EmptyState
-            icon={activeTab.icon}
-            title={`${activeTab.label} — bientôt disponible`}
-            description={`Cet onglet arrivera en ${activeTab.phase}.`}
-          />
         ) : tab === "presentation" ? (
           <div className="max-w-2xl space-y-4 text-sm text-ink/90">
             {song.album && <p>Album : {song.album}</p>}
@@ -352,6 +348,46 @@ export function SongDetail() {
           <pre className="max-w-2xl whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
             {song.chords || "Accords non disponibles pour cette chanson."}
           </pre>
+        ) : tab === "sheet" ? (
+          !song.partition_url ? (
+            <EmptyState
+              icon={FileMusic}
+              title="Partition non disponible pour ce chant"
+              description="Aucune partition n'a encore été ajoutée pour cette chanson."
+            />
+          ) : (
+            <div className="max-w-2xl">
+              <div className="mb-3 flex gap-2">
+                <button
+                  onClick={() => sheetRef.current?.requestFullscreen()}
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
+                >
+                  <Maximize2 size={15} />
+                  Plein écran
+                </button>
+                <a
+                  href={song.partition_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  download
+                  className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
+                >
+                  <Download size={15} />
+                  Télécharger
+                </a>
+              </div>
+              <div ref={sheetRef} className="aspect-[3/4] w-full overflow-hidden rounded-xl border border-border bg-surface-raised">
+                <iframe
+                  src={`https://docs.google.com/viewer?url=${encodeURIComponent(song.partition_url)}&embedded=true`}
+                  title={`Partition — ${song.title}`}
+                  className="h-full w-full"
+                />
+              </div>
+              <p className="mt-2 text-xs text-muted">
+                L'aperçu ne s'affiche pas ? Utilise « Télécharger » ci-dessus pour l'ouvrir directement.
+              </p>
+            </div>
+          )
         ) : tab === "assignments" ? (
           <AssignmentsPanel song={song} />
         ) : tab === "structure" ? (
