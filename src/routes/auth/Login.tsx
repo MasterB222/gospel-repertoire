@@ -4,8 +4,10 @@ import { supabase, setRememberMe as persistRememberMe } from "../../lib/supabase
 import { Button } from "../../components/ui/Button";
 import { useToast } from "../../context/ToastContext";
 import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
+import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function Login() {
+  useDocumentTitle("Connexion");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -22,12 +24,26 @@ export function Login() {
     setError("");
     setLoading(true);
     persistRememberMe(rememberMe);
-    const { error: signInError } = await supabase.auth.signInWithPassword({ email, password });
-    setLoading(false);
+    const { data: signInData, error: signInError } = await supabase.auth.signInWithPassword({ email, password });
     if (signInError) {
+      setLoading(false);
       setError(signInError.message);
       return;
     }
+
+    const { data: profileRow } = await supabase
+      .from("profiles")
+      .select("active")
+      .eq("id", signInData.user.id)
+      .maybeSingle();
+    setLoading(false);
+
+    if (profileRow?.active === false) {
+      await supabase.auth.signOut();
+      setError("Ce compte a été désactivé. Contacte un responsable de ton groupe.");
+      return;
+    }
+
     showToast("Connexion réussie.", "success");
     navigate(redirectTo, { replace: true });
   }

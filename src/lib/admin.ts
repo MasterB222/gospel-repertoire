@@ -104,6 +104,7 @@ export interface AdminProfile {
   last_name: string;
   role: UserRole;
   created_at: string;
+  active: boolean;
 }
 
 export async function listAllProfiles(): Promise<AdminProfile[]> {
@@ -115,6 +116,46 @@ export async function listAllProfiles(): Promise<AdminProfile[]> {
 export async function updateUserRole(id: string, role: UserRole): Promise<void> {
   const { error } = await supabase.from("profiles").update({ role }).eq("id", id);
   if (error) throw error;
+}
+
+export async function setUserActive(id: string, active: boolean): Promise<void> {
+  const { error } = await supabase.from("profiles").update({ active }).eq("id", id);
+  if (error) throw error;
+}
+
+/**
+ * Suppression définitive du compte via l'Edge Function `delete-user`
+ * (supabase/functions/delete-user) — doit être déployée séparément, voir
+ * ses instructions. Sans déploiement, l'appel échoue avec une erreur claire.
+ */
+export async function deleteUserAccount(id: string): Promise<void> {
+  const {
+    data: { session },
+  } = await supabase.auth.getSession();
+  if (!session) throw new Error("Session expirée.");
+
+  let res: Response;
+  try {
+    res = await fetch(`${import.meta.env.VITE_SUPABASE_URL}/functions/v1/delete-user`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${session.access_token}`,
+      },
+      body: JSON.stringify({ userId: id }),
+    });
+  } catch {
+    throw new Error("La fonction de suppression n'est pas encore déployée. Voir les instructions fournies.");
+  }
+
+  if (!res.ok) {
+    const body = await res.text().catch(() => "");
+    throw new Error(
+      res.status === 404
+        ? "La fonction de suppression n'est pas encore déployée. Voir les instructions fournies."
+        : `Échec de la suppression (${res.status}) : ${body}`
+    );
+  }
 }
 
 export interface AdminStats {
@@ -145,7 +186,7 @@ export async function getAdminStats(): Promise<AdminStats> {
     supabase.from("categories").select("id", { count: "exact", head: true }),
     supabase.from("profiles").select("role"),
     supabase.from("playlists").select("id", { count: "exact", head: true }),
-    supabase.from("favorites").select("id", { count: "exact", head: true }),
+    supabase.from("favorites").select("user_id", { count: "exact", head: true }),
   ]);
 
   const songs = (songsRes.data ?? []) as unknown as { status: string; category: { name: string } | null }[];

@@ -1,6 +1,7 @@
 import { createContext, useCallback, useContext, useEffect, useState, type ReactNode } from "react";
 import type { Session, User } from "@supabase/supabase-js";
 import { supabase } from "../lib/supabaseClient";
+import { useToast } from "./ToastContext";
 
 export type UserRole = "admin" | "chef_choeur" | "musicien" | "chanteur" | "choriste" | "utilisateur";
 
@@ -10,6 +11,7 @@ export interface Profile {
   last_name: string;
   role: UserRole;
   note_notation: "solfege" | "letters";
+  active: boolean;
 }
 
 interface AuthContextValue {
@@ -25,45 +27,57 @@ const AuthContext = createContext<AuthContextValue | undefined>(undefined);
 const VALID_ROLES: UserRole[] = ["admin", "chef_choeur", "musicien", "chanteur", "choriste", "utilisateur"];
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { showToast } = useToast();
   const [session, setSession] = useState<Session | null>(null);
   const [profile, setProfile] = useState<Profile | null>(null);
   const [loading, setLoading] = useState(true);
 
-  const loadProfile = useCallback(async (user: User) => {
-    const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
-    if (error) {
-      console.error("Erreur de chargement du profil", error);
-      setProfile(null);
-      return;
-    }
-    if (data) {
-      setProfile(data);
-      return;
-    }
+  const loadProfile = useCallback(
+    async (user: User) => {
+      const { data, error } = await supabase.from("profiles").select("*").eq("id", user.id).maybeSingle();
+      if (error) {
+        console.error("Erreur de chargement du profil", error);
+        setProfile(null);
+        return;
+      }
 
-    // Compte authentifié sans ligne `profiles` (ex. trigger de création non
-    // déclenché à l'inscription) : on la crée maintenant, avec les métadonnées
-    // du compte si disponibles, sinon des valeurs par défaut.
-    const metaRole = user.user_metadata?.role;
-    const role = VALID_ROLES.includes(metaRole) ? metaRole : "utilisateur";
-    const { data: created, error: createError } = await supabase
-      .from("profiles")
-      .upsert({
-        id: user.id,
-        first_name: user.user_metadata?.first_name ?? "",
-        last_name: user.user_metadata?.last_name ?? "",
-        role,
-      })
-      .select("*")
-      .single();
+      let resolved = data;
+      if (!resolved) {
+        // Compte authentifié sans ligne `profiles` (ex. trigger de création non
+        // déclenché à l'inscription) : on la crée maintenant, avec les métadonnées
+        // du compte si disponibles, sinon des valeurs par défaut.
+        const metaRole = user.user_metadata?.role;
+        const role = VALID_ROLES.includes(metaRole) ? metaRole : "utilisateur";
+        const { data: created, error: createError } = await supabase
+          .from("profiles")
+          .upsert({
+            id: user.id,
+            first_name: user.user_metadata?.first_name ?? "",
+            last_name: user.user_metadata?.last_name ?? "",
+            role,
+          })
+          .select("*")
+          .single();
 
-    if (createError) {
-      console.error("Erreur de création du profil manquant", createError);
-      setProfile(null);
-      return;
-    }
-    setProfile(created);
-  }, []);
+        if (createError) {
+          console.error("Erreur de création du profil manquant", createError);
+          setProfile(null);
+          return;
+        }
+        resolved = created;
+      }
+
+      if (resolved.active === false) {
+        showToast("Ce compte a été désactivé par un administrateur.", "error");
+        await supabase.auth.signOut();
+        setProfile(null);
+        return;
+      }
+
+      setProfile(resolved);
+    },
+    [showToast]
+  );
 
   const refreshProfile = useCallback(async () => {
     if (session) await loadProfile(session.user);
