@@ -1,0 +1,44 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Dark theme (default) — bordeaux/prune chaud, jamais noir neutre */
+:root {
+  --color-background: 30 11 20; /* #1E0B14 */
+  --color-surface: 42 15 30; /* #2A0F1E */
+  --color-surface-raised: 56 21 40; /* #381528 */
+  --color-border: 82 34 58; /* #52223A */
+  --color-ink: 246 233 220; /* #F6E9DC */
+  --color-muted: 191 156 172; /* #BF9CAC */
+  --color-accent: 212 169 74; /* #D4A94A */
+  --color-accent-soft: 184 137 43; /* #B8892B */
+}
+
+/* Light theme, toggled via a `light` class on <html> — ivoire chaud, pas de gris froid */
+html.light {
+  --color-background: 250 240 227; /* #FAF0E3 */
+  --color-surface: 255 250 243; /* #FFFAF3 */
+  --color-surface-raised: 247 232 213; /* #F7E8D5 */
+  --color-border: 232 206 178; /* #E8CEB2 */
+  --color-ink: 43 20 30; /* #2B141E */
+  --color-muted: 138 96 112; /* #8A6070 */
+  --color-accent: 184 137 43; /* #B8892B */
+  --color-accent-soft: 138 94 18; /* #8A5E12 */
+}
+
+html,
+body,
+#root {
+  height: 100%;
+}
+
+body {
+  @apply bg-background text-ink font-sans transition-colors duration-200;
+}
+
+h1,
+h2,
+h3,
+h4 {
+  @apply font-serif;
+}
