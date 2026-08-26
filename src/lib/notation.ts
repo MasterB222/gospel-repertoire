@@ -64,6 +64,11 @@ export function midiToFrequency(midi: number): number {
   return 440 * Math.pow(2, (midi - 69) / 12);
 }
 
+/** "c/4" -> "C", "c#/4" -> "C#" (nom de note sans octave, pour affichage texte). */
+export function vexKeyToLetter(key: string): string {
+  return key.split("/")[0].toUpperCase();
+}
+
 /** "c/4" -> fréquence en Hz, pour la lecture audio. */
 export function vexKeyToFrequency(key: string): number {
   const [pitchPart, octaveStr] = key.split("/");

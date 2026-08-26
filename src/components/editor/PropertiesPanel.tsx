@@ -2,6 +2,9 @@ import { useState } from "react";
 import { X } from "lucide-react";
 import clsx from "clsx";
 import { ANNOTATION_MARKERS } from "../../lib/annotationMarkers";
+import { noteToDisplay } from "../../lib/music";
+import { playTone, vexKeyToFrequency, vexKeyToLetter } from "../../lib/notation";
+import { PianoKeyboard } from "../notation/PianoKeyboard";
 import { createEmptyNashvilleMark, type Annotation, type AnnotationType, type Measure, type NashvilleMark, type NoteNotation, type Section } from "../../types/editor";
 
 const fieldClasses =
@@ -189,6 +192,19 @@ export function PropertiesPanel({
               onChange={(e) => onUpdateMeasure({ notes: e.target.value })}
               placeholder="do ré mi..."
               className={fieldClasses}
+            />
+          </div>
+
+          <div>
+            <p className="mb-1.5 text-xs font-semibold text-muted">Piano — clique pour ajouter une note</p>
+            <PianoKeyboard
+              fromOctave={3}
+              toOctave={5}
+              onPlay={(vexKey) => {
+                playTone(vexKeyToFrequency(vexKey), 0.35, { gain: 0.2 });
+                const display = noteToDisplay(vexKeyToLetter(vexKey), notation);
+                onUpdateMeasure({ notes: measure.notes ? `${measure.notes} ${display}` : display });
+              }}
             />
           </div>
 
