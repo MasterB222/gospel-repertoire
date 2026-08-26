@@ -95,8 +95,12 @@ export function transposeChordLine(line: string, semitones: number): string {
 
 const DEGREE_LABELS = ["1", "b2", "2", "b3", "3", "4", "#4", "5", "b6", "6", "b7", "7"];
 
+// Les syllabes solfège doivent être testées avant les lettres seules : sinon "do" (do = C)
+// matche d'abord [A-Ga-g] sur son "d" isolé et se fait interpréter comme la note D (ré).
+const KEY_ROOT_RE = /^(do|ré|re|mi|fa|sol|la|si|[A-Ga-g])([#b]?)/i;
+
 function keyRootIndex(key: string): number {
-  const match = key.trim().match(/^([A-Ga-g]|do|ré|re|mi|fa|sol|la|si)([#b]?)/i);
+  const match = key.trim().match(KEY_ROOT_RE);
   if (!match) return -1;
   const normalized = parseNoteToken(match[1] + (match[2] ?? ""));
   if (!normalized) return -1;
@@ -152,7 +156,7 @@ export function formatChordDisplay(chord: string, notation: NoteNotation, key: s
 
 export function transposeKey(key: string, semitones: number): string {
   // Gère des tonalités du type "Sol majeur", "Mi mineur", "G", "Em"...
-  const match = key.trim().match(/^([A-Ga-g]|do|ré|re|mi|fa|sol|la|si)([#b]?)(.*)$/i);
+  const match = key.trim().match(new RegExp(KEY_ROOT_RE.source + "(.*)$", "i"));
   if (!match) return key;
   const [, rootRaw, accidental, rest] = match;
   const letterRoot = parseNoteToken(rootRaw) ?? rootRaw.toUpperCase();
