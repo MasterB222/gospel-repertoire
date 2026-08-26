@@ -40,6 +40,8 @@ const AdminArtists = lazy(() => import("./routes/admin/AdminArtists").then((m) =
 const AdminCategories = lazy(() => import("./routes/admin/AdminCategories").then((m) => ({ default: m.AdminCategories })));
 const AdminUsers = lazy(() => import("./routes/admin/AdminUsers").then((m) => ({ default: m.AdminUsers })));
 const AdminLayout = lazy(() => import("./routes/admin/AdminLayout").then((m) => ({ default: m.AdminLayout })));
+const CalendarPage = lazy(() => import("./routes/events/Calendar").then((m) => ({ default: m.CalendarPage })));
+const EventDetail = lazy(() => import("./routes/events/EventDetail").then((m) => ({ default: m.EventDetail })));
 
 function RouteFallback() {
   return (
@@ -88,6 +90,8 @@ export const router = createBrowserRouter([
       { path: "categories", element: <CategoriesList /> },
       { path: "categories/:id", element: <CategoryDetail /> },
       { path: "partitions", element: <Partitions /> },
+      { path: "calendar", element: lazyPage(<CalendarPage />) },
+      { path: "events/:id", element: lazyPage(<EventDetail />) },
       { path: "help", element: <Help /> },
       {
         path: "dashboard",

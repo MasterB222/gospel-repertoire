@@ -11,6 +11,7 @@ import {
   FileMusic,
   Library,
   History,
+  CalendarDays,
   User,
   Settings,
   Sun,
@@ -41,6 +42,7 @@ const MAIN_LINKS: NavItem[] = [
   { to: "/playlists", label: "Playlists", icon: ListMusic },
   { to: "/favorites", label: "Favoris", icon: Star },
   { to: "/partitions", label: "Partitions", icon: FileMusic },
+  { to: "/calendar", label: "Calendrier", icon: CalendarDays },
   { to: "/library", label: "Ma bibliothèque", icon: Library },
   { to: "/history", label: "Historique", icon: History },
 ];
