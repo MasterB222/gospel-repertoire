@@ -1,7 +1,9 @@
-import { useEffect, useState } from "react";
-import { Save } from "lucide-react";
+import { useEffect, useRef, useState } from "react";
+import { FileText, Save, Upload, X } from "lucide-react";
 import { Button } from "../ui/Button";
 import { listArtists, listCategories } from "../../lib/catalog";
+import { uploadPartitionFile } from "../../lib/storage";
+import { useToast } from "../../context/ToastContext";
 import type { SongInput } from "../../lib/admin";
 import type { Artist, Category, Difficulty, Song, SongStatus } from "../../types/catalog";
 
@@ -32,11 +34,33 @@ function toInput(song?: Song): SongInput {
 }
 
 export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: SongInput) => Promise<void> }) {
+  const { showToast } = useToast();
   const [input, setInput] = useState<SongInput>(() => toInput(song));
   const [tagsText, setTagsText] = useState(song?.tags.join(", ") ?? "");
   const [artists, setArtists] = useState<Artist[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
   const [saving, setSaving] = useState(false);
+  const [uploadingPartition, setUploadingPartition] = useState(false);
+  const [showManualPartitionUrl, setShowManualPartitionUrl] = useState(false);
+  const partitionFileInput = useRef<HTMLInputElement>(null);
+
+  async function handlePartitionFile(file: File | undefined) {
+    if (!file) return;
+    if (file.type !== "application/pdf") {
+      showToast("Seuls les fichiers PDF sont acceptés.", "error");
+      return;
+    }
+    setUploadingPartition(true);
+    try {
+      const url = await uploadPartitionFile(file);
+      set("partition_url", url);
+      showToast("Partition importée.", "success");
+    } catch {
+      showToast("Échec de l'import du fichier. Vérifie que le bucket 'partitions' existe (migration 011).", "error");
+    } finally {
+      setUploadingPartition(false);
+    }
+  }
 
   useEffect(() => {
     listArtists().then(setArtists);
@@ -223,16 +247,61 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
           />
         </div>
         <div>
-          <label htmlFor="song-partition" className={labelClasses}>
-            URL partition (PDF)
-          </label>
+          <label className={labelClasses}>Partition (PDF)</label>
           <input
-            id="song-partition"
-            value={input.partition_url}
-            onChange={(e) => set("partition_url", e.target.value)}
-            className={fieldClasses}
-            placeholder="https://..."
+            ref={partitionFileInput}
+            type="file"
+            accept="application/pdf"
+            className="hidden"
+            onChange={(e) => handlePartitionFile(e.target.files?.[0])}
           />
+          <div className="flex flex-wrap items-center gap-2">
+            <button
+              type="button"
+              onClick={() => partitionFileInput.current?.click()}
+              disabled={uploadingPartition}
+              className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-semibold text-ink hover:border-accent disabled:opacity-50"
+            >
+              <Upload size={13} />
+              {uploadingPartition ? "Import..." : "Choisir un fichier PDF"}
+            </button>
+            {input.partition_url && (
+              <>
+                <a
+                  href={input.partition_url}
+                  target="_blank"
+                  rel="noreferrer"
+                  className="flex min-w-0 items-center gap-1 truncate text-xs text-accent underline"
+                >
+                  <FileText size={12} className="shrink-0" />
+                  Fichier actuel
+                </a>
+                <button
+                  type="button"
+                  onClick={() => set("partition_url", "")}
+                  title="Retirer la partition"
+                  className="text-muted hover:text-danger"
+                >
+                  <X size={13} />
+                </button>
+              </>
+            )}
+          </div>
+          <button
+            type="button"
+            onClick={() => setShowManualPartitionUrl((v) => !v)}
+            className="mt-1.5 text-xs text-muted underline hover:text-ink"
+          >
+            Ou coller un lien externe
+          </button>
+          {showManualPartitionUrl && (
+            <input
+              value={input.partition_url}
+              onChange={(e) => set("partition_url", e.target.value)}
+              className={`${fieldClasses} mt-1.5`}
+              placeholder="https://..."
+            />
+          )}
         </div>
         <div>
           <label htmlFor="song-tags" className={labelClasses}>
