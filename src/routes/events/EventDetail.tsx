@@ -6,6 +6,7 @@ import { Card } from "../../components/ui/Card";
 import { Button } from "../../components/ui/Button";
 import { Skeleton } from "../../components/ui/Skeleton";
 import { EmptyState } from "../../components/ui/EmptyState";
+import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { listSongs } from "../../lib/catalog";
 import { searchProfiles } from "../../lib/collaboration";
@@ -41,8 +42,10 @@ function nextStatus(status: ChecklistStatus): ChecklistStatus {
 export function EventDetail() {
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
+  const { profile } = useAuth();
   const { showToast } = useToast();
   useDocumentTitle("Événement");
+  const canManage = profile?.role === "admin" || profile?.role === "chef_choeur";
 
   const [event, setEvent] = useState<AppEvent | null>(null);
   const [program, setProgram] = useState<EventProgramItem[]>([]);
@@ -179,7 +182,7 @@ export function EventDetail() {
       </button>
 
       <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent">{EVENT_TYPE_LABELS[event.type]}</p>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent-ink">{EVENT_TYPE_LABELS[event.type]}</p>
         <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{event.name}</h1>
         <p className="mt-1 text-sm capitalize text-muted">{DATE_FMT.format(new Date(event.event_date))}</p>
         {event.location && (
@@ -189,47 +192,51 @@ export function EventDetail() {
         )}
         {event.description && <p className="mt-3 text-sm text-ink">{event.description}</p>}
 
-        <div className="mt-3 flex flex-wrap items-center gap-2">
-          <select
-            value={event.status}
-            onChange={(e) => handleStatusChange(e.target.value as AppEvent["status"])}
-            className="rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs font-semibold text-ink focus:border-accent focus:outline-none"
-          >
-            <option value="brouillon">Brouillon</option>
-            <option value="publie">Publié</option>
-            <option value="termine">Terminé</option>
-            <option value="annule">Annulé</option>
-          </select>
-          <button onClick={handleDeleteEvent} className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs text-danger hover:border-danger">
-            <Trash2 size={13} />
-            Supprimer l'événement
-          </button>
-        </div>
+        {canManage && (
+          <div className="mt-3 flex flex-wrap items-center gap-2">
+            <select
+              value={event.status}
+              onChange={(e) => handleStatusChange(e.target.value as AppEvent["status"])}
+              className="rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs font-semibold text-ink focus:border-accent focus:outline-none"
+            >
+              <option value="brouillon">Brouillon</option>
+              <option value="publie">Publié</option>
+              <option value="termine">Terminé</option>
+              <option value="annule">Annulé</option>
+            </select>
+            <button onClick={handleDeleteEvent} className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs text-danger hover:border-danger">
+              <Trash2 size={13} />
+              Supprimer l'événement
+            </button>
+          </div>
+        )}
       </div>
 
       <Card className="p-4">
         <h2 className="mb-3 font-serif text-lg font-semibold text-ink">Programme</h2>
-        <div className="relative mb-3">
-          <input
-            value={songQuery}
-            onChange={(e) => setSongQuery(e.target.value)}
-            placeholder="Ajouter un chant au programme..."
-            className={fieldClasses}
-          />
-          {songResults.length > 0 && (
-            <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
-              {songResults.map((s) => (
-                <button
-                  key={s.id}
-                  onClick={() => handleAddSong(s)}
-                  className="block w-full rounded px-2 py-1.5 text-left text-sm text-ink hover:bg-surface-raised"
-                >
-                  {s.title} <span className="text-xs text-muted">· {s.original_key}</span>
-                </button>
-              ))}
-            </div>
-          )}
-        </div>
+        {canManage && (
+          <div className="relative mb-3">
+            <input
+              value={songQuery}
+              onChange={(e) => setSongQuery(e.target.value)}
+              placeholder="Ajouter un chant au programme..."
+              className={fieldClasses}
+            />
+            {songResults.length > 0 && (
+              <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
+                {songResults.map((s) => (
+                  <button
+                    key={s.id}
+                    onClick={() => handleAddSong(s)}
+                    className="block w-full rounded px-2 py-1.5 text-left text-sm text-ink hover:bg-surface-raised"
+                  >
+                    {s.title} <span className="text-xs text-muted">· {s.original_key}</span>
+                  </button>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
 
         {program.length === 0 ? (
           <p className="text-sm text-muted">Aucun chant dans le programme pour l'instant.</p>
@@ -242,9 +249,11 @@ export function EventDetail() {
                   <span className="font-semibold text-ink">{p.song?.title}</span>
                   {p.song?.original_key && <span className="ml-2 text-xs text-muted">{p.song.original_key}</span>}
                 </span>
-                <button onClick={() => handleRemoveSong(p.id)} className="shrink-0 text-muted hover:text-danger">
-                  <Trash2 size={14} />
-                </button>
+                {canManage && (
+                  <button onClick={() => handleRemoveSong(p.id)} className="shrink-0 text-muted hover:text-danger">
+                    <Trash2 size={14} />
+                  </button>
+                )}
               </li>
             ))}
           </ol>
@@ -253,46 +262,48 @@ export function EventDetail() {
 
       <Card className="p-4">
         <h2 className="mb-3 font-serif text-lg font-semibold text-ink">Checklist</h2>
-        <div className="mb-3 space-y-2">
-          <input
-            value={newItem}
-            onChange={(e) => setNewItem(e.target.value)}
-            placeholder="Nouvelle tâche (ex. Vérifier la sono)..."
-            className={fieldClasses}
-          />
-          <div className="relative">
+        {canManage && (
+          <div className="mb-3 space-y-2">
             <input
-              value={assigneeQuery}
-              onChange={(e) => {
-                setAssigneeQuery(e.target.value);
-                setAssigneeId(null);
-              }}
-              placeholder="Assigner à (optionnel)..."
+              value={newItem}
+              onChange={(e) => setNewItem(e.target.value)}
+              placeholder="Nouvelle tâche (ex. Vérifier la sono)..."
               className={fieldClasses}
             />
-            {assigneeResults.length > 0 && !assigneeId && (
-              <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
-                {assigneeResults.map((u) => (
-                  <button
-                    key={u.id}
-                    onClick={() => {
-                      setAssigneeId(u.id);
-                      setAssigneeQuery(`${u.first_name} ${u.last_name}`);
-                      setAssigneeResults([]);
-                    }}
-                    className="block w-full rounded px-2 py-1 text-left text-xs text-ink hover:bg-surface-raised"
-                  >
-                    {u.first_name} {u.last_name}
-                  </button>
-                ))}
-              </div>
-            )}
+            <div className="relative">
+              <input
+                value={assigneeQuery}
+                onChange={(e) => {
+                  setAssigneeQuery(e.target.value);
+                  setAssigneeId(null);
+                }}
+                placeholder="Assigner à (optionnel)..."
+                className={fieldClasses}
+              />
+              {assigneeResults.length > 0 && !assigneeId && (
+                <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
+                  {assigneeResults.map((u) => (
+                    <button
+                      key={u.id}
+                      onClick={() => {
+                        setAssigneeId(u.id);
+                        setAssigneeQuery(`${u.first_name} ${u.last_name}`);
+                        setAssigneeResults([]);
+                      }}
+                      className="block w-full rounded px-2 py-1 text-left text-xs text-ink hover:bg-surface-raised"
+                    >
+                      {u.first_name} {u.last_name}
+                    </button>
+                  ))}
+                </div>
+              )}
+            </div>
+            <Button onClick={handleAddChecklistItem}>
+              <Plus size={15} />
+              Ajouter
+            </Button>
           </div>
-          <Button onClick={handleAddChecklistItem}>
-            <Plus size={15} />
-            Ajouter
-          </Button>
-        </div>
+        )}
 
         {checklist.length === 0 ? (
           <p className="text-sm text-muted">Aucune tâche pour l'instant.</p>
@@ -303,15 +314,17 @@ export function EventDetail() {
               return (
                 <li key={item.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface-raised px-3 py-2 text-sm">
                   <button onClick={() => handleCycleStatus(item)} className="flex min-w-0 items-center gap-2 text-left">
-                    <Icon size={16} className={clsx(item.status === "fait" ? "text-accent" : "text-muted")} />
+                    <Icon size={16} className={clsx(item.status === "fait" ? "text-accent-ink" : "text-muted")} />
                     <span className={clsx("truncate", item.status === "fait" && "text-muted line-through")}>{item.item}</span>
                   </button>
                   <span className="flex shrink-0 items-center gap-2">
                     {item.assignee && <span className="text-xs text-muted">{item.assignee.first_name}</span>}
                     <span className="text-xs text-muted">{CHECKLIST_STATUS_LABELS[item.status]}</span>
-                    <button onClick={() => handleDeleteChecklistItem(item.id)} className="text-muted hover:text-danger">
-                      <Trash2 size={13} />
-                    </button>
+                    {canManage && (
+                      <button onClick={() => handleDeleteChecklistItem(item.id)} className="text-muted hover:text-danger">
+                        <Trash2 size={13} />
+                      </button>
+                    )}
                   </span>
                 </li>
               );

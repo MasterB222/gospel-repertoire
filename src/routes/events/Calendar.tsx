@@ -23,7 +23,8 @@ const TIME_FMT = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-
 
 export function CalendarPage() {
   useDocumentTitle("Calendrier");
-  const { isAuthenticated } = useAuth();
+  const { profile } = useAuth();
+  const canManageEvents = profile?.role === "admin" || profile?.role === "chef_choeur";
   const { showToast } = useToast();
   const [events, setEvents] = useState<AppEvent[]>([]);
   const [loading, setLoading] = useState(true);
@@ -65,7 +66,7 @@ export function CalendarPage() {
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
         <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Calendrier</h1>
-        {isAuthenticated && (
+        {canManageEvents && (
           <Button onClick={() => setShowForm(true)}>
             <Plus size={15} />
             Nouvel événement
@@ -97,7 +98,7 @@ export function CalendarPage() {
                   {(selectedDate ? dayEvents : upcoming).map((e) => (
                     <Link key={e.id} to={`/events/${e.id}`}>
                       <Card className="p-3 hover:border-accent/40">
-                        <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-accent">{EVENT_TYPE_LABELS[e.type]}</p>
+                        <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-accent-ink">{EVENT_TYPE_LABELS[e.type]}</p>
                         <p className="truncate font-semibold text-ink">{e.name}</p>
                         <p className="text-xs text-muted">
                           {DATE_FMT.format(new Date(e.event_date))} · {TIME_FMT.format(new Date(e.event_date))}
