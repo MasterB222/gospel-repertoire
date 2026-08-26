@@ -54,7 +54,7 @@ export function ForgotPassword() {
       )}
 
       <p className="mt-5 text-center text-xs text-muted">
-        <Link to="/login" className="text-accent hover:underline">
+        <Link to="/login" className="text-accent-ink hover:underline">
           Retour à la connexion
         </Link>
       </p>

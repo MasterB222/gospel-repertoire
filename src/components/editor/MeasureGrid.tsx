@@ -52,7 +52,7 @@ export function MeasureGrid({
         ))}
         <button
           onClick={onAddMeasure}
-          className="flex h-28 w-16 shrink-0 items-center justify-center rounded-xl border border-dashed border-border text-muted hover:border-accent hover:text-accent"
+          className="flex h-28 w-16 shrink-0 items-center justify-center rounded-xl border border-dashed border-border text-muted hover:border-accent hover:text-accent-ink"
           aria-label="Ajouter une mesure"
         >
           <Plus size={18} />

@@ -23,7 +23,7 @@ export function Metronome({ bpm, beatsPerMeasure }: { bpm: number; beatsPerMeasu
       type="button"
       onClick={() => setRunning((r) => !r)}
       className={`flex h-9 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold ${
-        running ? "border-accent bg-accent/20 text-accent" : "border-border text-ink hover:border-accent/40"
+        running ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-ink hover:border-accent/40"
       }`}
       title="Métronome"
     >

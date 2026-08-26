@@ -5,7 +5,7 @@ import { formatChordDisplay } from "../../lib/music";
 export function NashvilleNumber({ text, mark }: { text: string; mark?: NashvilleMark }) {
   return (
     <span className="inline-flex items-center gap-0.5">
-      {mark?.push && <span className="text-[10px] font-bold leading-none text-accent">^</span>}
+      {mark?.push && <span className="text-[10px] font-bold leading-none text-accent-ink">^</span>}
       <span
         className={clsx(
           "relative inline-flex items-center justify-center px-1 leading-none",
@@ -15,7 +15,7 @@ export function NashvilleNumber({ text, mark }: { text: string; mark?: Nashville
         <span className="relative">{text}</span>
       </span>
       {mark && mark.slashes > 0 && (
-        <span className="text-xs font-semibold tracking-widest text-accent/70">{"/".repeat(mark.slashes)}</span>
+        <span className="text-xs font-semibold tracking-widest text-accent-ink/70">{"/".repeat(mark.slashes)}</span>
       )}
     </span>
   );
@@ -50,12 +50,12 @@ export function MeasureCard({
       <div className="flex items-center justify-between">
         <span className="text-[10px] font-semibold text-muted">#{measure.number}</span>
         {measure.annotations.length > 0 && (
-          <span className="rounded-full bg-accent/20 px-1.5 text-[10px] text-accent">
+          <span className="rounded-full bg-accent/20 px-1.5 text-[10px] text-accent-ink">
             {measure.annotations.length}
           </span>
         )}
       </div>
-      <p className="flex items-baseline gap-2 truncate text-sm font-semibold text-accent">
+      <p className="flex items-baseline gap-2 truncate text-sm font-semibold text-accent-ink">
         {!measure.chord && !measure.chord2 ? (
           "—"
         ) : isNashville ? (

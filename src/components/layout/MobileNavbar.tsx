@@ -21,7 +21,7 @@ export function MobileNavbar() {
           className={({ isActive }) =>
             clsx(
               "flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px]",
-              isActive ? "text-accent" : "text-muted"
+              isActive ? "text-accent-ink" : "text-muted"
             )
           }
         >

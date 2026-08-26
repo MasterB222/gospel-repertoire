@@ -84,7 +84,7 @@ export function Login() {
             />
             Se souvenir de moi
           </label>
-          <Link to="/forgot-password" className="text-accent hover:underline">
+          <Link to="/forgot-password" className="text-accent-ink hover:underline">
             Mot de passe oublié ?
           </Link>
         </div>
@@ -108,7 +108,7 @@ export function Login() {
 
       <p className="mt-5 text-center text-xs text-muted">
         Pas encore de compte ?{" "}
-        <Link to="/register" className="text-accent hover:underline">
+        <Link to="/register" className="text-accent-ink hover:underline">
           Inscrivez-vous
         </Link>
       </p>

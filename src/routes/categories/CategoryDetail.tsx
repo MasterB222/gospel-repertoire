@@ -41,7 +41,7 @@ export function CategoryDetail() {
         icon={LayoutGrid}
         title="Catégorie introuvable"
         action={
-          <Link to="/categories" className="text-sm font-semibold text-accent hover:underline">
+          <Link to="/categories" className="text-sm font-semibold text-accent-ink hover:underline">
             Retour aux catégories
           </Link>
         }

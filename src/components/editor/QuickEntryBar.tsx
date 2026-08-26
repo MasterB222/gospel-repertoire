@@ -13,7 +13,7 @@ export function QuickEntryBar({ onSubmit }: { onSubmit: (text: string) => void }
 
   return (
     <form onSubmit={handleSubmit} className="mb-3 flex items-center gap-2">
-      <Wand2 size={16} strokeWidth={1.8} className="shrink-0 text-accent" />
+      <Wand2 size={16} strokeWidth={1.8} className="shrink-0 text-accent-ink" />
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}

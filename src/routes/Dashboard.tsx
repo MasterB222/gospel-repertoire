@@ -91,14 +91,14 @@ function ChefDashboard() {
               {activity.map((item, i) =>
                 item.kind === "assignment" ? (
                   <div key={i} className="rounded-lg bg-surface-raised px-3 py-2 text-sm">
-                    <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent">
+                    <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent-ink">
                       {item.data.song?.title ?? "Chanson"}
                     </Link>
                     <span className="text-muted"> — assignation mise à jour ({formatDate(item.at)})</span>
                   </div>
                 ) : (
                   <div key={i} className="rounded-lg bg-surface-raised px-3 py-2 text-sm">
-                    <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent">
+                    <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent-ink">
                       {item.data.song?.title ?? "Chanson"}
                     </Link>
                     <span className="text-muted"> — commentaire : "{item.data.text}" ({formatDate(item.at)})</span>
@@ -185,7 +185,7 @@ function MemberDashboard({ userId }: { userId: string }) {
               />
               <Link
                 to={`/songs/${a.song_id}/learn?assignment=${a.id}`}
-                className="inline-block text-xs font-semibold text-accent hover:underline"
+                className="inline-block text-xs font-semibold text-accent-ink hover:underline"
               >
                 Ouvrir en mode Apprentissage →
               </Link>

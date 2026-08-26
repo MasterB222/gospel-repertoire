@@ -50,7 +50,7 @@ export function Library() {
             <Heart size={18} />
             Favoris
           </h2>
-          <Link to="/favorites" className="text-xs text-accent hover:underline">
+          <Link to="/favorites" className="text-xs text-accent-ink hover:underline">
             Tout voir
           </Link>
         </div>
@@ -71,7 +71,7 @@ export function Library() {
             <ListMusic size={18} />
             Playlists
           </h2>
-          <Link to="/playlists" className="text-xs text-accent hover:underline">
+          <Link to="/playlists" className="text-xs text-accent-ink hover:underline">
             Tout voir
           </Link>
         </div>
@@ -96,7 +96,7 @@ export function Library() {
             <Clock size={18} />
             Récemment consultés
           </h2>
-          <Link to="/history" className="text-xs text-accent hover:underline">
+          <Link to="/history" className="text-xs text-accent-ink hover:underline">
             Tout voir
           </Link>
         </div>

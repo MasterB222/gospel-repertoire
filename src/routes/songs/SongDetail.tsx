@@ -204,7 +204,7 @@ export function SongDetail() {
         title="Chanson introuvable"
         description="Elle a peut-être été retirée du répertoire."
         action={
-          <Link to="/songs" className="text-sm font-semibold text-accent hover:underline">
+          <Link to="/songs" className="text-sm font-semibold text-accent-ink hover:underline">
             Retour au répertoire
           </Link>
         }
@@ -239,7 +239,7 @@ export function SongDetail() {
 
         <div className="flex flex-col justify-end gap-2">
           {song.category && (
-            <span className="w-fit rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent">
+            <span className="w-fit rounded-full bg-accent/15 px-3 py-1 text-xs font-semibold text-accent-ink">
               {song.category.name}
             </span>
           )}
@@ -296,7 +296,7 @@ export function SongDetail() {
             className={clsx(
               "flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm transition-colors",
               tab === t.key
-                ? "border-accent font-semibold text-accent"
+                ? "border-accent font-semibold text-accent-ink"
                 : "border-transparent text-muted hover:text-ink"
             )}
           >
@@ -313,7 +313,7 @@ export function SongDetail() {
             title="Mode Apprentissage"
             description="Accessible depuis une assignation précise : ouvre « Mes assignations » sur ton dashboard, puis « Ouvrir en mode Apprentissage »."
             action={
-              <Link to="/dashboard" className="text-sm font-semibold text-accent hover:underline">
+              <Link to="/dashboard" className="text-sm font-semibold text-accent-ink hover:underline">
                 Aller au dashboard
               </Link>
             }
@@ -439,7 +439,7 @@ export function SongDetail() {
                         <span className="text-muted">#{m.number}</span>{" "}
                         {m.chord &&
                           (structureNotation === "nashville" ? (
-                            <span className="font-semibold text-accent">
+                            <span className="font-semibold text-accent-ink">
                               <NashvilleNumber
                                 text={formatChordDisplay(m.chord, structureNotation, song.original_key)}
                                 mark={m.nashvilleMark}
@@ -452,7 +452,7 @@ export function SongDetail() {
                               )}
                             </span>
                           ) : (
-                            <span className="font-semibold text-accent">
+                            <span className="font-semibold text-accent-ink">
                               {formatChordDisplay(m.chord, structureNotation, song.original_key)}
                               {m.chord2 && ` · ${formatChordDisplay(m.chord2, structureNotation, song.original_key)}`}
                             </span>

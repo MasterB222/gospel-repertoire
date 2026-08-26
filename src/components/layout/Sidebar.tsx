@@ -58,7 +58,7 @@ function linkClasses(isActive: boolean) {
   return clsx(
     "flex items-center gap-3 rounded-xl px-3 py-2 text-sm transition-colors",
     isActive
-      ? "bg-accent/15 font-semibold text-accent"
+      ? "bg-accent/15 font-semibold text-accent-ink"
       : "text-muted hover:bg-surface-raised hover:text-ink"
   );
 }

@@ -48,10 +48,10 @@ export function GlobalPlayer() {
         </div>
 
         <div className="flex flex-1 items-center justify-center gap-1 sm:gap-2">
-          <button onClick={toggleShuffle} className={clsx("hidden rounded-lg p-1.5 sm:block", shuffle ? "text-accent" : "text-muted hover:text-ink")} aria-label="Aléatoire">
+          <button onClick={toggleShuffle} className={clsx("hidden rounded-lg p-1.5 sm:block", shuffle ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label="Aléatoire">
             <Shuffle size={16} />
           </button>
-          <button onClick={prev} className="rounded-lg p-1.5 text-ink hover:text-accent" aria-label="Précédent">
+          <button onClick={prev} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label="Précédent">
             <SkipBack size={18} />
           </button>
           <button
@@ -61,10 +61,10 @@ export function GlobalPlayer() {
           >
             {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
           </button>
-          <button onClick={next} className="rounded-lg p-1.5 text-ink hover:text-accent" aria-label="Suivant">
+          <button onClick={next} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label="Suivant">
             <SkipForward size={18} />
           </button>
-          <button onClick={cycleRepeat} className={clsx("hidden rounded-lg p-1.5 sm:block", repeatMode !== "off" ? "text-accent" : "text-muted hover:text-ink")} aria-label="Répétition">
+          <button onClick={cycleRepeat} className={clsx("hidden rounded-lg p-1.5 sm:block", repeatMode !== "off" ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label="Répétition">
             <RepeatIcon size={16} />
           </button>
         </div>

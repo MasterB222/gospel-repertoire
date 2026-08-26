@@ -15,6 +15,7 @@ export default {
         accent: {
           DEFAULT: "rgb(var(--color-accent) / <alpha-value>)",
           soft: "rgb(var(--color-accent-soft) / <alpha-value>)",
+          ink: "rgb(var(--color-accent-ink) / <alpha-value>)",
         },
         plum: "#4B2545",
         danger: "#E3707D",

@@ -83,7 +83,7 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
                 className="flex w-full items-center justify-between rounded-lg px-3 py-2 text-sm text-ink hover:bg-surface-raised"
               >
                 {p.name}
-                {containing.has(p.id) && <Check size={15} className="text-accent" />}
+                {containing.has(p.id) && <Check size={15} className="text-accent-ink" />}
               </button>
             ))}
           </div>

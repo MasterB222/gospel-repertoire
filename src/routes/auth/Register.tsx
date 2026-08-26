@@ -123,7 +123,7 @@ export function Register() {
 
       <p className="mt-5 text-center text-xs text-muted">
         Déjà un compte ?{" "}
-        <Link to="/login" className="text-accent hover:underline">
+        <Link to="/login" className="text-accent-ink hover:underline">
           Connectez-vous
         </Link>
       </p>

@@ -11,7 +11,7 @@ export function NotFound() {
       title="Page introuvable"
       description="Cette adresse ne correspond à aucune page du site."
       action={
-        <Link to="/" className="text-sm font-semibold text-accent hover:underline">
+        <Link to="/" className="text-sm font-semibold text-accent-ink hover:underline">
           Retour à l'accueil
         </Link>
       }

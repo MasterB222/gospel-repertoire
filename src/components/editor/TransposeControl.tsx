@@ -43,7 +43,7 @@ export function TransposeControl({ displayKey, pendingConfirm, canReset, onStep,
       {pendingConfirm && (
         <div className="flex items-center gap-2 rounded-lg border border-accent/40 bg-accent/10 px-2.5 py-1.5 text-xs text-ink">
           Transposer les accords automatiquement ?
-          <button onClick={() => onAnswer(true)} className="font-semibold text-accent hover:underline">
+          <button onClick={() => onAnswer(true)} className="font-semibold text-accent-ink hover:underline">
             Oui
           </button>
           <button onClick={() => onAnswer(false)} className="text-muted hover:underline">

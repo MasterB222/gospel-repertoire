@@ -28,7 +28,7 @@ export function DurationPicker({ duration, dotted, onChangeDuration, onToggleDot
           onClick={() => onChangeDuration(d.value)}
           className={clsx(
             "flex h-9 w-9 items-center justify-center rounded-lg border text-lg",
-            duration === d.value ? "border-accent bg-accent/20 text-accent" : "border-border text-ink hover:border-accent/40"
+            duration === d.value ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-ink hover:border-accent/40"
           )}
         >
           {d.symbol}
@@ -40,7 +40,7 @@ export function DurationPicker({ duration, dotted, onChangeDuration, onToggleDot
         onClick={onToggleDotted}
         className={clsx(
           "flex h-9 items-center gap-1 rounded-lg border px-2.5 text-xs font-semibold",
-          dotted ? "border-accent bg-accent/20 text-accent" : "border-border text-ink hover:border-accent/40"
+          dotted ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-ink hover:border-accent/40"
         )}
       >
         ·pointée

@@ -14,7 +14,7 @@ export function CommentThread({ comments, onAdd }: { comments: Comment[]; onAdd:
       {comments.length === 0 && <p className="text-xs text-muted">Aucun commentaire pour l'instant.</p>}
       {comments.map((c) => (
         <div key={c.id} className="flex items-start gap-1.5 rounded-lg bg-surface-raised px-2.5 py-2 text-xs">
-          <Pin size={12} className="mt-0.5 shrink-0 text-accent" />
+          <Pin size={12} className="mt-0.5 shrink-0 text-accent-ink" />
           <div className="min-w-0">
             <p className="text-ink">{c.text}</p>
             <p className="mt-0.5 text-[11px] text-muted">

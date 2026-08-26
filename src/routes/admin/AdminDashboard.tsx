@@ -78,7 +78,7 @@ export function AdminDashboard() {
       </Card>
 
       <div className="mt-4 flex items-center gap-2 rounded-xl border border-border bg-surface-raised px-4 py-3 text-sm text-muted">
-        <Heart size={16} className="text-accent" />
+        <Heart size={16} className="text-accent-ink" />
         {stats.favorites} favoris enregistrés au total
       </div>
     </div>

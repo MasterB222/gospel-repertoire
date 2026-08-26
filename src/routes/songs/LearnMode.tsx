@@ -84,7 +84,7 @@ export function LearnMode() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
         <EmptyState icon={GraduationCap} title="Assignation introuvable" />
-        <Link to="/dashboard" className="text-sm text-accent hover:underline">
+        <Link to="/dashboard" className="text-sm text-accent-ink hover:underline">
           Retour au dashboard
         </Link>
       </div>
@@ -114,7 +114,7 @@ export function LearnMode() {
 
         {measure ? (
           <div className="space-y-2 rounded-xl border border-border p-4">
-            {measure.chord && <p className="font-serif text-2xl font-bold text-accent">{measure.chord}</p>}
+            {measure.chord && <p className="font-serif text-2xl font-bold text-accent-ink">{measure.chord}</p>}
             <p className="text-lg">{measure.lyrics || "—"}</p>
             {measure.notes && <p className="text-sm text-muted">Notes : {measure.notes}</p>}
           </div>
@@ -122,7 +122,7 @@ export function LearnMode() {
           <div className="space-y-2">
             {section.measures.map((m) => (
               <div key={m.number} className="rounded-lg bg-surface-raised px-3 py-2 text-sm">
-                <span className="text-muted">#{m.number}</span> {m.chord && <span className="font-semibold text-accent">{m.chord}</span>}{" "}
+                <span className="text-muted">#{m.number}</span> {m.chord && <span className="font-semibold text-accent-ink">{m.chord}</span>}{" "}
                 {m.lyrics}
               </div>
             ))}

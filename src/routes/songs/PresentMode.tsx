@@ -42,7 +42,7 @@ export function PresentMode() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
         <EmptyState icon={Music2} title="Chanson introuvable" />
-        <Link to="/songs" className="text-sm text-accent hover:underline">
+        <Link to="/songs" className="text-sm text-accent-ink hover:underline">
           Retour
         </Link>
       </div>

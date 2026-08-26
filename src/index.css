@@ -12,6 +12,10 @@
   --color-muted: 191 156 172; /* #BF9CAC */
   --color-accent: 212 169 74; /* #D4A94A */
   --color-accent-soft: 184 137 43; /* #B8892B */
+  /* Doré utilisé comme texte (liens, titres, badges) : identique à l'accent
+     en sombre (déjà 8.6:1 sur le fond), voir plus bas pourquoi il diffère
+     en clair. */
+  --color-accent-ink: 212 169 74; /* #D4A94A */
 }
 
 /* Light theme, toggled via a `light` class on <html> — ivoire chaud, pas de gris froid */
@@ -21,9 +25,15 @@ html.light {
   --color-surface-raised: 247 232 213; /* #F7E8D5 */
   --color-border: 232 206 178; /* #E8CEB2 */
   --color-ink: 43 20 30; /* #2B141E */
-  --color-muted: 138 96 112; /* #8A6070 */
+  --color-muted: 131 91 107; /* #835B6B — anciennement #8A6070 (4.38:1, sous la norme AA 4.5:1) */
   --color-accent: 184 137 43; /* #B8892B */
   --color-accent-soft: 138 94 18; /* #8A5E12 */
+  /* Le doré de fond (--color-accent) n'a que 2.8:1 de contraste sur un texte
+     directement posé sur le fond ivoire : trop faible (norme AA : 4.5:1).
+     On assombrit uniquement la version "texte" pour rester lisible, tout en
+     gardant --color-accent tel quel pour les boutons pleins (texte foncé
+     dessus, ça fonctionne bien à cette teinte). */
+  --color-accent-ink: 138 94 18; /* #8A5E12 — 4.7 à 5.5:1 selon le fond */
 }
 
 html,

@@ -73,7 +73,7 @@ export function RehearseMode() {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
         <EmptyState icon={Music2} title="Rien à répéter" description="Cette chanson n'a pas encore de structure." />
-        <Link to={id ? `/songs/${id}` : "/songs"} className="text-sm text-accent hover:underline">
+        <Link to={id ? `/songs/${id}` : "/songs"} className="text-sm text-accent-ink hover:underline">
           Retour
         </Link>
       </div>
@@ -93,19 +93,19 @@ export function RehearseMode() {
       </div>
 
       <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
-        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent">{section.name}</p>
+        <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-ink">{section.name}</p>
         <p className="text-xs text-muted">
           Mesure {measure?.number} / {section.measures.length}
         </p>
 
-        {measure?.chord && <p className="font-serif text-3xl font-bold text-accent">{measure.chord}</p>}
+        {measure?.chord && <p className="font-serif text-3xl font-bold text-accent-ink">{measure.chord}</p>}
         <p className="max-w-2xl text-2xl leading-relaxed sm:text-3xl">{measure?.lyrics || "—"}</p>
         {measure?.notes && <p className="text-muted">{measure.notes}</p>}
 
         {measure && measure.annotations.length > 0 && (
           <div className="flex flex-wrap justify-center gap-2">
             {measure.annotations.map((a) => (
-              <span key={a.id} className="rounded-full bg-accent/15 px-3 py-1 text-xs text-accent">
+              <span key={a.id} className="rounded-full bg-accent/15 px-3 py-1 text-xs text-accent-ink">
                 {a.marker ? `${a.marker} — ` : ""}
                 {a.text}
               </span>

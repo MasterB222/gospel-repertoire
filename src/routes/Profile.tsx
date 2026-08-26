@@ -69,17 +69,17 @@ export function Profile() {
 
       <div className="mb-8 grid grid-cols-3 gap-3">
         <Card className="p-4 text-center">
-          <Heart size={16} className="mx-auto mb-1 text-accent" />
+          <Heart size={16} className="mx-auto mb-1 text-accent-ink" />
           <p className="text-xl font-bold text-ink">{stats?.favorites ?? "—"}</p>
           <p className="text-xs text-muted">Favoris</p>
         </Card>
         <Card className="p-4 text-center">
-          <ListMusic size={16} className="mx-auto mb-1 text-accent" />
+          <ListMusic size={16} className="mx-auto mb-1 text-accent-ink" />
           <p className="text-xl font-bold text-ink">{stats?.playlists ?? "—"}</p>
           <p className="text-xs text-muted">Playlists</p>
         </Card>
         <Card className="p-4 text-center">
-          <Music2 size={16} className="mx-auto mb-1 text-accent" />
+          <Music2 size={16} className="mx-auto mb-1 text-accent-ink" />
           <p className="text-xl font-bold text-ink">{stats?.viewed ?? "—"}</p>
           <p className="text-xs text-muted">Consultées</p>
         </Card>

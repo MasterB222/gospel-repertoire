@@ -10,7 +10,7 @@ export function Home() {
     <div className="mx-auto max-w-5xl">
       <ArtisticBackdrop className="rounded-3xl">
         <div className="flex min-h-[360px] flex-col justify-end gap-4 px-6 py-10 sm:px-10 sm:py-14 md:min-h-[420px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent">Atelier musical gospel</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">Atelier musical gospel</p>
           <h1 className="max-w-xl font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl">
             {isAuthenticated ? `Bienvenue, ${profile?.first_name ?? ""}` : "Le répertoire gospel de votre groupe"}
           </h1>

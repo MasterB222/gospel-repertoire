@@ -44,7 +44,7 @@ export function Settings() {
             {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
             Thème {theme === "dark" ? "sombre" : "clair"}
           </span>
-          <span className="text-xs text-accent">Changer</span>
+          <span className="text-xs text-accent-ink">Changer</span>
         </button>
       </Card>
 
@@ -58,7 +58,7 @@ export function Settings() {
             disabled={saving}
             onClick={() => handleNotationChange("solfege")}
             className={`min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm ${
-              profile?.note_notation === "solfege" ? "border-accent bg-accent/10 text-accent" : "border-border text-ink"
+              profile?.note_notation === "solfege" ? "border-accent bg-accent/10 text-accent-ink" : "border-border text-ink"
             }`}
           >
             Solfège (do ré mi)
@@ -67,7 +67,7 @@ export function Settings() {
             disabled={saving}
             onClick={() => handleNotationChange("letters")}
             className={`min-w-0 flex-1 rounded-lg border px-3 py-2 text-sm ${
-              profile?.note_notation === "letters" ? "border-accent bg-accent/10 text-accent" : "border-border text-ink"
+              profile?.note_notation === "letters" ? "border-accent bg-accent/10 text-accent-ink" : "border-border text-ink"
             }`}
           >
             Lettres (C D E)

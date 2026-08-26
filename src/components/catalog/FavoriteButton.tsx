@@ -20,7 +20,7 @@ export function FavoriteButton({ songId, className }: { songId: string; classNam
       aria-pressed={active}
       className={clsx(
         "flex items-center justify-center rounded-full transition-colors",
-        active ? "text-accent" : "text-muted hover:text-ink",
+        active ? "text-accent-ink" : "text-muted hover:text-ink",
         className
       )}
     >

@@ -51,7 +51,7 @@ export function Explore() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-serif text-lg font-semibold text-ink">Nouveautés</h2>
-          <Link to="/songs" className="text-xs text-accent hover:underline">
+          <Link to="/songs" className="text-xs text-accent-ink hover:underline">
             Tout le répertoire
           </Link>
         </div>
@@ -69,7 +69,7 @@ export function Explore() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-serif text-lg font-semibold text-ink">Artistes</h2>
-          <Link to="/artists" className="text-xs text-accent hover:underline">
+          <Link to="/artists" className="text-xs text-accent-ink hover:underline">
             Tous les artistes
           </Link>
         </div>
@@ -87,7 +87,7 @@ export function Explore() {
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="font-serif text-lg font-semibold text-ink">Catégories</h2>
-          <Link to="/categories" className="text-xs text-accent hover:underline">
+          <Link to="/categories" className="text-xs text-accent-ink hover:underline">
             Toutes les catégories
           </Link>
         </div>

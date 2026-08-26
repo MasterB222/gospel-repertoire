@@ -21,7 +21,7 @@ export function AssignmentCard({ assignment, showSongTitle, canEditStatus, onSta
     <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-surface-raised px-3 py-2.5">
       <div className="min-w-0">
         {showSongTitle && assignment.song && (
-          <Link to={`/songs/${assignment.song.id}`} className="text-sm font-semibold text-ink hover:text-accent">
+          <Link to={`/songs/${assignment.song.id}`} className="text-sm font-semibold text-ink hover:text-accent-ink">
             {assignment.song.title}
           </Link>
         )}

@@ -125,7 +125,7 @@ export function PlaylistDetail() {
         icon={ListMusic}
         title="Playlist introuvable"
         action={
-          <Link to="/playlists" className="text-sm font-semibold text-accent hover:underline">
+          <Link to="/playlists" className="text-sm font-semibold text-accent-ink hover:underline">
             Retour aux playlists
           </Link>
         }
@@ -197,7 +197,7 @@ export function PlaylistDetail() {
                   <span className="min-w-0 truncate">
                     {s.title} <span className="text-muted">— {s.artist?.name ?? "Artiste inconnu"}</span>
                   </span>
-                  <Plus size={14} className="shrink-0 text-accent" />
+                  <Plus size={14} className="shrink-0 text-accent-ink" />
                 </button>
               ))
             )}

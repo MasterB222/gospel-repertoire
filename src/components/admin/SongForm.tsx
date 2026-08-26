@@ -271,7 +271,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
                   href={input.partition_url}
                   target="_blank"
                   rel="noreferrer"
-                  className="flex min-w-0 items-center gap-1 truncate text-xs text-accent underline"
+                  className="flex min-w-0 items-center gap-1 truncate text-xs text-accent-ink underline"
                 >
                   <FileText size={12} className="shrink-0" />
                   Fichier actuel

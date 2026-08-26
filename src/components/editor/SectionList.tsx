@@ -46,7 +46,7 @@ export function SectionList({
         <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">Structure</h2>
         <button
           onClick={onAdd}
-          className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-accent hover:bg-accent/10"
+          className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-accent-ink hover:bg-accent/10"
         >
           <Plus size={14} strokeWidth={2} />
           Section

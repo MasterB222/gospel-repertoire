@@ -41,7 +41,7 @@ export function Help() {
   return (
     <div className="max-w-2xl">
       <div className="mb-6 flex items-center gap-2">
-        <LifeBuoy size={22} className="text-accent" />
+        <LifeBuoy size={22} className="text-accent-ink" />
         <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Aide</h1>
       </div>
 
@@ -59,7 +59,7 @@ export function Help() {
       </div>
 
       <Card className="mt-4 flex items-center gap-2 p-4 text-sm text-muted">
-        <Mail size={16} className="text-accent" />
+        <Mail size={16} className="text-accent-ink" />
         Une question qui n'est pas couverte ici ? Contacte le responsable de ton groupe.
       </Card>
     </div>

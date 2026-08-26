@@ -88,13 +88,13 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
       <div className="flex gap-1.5">
         <button
           onClick={() => setAssigneeType("group")}
-          className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "group" ? "bg-accent/20 text-accent" : "text-muted hover:bg-surface-raised"}`}
+          className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "group" ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"}`}
         >
           Groupe/pupitre
         </button>
         <button
           onClick={() => setAssigneeType("user")}
-          className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "user" ? "bg-accent/20 text-accent" : "text-muted hover:bg-surface-raised"}`}
+          className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "user" ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"}`}
         >
           Membre
         </button>

@@ -41,7 +41,7 @@ export function ArtistDetail() {
         icon={Mic2}
         title="Artiste introuvable"
         action={
-          <Link to="/artists" className="text-sm font-semibold text-accent hover:underline">
+          <Link to="/artists" className="text-sm font-semibold text-accent-ink hover:underline">
             Retour aux artistes
           </Link>
         }

@@ -65,7 +65,7 @@ export function NotationEditorPanel({
           onClick={onTogglePlayMelody}
           className={clsx(
             "flex h-9 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold",
-            isPlayingMelody ? "border-accent bg-accent/20 text-accent" : "border-border text-ink hover:border-accent/40"
+            isPlayingMelody ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-ink hover:border-accent/40"
           )}
         >
           {isPlayingMelody ? <Square size={13} /> : <Play size={13} />}
@@ -99,7 +99,7 @@ export function NotationEditorPanel({
             onClick={() => onSelectMeasure(m.number)}
             className={clsx(
               "rounded-lg border px-2.5 py-1 text-xs font-semibold",
-              m.number === selectedMeasureNumber ? "border-accent bg-accent/20 text-accent" : "border-border text-muted hover:border-accent/40"
+              m.number === selectedMeasureNumber ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-muted hover:border-accent/40"
             )}
           >
             #{m.number}
