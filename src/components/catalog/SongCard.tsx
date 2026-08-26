@@ -17,6 +17,7 @@ export function SongCard({ song, queue }: { song: Song; queue?: Song[] }) {
             <CoverPlaceholder icon={Music2} imageUrl={song.cover_url || undefined} alt={song.title} />
             <FavoriteButton
               songId={song.id}
+              onDark
               className="absolute right-2 top-2 h-8 w-8 bg-black/40 opacity-0 backdrop-blur-glass transition-opacity group-hover:opacity-100"
             />
             <button

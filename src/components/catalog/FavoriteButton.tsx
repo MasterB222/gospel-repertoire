@@ -3,7 +3,18 @@ import clsx from "clsx";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useAuth } from "../../context/AuthContext";
 
-export function FavoriteButton({ songId, className }: { songId: string; className?: string }) {
+export function FavoriteButton({
+  songId,
+  className,
+  onDark,
+}: {
+  songId: string;
+  className?: string;
+  /** Utilisé sur une vignette (fond sombre fixe, quel que soit le thème du site) :
+   * force des couleurs claires fixes au lieu des jetons de thème, qui deviendraient
+   * illisibles en mode clair sur ce fond qui, lui, ne change jamais. */
+  onDark?: boolean;
+}) {
   const { isAuthenticated } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
   if (!isAuthenticated) return null;
@@ -20,7 +31,13 @@ export function FavoriteButton({ songId, className }: { songId: string; classNam
       aria-pressed={active}
       className={clsx(
         "flex items-center justify-center rounded-full transition-colors",
-        active ? "text-accent-ink" : "text-muted hover:text-ink",
+        onDark
+          ? active
+            ? "text-[#D4A94A]"
+            : "text-[#F6E9DC]/70 hover:text-[#F6E9DC]"
+          : active
+            ? "text-accent-ink"
+            : "text-muted hover:text-ink",
         className
       )}
     >
