@@ -10,11 +10,15 @@ export function Home() {
     <div className="mx-auto max-w-5xl">
       <ArtisticBackdrop className="rounded-3xl">
         <div className="flex min-h-[360px] flex-col justify-end gap-4 px-6 py-10 sm:px-10 sm:py-14 md:min-h-[420px]">
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-accent-ink">Atelier musical gospel</p>
-          <h1 className="max-w-xl font-serif text-4xl font-semibold leading-tight text-ink sm:text-5xl">
+          {/* Le fond de ce bandeau (ArtisticBackdrop) reste volontairement sombre
+              dans les deux thèmes : le texte ici utilise donc des couleurs fixes,
+              pas les jetons de thème (ink/accent-ink), sinon il devient illisible
+              en mode clair. */}
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A94A]">Atelier musical gospel</p>
+          <h1 className="max-w-xl font-serif text-4xl font-semibold leading-tight text-[#F6E9DC] sm:text-5xl">
             {isAuthenticated ? `Bienvenue, ${profile?.first_name ?? ""}` : "Le répertoire gospel de votre groupe"}
           </h1>
-          <p className="max-w-lg text-sm text-ink/80 sm:text-base">
+          <p className="max-w-lg text-sm text-[#F6E9DC]/80 sm:text-base">
             Créez, structurez et répétez vos chansons ensemble — paroles, accords, notes et assignations, du
             premier brouillon à la présentation sur scène.
           </p>
@@ -30,7 +34,7 @@ export function Home() {
               </Link>
               <Link
                 to="/login"
-                className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-semibold text-ink backdrop-blur-glass transition-colors hover:bg-white/10"
+                className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-semibold text-[#F6E9DC] backdrop-blur-glass transition-colors hover:bg-white/10"
               >
                 <LogIn size={16} strokeWidth={2} />
                 Connexion

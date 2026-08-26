@@ -6,17 +6,19 @@ import { Logo } from "../../components/brand/Logo";
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
   return (
     <div className="flex min-h-screen flex-col bg-background md:flex-row">
+      {/* ArtisticBackdrop reste sombre dans les deux thèmes : couleurs de texte
+          fixes ici, pas les jetons de thème (sinon illisible en mode clair). */}
       <ArtisticBackdrop className="hidden md:flex md:w-1/2 lg:w-3/5">
         <div className="flex h-full flex-col justify-between p-10 lg:p-14">
           <Link to="/" className="flex w-fit items-center gap-2.5">
             <Logo className="h-9 w-9" />
-            <span className="font-serif text-lg font-semibold text-ink">Gospel Répertoire</span>
+            <span className="font-serif text-lg font-semibold text-[#F6E9DC]">Gospel Répertoire</span>
           </Link>
           <div className="max-w-md">
-            <h2 className="font-serif text-3xl font-semibold leading-tight text-ink lg:text-4xl">
+            <h2 className="font-serif text-3xl font-semibold leading-tight text-[#F6E9DC] lg:text-4xl">
               Un répertoire vivant, pensé pour chanter ensemble.
             </h2>
-            <p className="mt-3 text-sm text-ink/75">
+            <p className="mt-3 text-sm text-[#F6E9DC]/75">
               Structurez vos chansons, assignez les parties, suivez l'apprentissage du groupe — tout au même
               endroit.
             </p>
@@ -27,7 +29,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
       <ArtisticBackdrop className="flex h-36 items-end p-6 md:hidden">
         <Link to="/" className="flex items-center gap-2.5">
           <Logo className="h-8 w-8" />
-          <span className="font-serif text-base font-semibold text-ink">Gospel Répertoire</span>
+          <span className="font-serif text-base font-semibold text-[#F6E9DC]">Gospel Répertoire</span>
         </Link>
       </ArtisticBackdrop>
 

@@ -18,7 +18,9 @@ export function CoverPlaceholder({ icon: Icon, imageUrl, alt }: { icon: LucideIc
           "radial-gradient(120% 120% at 20% 15%, rgba(212,169,74,0.45), transparent 60%), radial-gradient(120% 120% at 85% 90%, rgba(151,36,74,0.6), transparent 60%), linear-gradient(160deg, #3A1224 0%, #200A16 100%)",
       }}
     >
-      <Icon size={28} strokeWidth={1.5} className="text-ink/50" aria-hidden="true" />
+      {/* Fond toujours sombre (même dégradé que ArtisticBackdrop) : couleur fixe,
+          pas le jeton de thème "ink" qui deviendrait sombre-sur-sombre en clair. */}
+      <Icon size={28} strokeWidth={1.5} className="text-[#F6E9DC]/50" aria-hidden="true" />
     </div>
   );
 }
