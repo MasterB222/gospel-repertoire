@@ -19,7 +19,10 @@ interface PropertiesPanelProps {
   onAddAnnotation: (annotation: Omit<Annotation, "id" | "author">) => void;
   onRemoveAnnotation: (annotationId: string) => void;
   onUpdateSectionAssignment: (text: string) => void;
+  onUpdateSectionTimeSignature: (timeSignature: string) => void;
 }
+
+const TIME_SIGNATURES = ["4/4", "3/4", "6/8", "2/4", "12/8", "5/4"];
 
 function NashvilleMarkEditor({
   label,
@@ -64,7 +67,7 @@ function NashvilleMarkEditor({
         >
           −
         </button>
-        <span className="w-6 text-center font-semibold text-accent">{"/".repeat(mark.slashes) || "0"}</span>
+        <span className="w-6 text-center font-semibold text-accent-ink">{"/".repeat(mark.slashes) || "0"}</span>
         <button
           type="button"
           title="Ajouter une barre rythmique"
@@ -86,6 +89,7 @@ export function PropertiesPanel({
   onAddAnnotation,
   onRemoveAnnotation,
   onUpdateSectionAssignment,
+  onUpdateSectionTimeSignature,
 }: PropertiesPanelProps) {
   const [annotationType, setAnnotationType] = useState<AnnotationType>("chant");
   const [annotationMarker, setAnnotationMarker] = useState("");
@@ -104,6 +108,21 @@ export function PropertiesPanel({
 
   return (
     <div className="space-y-5 p-4">
+      <div>
+        <label className="mb-1.5 block text-xs font-semibold text-muted">Mesure rythmique (section entière)</label>
+        <select
+          value={section.time_signature ?? "4/4"}
+          onChange={(e) => onUpdateSectionTimeSignature(e.target.value)}
+          className={fieldClasses}
+        >
+          {TIME_SIGNATURES.map((sig) => (
+            <option key={sig} value={sig}>
+              {sig}
+            </option>
+          ))}
+        </select>
+      </div>
+
       <div>
         <label className="mb-1.5 block text-xs font-semibold text-muted">Assigné à (section entière)</label>
         <input
@@ -168,7 +187,7 @@ export function PropertiesPanel({
                 <button
                   type="button"
                   onClick={() => onUpdateMeasure({ chord2: "" })}
-                  className="w-full rounded-lg border border-dashed border-border py-1.5 text-xs text-muted hover:border-accent hover:text-accent"
+                  className="w-full rounded-lg border border-dashed border-border py-1.5 text-xs text-muted hover:border-accent hover:text-accent-ink"
                 >
                   + Fractionner la mesure (2 accords)
                 </button>
@@ -214,7 +233,7 @@ export function PropertiesPanel({
               {measure.annotations.map((a) => (
                 <div key={a.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface-raised px-2.5 py-1.5 text-xs">
                   <span className="min-w-0 truncate text-ink">
-                    {a.marker && <strong className="text-accent">{a.marker}</strong>} {a.text}
+                    {a.marker && <strong className="text-accent-ink">{a.marker}</strong>} {a.text}
                   </span>
                   <button onClick={() => onRemoveAnnotation(a.id)} className="shrink-0 text-muted hover:text-danger">
                     <X size={13} />
@@ -233,7 +252,7 @@ export function PropertiesPanel({
                       setAnnotationMarker("");
                     }}
                     className={`rounded-full px-2 py-1 text-[11px] ${
-                      annotationType === t ? "bg-accent/20 text-accent" : "text-muted hover:bg-surface-raised"
+                      annotationType === t ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"
                     }`}
                   >
                     {ANNOTATION_MARKERS[t].emoji} {ANNOTATION_MARKERS[t].label}

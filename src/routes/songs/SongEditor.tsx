@@ -159,6 +159,7 @@ export function SongEditor() {
         await saveSongStructure(id, {
           structure: sections,
           original_key: displayKey,
+          tempo,
           version: newVersion,
           version_history: newHistory,
         });
@@ -174,7 +175,7 @@ export function SongEditor() {
       if (saveTimer.current) window.clearTimeout(saveTimer.current);
     };
     // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [sections, displayKey]);
+  }, [sections, displayKey, tempo]);
 
   const selectedSection = sections.find((s) => s.id === selectedSectionId) ?? null;
   const selectedMeasure = selectedSection?.measures.find((m) => m.number === selectedMeasureNumber) ?? null;
@@ -235,6 +236,10 @@ export function SongEditor() {
 
   function updateSectionAssignment(sectionId: string, text: string) {
     applyChange((current) => current.map((s) => (s.id === sectionId ? { ...s, assigned_to: text } : s)));
+  }
+
+  function updateSectionTimeSignature(sectionId: string, timeSig: string) {
+    applyChange((current) => current.map((s) => (s.id === sectionId ? { ...s, time_signature: timeSig } : s)));
   }
 
   function addMeasure(sectionId: string) {
@@ -425,7 +430,7 @@ export function SongEditor() {
     const entry = { version: newVersion, author: profile ? `${profile.first_name} ${profile.last_name}`.trim() : "Anonyme", at: new Date().toISOString() };
     const newHistory = [...versionHistory, entry].slice(-20);
     setSaveStatus("saving");
-    saveSongStructure(id, { structure: sections, original_key: displayKey, version: newVersion, version_history: newHistory })
+    saveSongStructure(id, { structure: sections, original_key: displayKey, tempo, version: newVersion, version_history: newHistory })
       .then(() => {
         setVersion(newVersion);
         setVersionHistory(newHistory);
@@ -483,7 +488,7 @@ export function SongEditor() {
         icon={Music2}
         title="Chanson introuvable"
         action={
-          <button onClick={() => navigate("/songs")} className="text-sm font-semibold text-accent hover:underline">
+          <button onClick={() => navigate("/songs")} className="text-sm font-semibold text-accent-ink hover:underline">
             Retour au répertoire
           </button>
         }
@@ -498,6 +503,7 @@ export function SongEditor() {
         title={songTitle}
         timeSignature={timeSignature}
         bpm={tempo}
+        onChangeBpm={setTempo}
         saveStatus={saveStatus}
         version={version}
         notation={notation}
@@ -591,6 +597,7 @@ export function SongEditor() {
                 onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
                 onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}
                 onUpdateSectionAssignment={(text) => selectedSectionId && updateSectionAssignment(selectedSectionId, text)}
+                onUpdateSectionTimeSignature={(timeSig) => selectedSectionId && updateSectionTimeSignature(selectedSectionId, timeSig)}
               />
             </div>
           </>
@@ -642,6 +649,7 @@ export function SongEditor() {
           onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
           onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}
           onUpdateSectionAssignment={(text) => selectedSectionId && updateSectionAssignment(selectedSectionId, text)}
+          onUpdateSectionTimeSignature={(timeSig) => selectedSectionId && updateSectionTimeSignature(selectedSectionId, timeSig)}
         />
       </Modal>
     </div>

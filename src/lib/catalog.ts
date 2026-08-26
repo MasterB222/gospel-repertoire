@@ -69,6 +69,7 @@ export async function getCategory(id: string): Promise<Category | null> {
 export interface SongStructureUpdate {
   structure: Section[];
   original_key: string;
+  tempo: string;
   version: string;
   version_history: VersionEntry[];
 }

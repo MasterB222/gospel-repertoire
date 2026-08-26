@@ -16,6 +16,7 @@ interface EditorTopBarProps {
   title: string;
   timeSignature: string;
   bpm: string;
+  onChangeBpm: (value: string) => void;
   saveStatus: "idle" | "saving" | "saved";
   version: string;
   notation: NoteNotation;
@@ -43,9 +44,21 @@ export function EditorTopBar(props: EditorTopBarProps) {
 
         <div className="min-w-0">
           <h1 className="truncate font-serif text-lg font-semibold text-ink">{props.title}</h1>
-          <p className="text-xs text-muted">
-            v{props.version} · {props.timeSignature} · {props.bpm} BPM
-          </p>
+          <div className="flex items-center gap-1 text-xs text-muted">
+            <span>
+              v{props.version} · {props.timeSignature} ·
+            </span>
+            <input
+              type="number"
+              min={20}
+              max={300}
+              value={props.bpm}
+              onChange={(e) => props.onChangeBpm(e.target.value)}
+              aria-label="Tempo (BPM)"
+              className="w-12 rounded border border-border bg-surface-raised px-1 py-0.5 text-center text-xs text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
+            />
+            <span>BPM</span>
+          </div>
         </div>
 
         <TransposeControl
@@ -77,7 +90,7 @@ export function EditorTopBar(props: EditorTopBarProps) {
           <span
             className={clsx(
               "flex items-center gap-1.5 text-xs",
-              props.saveStatus === "saving" ? "text-muted" : "text-accent"
+              props.saveStatus === "saving" ? "text-muted" : "text-accent-ink"
             )}
           >
             {props.saveStatus === "saving" ? (
