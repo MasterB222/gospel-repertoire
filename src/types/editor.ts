@@ -18,6 +18,16 @@ export function createEmptyNashvilleMark(): NashvilleMark {
   return { hold: false, push: false, slashes: 0 };
 }
 
+export type NoteDuration = "whole" | "half" | "quarter" | "eighth" | "sixteenth";
+
+export interface ScoreNote {
+  id: string;
+  /** Hauteur au format VexFlow "c/4", "f#/5"... ou null pour un silence. */
+  pitch: string | null;
+  duration: NoteDuration;
+  dotted: boolean;
+}
+
 export interface Measure {
   number: number;
   lyrics: string;
@@ -27,6 +37,7 @@ export interface Measure {
   annotations: Annotation[];
   nashvilleMark?: NashvilleMark;
   nashvilleMark2?: NashvilleMark;
+  score?: ScoreNote[];
 }
 
 export interface Section {

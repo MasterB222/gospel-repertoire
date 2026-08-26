@@ -1,6 +1,6 @@
-import { useCallback, useEffect, useRef, useState } from "react";
+import { lazy, Suspense, useCallback, useEffect, useRef, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
-import { PanelRight, Rows3 } from "lucide-react";
+import { LayoutGrid, Music4, PanelRight, Rows3 } from "lucide-react";
 import { EditorTopBar } from "../../components/editor/EditorTopBar";
 import { SectionList } from "../../components/editor/SectionList";
 import { MeasureGrid } from "../../components/editor/MeasureGrid";
@@ -11,10 +11,23 @@ import { EmptyState } from "../../components/ui/EmptyState";
 import { getSong, saveSongStructure } from "../../lib/catalog";
 import { useSongPresence } from "../../lib/collaboration";
 import { distributeQuickEntry, transposeChord, transposeKey } from "../../lib/music";
-import { createEmptySection, type Annotation, type NoteNotation, type Section } from "../../types/editor";
+import {
+  measureFilledFraction,
+  noteDurationSeconds,
+  noteFraction,
+  parseTimeSignature,
+  playMelody,
+  playTone,
+  vexKeyToFrequency,
+} from "../../lib/notation";
+import { createEmptyMeasure, createEmptySection, type Annotation, type NoteDuration, type NoteNotation, type ScoreNote, type Section } from "../../types/editor";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { Music2 } from "lucide-react";
+
+const NotationEditorPanel = lazy(() =>
+  import("../../components/notation/NotationEditorPanel").then((m) => ({ default: m.NotationEditorPanel }))
+);
 
 function bumpMinorVersion(version: string): string {
   const [major, minor] = version.split(".").map((n) => parseInt(n, 10) || 0);
@@ -59,6 +72,12 @@ export function SongEditor() {
 
   const [mobileSectionsOpen, setMobileSectionsOpen] = useState(false);
   const [mobilePanelOpen, setMobilePanelOpen] = useState(false);
+
+  const [editorView, setEditorView] = useState<"grid" | "score">("grid");
+  const [scoreDuration, setScoreDuration] = useState<NoteDuration>("quarter");
+  const [scoreDotted, setScoreDotted] = useState(false);
+  const [isPlayingMelody, setIsPlayingMelody] = useState(false);
+  const playbackRef = useRef<{ stop: () => void } | null>(null);
 
   const sessionOriginalKey = useRef("");
   const skipNextAutosave = useRef(true);
@@ -293,6 +312,82 @@ export function SongEditor() {
     );
   }
 
+  function playAndRecordNote(pitch: string | null) {
+    if (!selectedSectionId || selectedMeasureNumber == null || !selectedSection) return;
+    const measure = selectedSection.measures.find((m) => m.number === selectedMeasureNumber);
+    if (!measure) return;
+    const capacity = parseTimeSignature(selectedSection.time_signature).capacity;
+    const filled = measureFilledFraction(measure.score);
+    const frac = noteFraction({ duration: scoreDuration, dotted: scoreDotted });
+    const overflow = filled + frac > capacity + 1e-9;
+    const targetNumber = overflow ? measure.number + 1 : measure.number;
+
+    applyChange((current) =>
+      current.map((s) => {
+        if (s.id !== selectedSectionId) return s;
+        const measures = [...s.measures];
+        let idx = measures.findIndex((m) => m.number === targetNumber);
+        if (idx === -1) {
+          measures.push(createEmptyMeasure(targetNumber));
+          idx = measures.length - 1;
+        }
+        const newNote: ScoreNote = { id: crypto.randomUUID(), pitch, duration: scoreDuration, dotted: scoreDotted };
+        measures[idx] = { ...measures[idx], score: [...(measures[idx].score ?? []), newNote] };
+        return { ...s, measures };
+      })
+    );
+    if (overflow) setSelectedMeasureNumber(targetNumber);
+    if (pitch) {
+      const bpm = parseInt(tempo, 10) || 90;
+      playTone(vexKeyToFrequency(pitch), noteDurationSeconds({ duration: scoreDuration, dotted: scoreDotted }, bpm) * 0.9, { gain: 0.22 });
+    }
+  }
+
+  function clearLastNote() {
+    if (!selectedSectionId || selectedMeasureNumber == null) return;
+    applyChange((current) =>
+      current.map((s) =>
+        s.id === selectedSectionId
+          ? { ...s, measures: s.measures.map((m) => (m.number === selectedMeasureNumber ? { ...m, score: (m.score ?? []).slice(0, -1) } : m)) }
+          : s
+      )
+    );
+  }
+
+  function clearMeasureScore() {
+    if (!selectedSectionId || selectedMeasureNumber == null) return;
+    applyChange((current) =>
+      current.map((s) =>
+        s.id === selectedSectionId
+          ? { ...s, measures: s.measures.map((m) => (m.number === selectedMeasureNumber ? { ...m, score: [] } : m)) }
+          : s
+      )
+    );
+  }
+
+  function togglePlayMelody() {
+    if (isPlayingMelody) {
+      playbackRef.current?.stop();
+      playbackRef.current = null;
+      setIsPlayingMelody(false);
+      return;
+    }
+    if (!selectedSection) return;
+    const allNotes = selectedSection.measures.flatMap((m) => m.score ?? []);
+    if (allNotes.length === 0) {
+      showToast("Aucune note saisie dans cette section.", "info");
+      return;
+    }
+    const bpm = parseInt(tempo, 10) || 90;
+    setIsPlayingMelody(true);
+    const totalDuration = allNotes.reduce((sum, n) => sum + noteDurationSeconds(n, bpm), 0);
+    playbackRef.current = playMelody(allNotes, bpm);
+    window.setTimeout(() => {
+      setIsPlayingMelody(false);
+      playbackRef.current = null;
+    }, totalDuration * 1000 + 150);
+  }
+
   function handleTransposeStep(direction: 1 | -1) {
     const newOffset = keyOffset + direction;
     setDisplayKey(transposeKey(sessionOriginalKey.current, newOffset));
@@ -369,6 +464,10 @@ export function SongEditor() {
     return () => window.removeEventListener("keydown", handleKeyDown);
   }, [undo, redo, selectedSectionId, selectedMeasureNumber]);
 
+  useEffect(() => {
+    return () => playbackRef.current?.stop();
+  }, []);
+
   if (loaded === null) {
     return (
       <div className="space-y-3 p-4">
@@ -413,22 +512,44 @@ export function SongEditor() {
         presentUsers={presentUsers}
       />
 
-      <div className="flex items-center gap-2 border-b border-border px-4 py-2 md:hidden">
+      <div className="flex items-center gap-2 border-b border-border px-4 py-2">
         <button
           onClick={() => setMobileSectionsOpen(true)}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink"
+          className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink md:hidden"
         >
           <Rows3 size={14} />
           Sections
         </button>
-        <button
-          onClick={() => setMobilePanelOpen(true)}
-          disabled={!selectedSection}
-          className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink disabled:opacity-40"
-        >
-          <PanelRight size={14} />
-          Propriétés
-        </button>
+        <div className="flex items-center gap-1 rounded-lg border border-border p-0.5">
+          <button
+            onClick={() => setEditorView("grid")}
+            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold ${
+              editorView === "grid" ? "bg-accent text-[#2A0F1E]" : "text-muted hover:text-ink"
+            }`}
+          >
+            <LayoutGrid size={13} />
+            Grille
+          </button>
+          <button
+            onClick={() => setEditorView("score")}
+            className={`flex items-center gap-1.5 rounded-md px-2.5 py-1 text-xs font-semibold ${
+              editorView === "score" ? "bg-accent text-[#2A0F1E]" : "text-muted hover:text-ink"
+            }`}
+          >
+            <Music4 size={13} />
+            Portée
+          </button>
+        </div>
+        {editorView === "grid" && (
+          <button
+            onClick={() => setMobilePanelOpen(true)}
+            disabled={!selectedSection}
+            className="ml-auto flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink disabled:opacity-40 md:hidden"
+          >
+            <PanelRight size={14} />
+            Propriétés
+          </button>
+        )}
       </div>
 
       <div className="flex flex-1 overflow-hidden">
@@ -446,30 +567,55 @@ export function SongEditor() {
           />
         </div>
 
-        <div className="flex-1 overflow-y-auto p-4">
-          <MeasureGrid
-            section={selectedSection}
-            selectedMeasureNumber={selectedMeasureNumber}
-            notation={notation}
-            songKey={displayKey}
-            onSelectMeasure={setSelectedMeasureNumber}
-            onQuickEntry={(text) => selectedSectionId && quickEntry(selectedSectionId, text)}
-            onAddMeasure={() => selectedSectionId && addMeasure(selectedSectionId)}
-          />
-        </div>
+        {editorView === "grid" ? (
+          <>
+            <div className="flex-1 overflow-y-auto p-4">
+              <MeasureGrid
+                section={selectedSection}
+                selectedMeasureNumber={selectedMeasureNumber}
+                notation={notation}
+                songKey={displayKey}
+                onSelectMeasure={setSelectedMeasureNumber}
+                onQuickEntry={(text) => selectedSectionId && quickEntry(selectedSectionId, text)}
+                onAddMeasure={() => selectedSectionId && addMeasure(selectedSectionId)}
+              />
+            </div>
 
-        <div className="hidden w-72 shrink-0 overflow-y-auto border-l border-border md:block">
-          <PropertiesPanel
-            section={selectedSection}
-            measure={selectedMeasure}
-            notation={notation}
-            authorName={profile?.first_name ?? "Anonyme"}
-            onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
-            onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
-            onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}
-            onUpdateSectionAssignment={(text) => selectedSectionId && updateSectionAssignment(selectedSectionId, text)}
-          />
-        </div>
+            <div className="hidden w-72 shrink-0 overflow-y-auto border-l border-border md:block">
+              <PropertiesPanel
+                section={selectedSection}
+                measure={selectedMeasure}
+                notation={notation}
+                authorName={profile?.first_name ?? "Anonyme"}
+                onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
+                onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
+                onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}
+                onUpdateSectionAssignment={(text) => selectedSectionId && updateSectionAssignment(selectedSectionId, text)}
+              />
+            </div>
+          </>
+        ) : (
+          <div className="flex-1 overflow-y-auto p-4">
+            <Suspense fallback={<Skeleton className="h-96 w-full" />}>
+              <NotationEditorPanel
+                section={selectedSection}
+                selectedMeasureNumber={selectedMeasureNumber}
+                onSelectMeasure={setSelectedMeasureNumber}
+                duration={scoreDuration}
+                dotted={scoreDotted}
+                onChangeDuration={setScoreDuration}
+                onToggleDotted={() => setScoreDotted((d) => !d)}
+                onPlayNote={playAndRecordNote}
+                onAddRest={() => playAndRecordNote(null)}
+                onClearLastNote={clearLastNote}
+                onClearMeasureScore={clearMeasureScore}
+                bpm={parseInt(tempo, 10) || 90}
+                isPlayingMelody={isPlayingMelody}
+                onTogglePlayMelody={togglePlayMelody}
+              />
+            </Suspense>
+          </div>
+        )}
       </div>
 
       <Modal open={mobileSectionsOpen} onClose={() => setMobileSectionsOpen(false)} title="Structure">
