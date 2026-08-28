@@ -49,7 +49,7 @@ export function Login() {
   }
 
   return (
-    <AuthLayout title="Connexion admin" subtitle="Accédez à votre espace du répertoire gospel.">
+    <AuthLayout title="Connexion" subtitle="Accédez à votre espace du répertoire gospel.">
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
           <FieldLabel htmlFor="email">Email</FieldLabel>
