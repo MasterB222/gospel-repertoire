@@ -5,6 +5,7 @@ import { Home } from "./routes/Home";
 import { Login } from "./routes/auth/Login";
 import { Register } from "./routes/auth/Register";
 import { ForgotPassword } from "./routes/auth/ForgotPassword";
+import { ResetPassword } from "./routes/auth/ResetPassword";
 import { RequireAuth } from "./routes/RequireAuth";
 import { RequireAdmin } from "./routes/RequireAdmin";
 import { SongsList } from "./routes/songs/SongsList";
@@ -60,6 +61,7 @@ export const router = createBrowserRouter([
   { path: "/login", element: <Login /> },
   { path: "/register", element: <Register /> },
   { path: "/forgot-password", element: <ForgotPassword /> },
+  { path: "/reset-password", element: <ResetPassword /> },
   {
     path: "/songs/:id/edit",
     element: <RequireAuth>{lazyPage(<SongEditor />)}</RequireAuth>,
