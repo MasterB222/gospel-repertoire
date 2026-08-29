@@ -19,7 +19,7 @@ const ROLE_LABELS: Record<UserRole, string> = {
   utilisateur: "Utilisateur",
 };
 
-const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
 const fieldClasses =
   "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
@@ -52,7 +52,13 @@ function CreateUserForm({
       return;
     }
     if (!EMAIL_PATTERN.test(trimmedEmail)) {
-      showToast("Adresse email invalide (ex : nom@domaine.com).", "error");
+      showToast(
+        // eslint-disable-next-line no-control-regex
+        /[^\x00-\x7F]/.test(trimmedEmail)
+          ? "L'email contient des caractères stylisés (police fantaisie) qui ne sont pas de vraies lettres. Retape-le avec un clavier normal."
+          : "Adresse email invalide (ex : nom@domaine.com).",
+        "error"
+      );
       return;
     }
     setSaving(true);
