@@ -19,6 +19,8 @@ const ROLE_LABELS: Record<UserRole, string> = {
   utilisateur: "Utilisateur",
 };
 
+const EMAIL_PATTERN = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
 const fieldClasses =
   "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
@@ -44,26 +46,37 @@ function CreateUserForm({
   const [saving, setSaving] = useState(false);
 
   async function handleSubmit() {
-    if (!firstName.trim() || !lastName.trim() || !email.trim() || password.length < 6) {
+    const trimmedEmail = email.trim();
+    if (!firstName.trim() || !lastName.trim() || !trimmedEmail || password.length < 6) {
       showToast("Remplis tous les champs (mot de passe : 6 caractères minimum).", "error");
+      return;
+    }
+    if (!EMAIL_PATTERN.test(trimmedEmail)) {
+      showToast("Adresse email invalide (ex : nom@domaine.com).", "error");
       return;
     }
     setSaving(true);
     try {
       const result = await adminCreateUser({
-        email: email.trim(),
+        email: trimmedEmail,
         password,
         first_name: firstName.trim(),
         last_name: lastName.trim(),
         role,
       });
-      onCreated({ email: email.trim(), password, needsEmailConfirmation: result.needsEmailConfirmation });
+      onCreated({ email: trimmedEmail, password, needsEmailConfirmation: result.needsEmailConfirmation });
       setFirstName("");
       setLastName("");
       setEmail("");
       setPassword(generatePassword());
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Échec de la création du compte.", "error");
+      const message = err instanceof Error ? err.message : "";
+      showToast(
+        message.toLowerCase().includes("invalid format")
+          ? "Adresse email invalide (ex : nom@domaine.com)."
+          : message || "Échec de la création du compte.",
+        "error"
+      );
     } finally {
       setSaving(false);
     }
