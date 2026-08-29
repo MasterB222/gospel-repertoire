@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Compass } from "lucide-react";
 import { ArtistCard } from "../components/catalog/ArtistCard";
 import { CategoryCard } from "../components/catalog/CategoryCard";
@@ -11,7 +12,8 @@ import type { Artist, Category, Song } from "../types/catalog";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Explore() {
-  useDocumentTitle("Explorer");
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("explore.title"));
   const [songs, setSongs] = useState<Song[]>([]);
   const [artists, setArtists] = useState<Artist[]>([]);
   const [categories, setCategories] = useState<Category[]>([]);
@@ -38,25 +40,25 @@ export function Explore() {
   }
 
   if (songs.length === 0 && artists.length === 0 && categories.length === 0) {
-    return <EmptyState icon={Compass} title="Rien à explorer pour l'instant" description="Le répertoire est encore vide." />;
+    return <EmptyState icon={Compass} title={t("explore.emptyTitle")} description={t("explore.emptyDescription")} />;
   }
 
   return (
     <div className="space-y-10">
       <div>
-        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Explorer</h1>
-        <p className="mt-1 text-sm text-muted">Découvre le répertoire par nouveautés, artistes et catégories.</p>
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("explore.title")}</h1>
+        <p className="mt-1 text-sm text-muted">{t("explore.subtitle")}</p>
       </div>
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-serif text-lg font-semibold text-ink">Nouveautés</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink">{t("explore.newSongs")}</h2>
           <Link to="/songs" className="text-xs text-accent-ink hover:underline">
-            Tout le répertoire
+            {t("explore.viewAllSongs")}
           </Link>
         </div>
         {songs.length === 0 ? (
-          <p className="text-sm text-muted">Aucune chanson pour l'instant.</p>
+          <p className="text-sm text-muted">{t("explore.noSongsYet")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {songs.slice(0, 5).map((song) => (
@@ -68,13 +70,13 @@ export function Explore() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-serif text-lg font-semibold text-ink">Artistes</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink">{t("explore.artists")}</h2>
           <Link to="/artists" className="text-xs text-accent-ink hover:underline">
-            Tous les artistes
+            {t("explore.viewAllArtists")}
           </Link>
         </div>
         {artists.length === 0 ? (
-          <p className="text-sm text-muted">Aucun artiste pour l'instant.</p>
+          <p className="text-sm text-muted">{t("explore.noArtistsYet")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {artists.slice(0, 5).map((artist) => (
@@ -86,13 +88,13 @@ export function Explore() {
 
       <section>
         <div className="mb-3 flex items-center justify-between">
-          <h2 className="font-serif text-lg font-semibold text-ink">Catégories</h2>
+          <h2 className="font-serif text-lg font-semibold text-ink">{t("explore.categories")}</h2>
           <Link to="/categories" className="text-xs text-accent-ink hover:underline">
-            Toutes les catégories
+            {t("explore.viewAllCategories")}
           </Link>
         </div>
         {categories.length === 0 ? (
-          <p className="text-sm text-muted">Aucune catégorie pour l'instant.</p>
+          <p className="text-sm text-muted">{t("explore.noCategoriesYet")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
             {categories.slice(0, 5).map((category) => (

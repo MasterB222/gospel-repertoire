@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Heart } from "lucide-react";
 import { SongCard } from "../components/catalog/SongCard";
 import { Skeleton } from "../components/ui/Skeleton";
@@ -9,7 +10,8 @@ import { useDocumentTitle } from "../hooks/useDocumentTitle";
 import type { Song } from "../types/catalog";
 
 export function Favorites() {
-  useDocumentTitle("Favoris");
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("favorites.title"));
   const { profile } = useAuth();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
@@ -23,7 +25,7 @@ export function Favorites() {
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Favoris</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("favorites.title")}</h1>
 
       {loading ? (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -32,11 +34,7 @@ export function Favorites() {
           ))}
         </div>
       ) : songs.length === 0 ? (
-        <EmptyState
-          icon={Heart}
-          title="Aucun favori pour l'instant"
-          description="Ajoute des chansons à tes favoris depuis le répertoire."
-        />
+        <EmptyState icon={Heart} title={t("favorites.emptyTitle")} description={t("favorites.emptyDescription")} />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {songs.map((song) => (

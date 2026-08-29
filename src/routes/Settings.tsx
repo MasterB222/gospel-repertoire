@@ -1,4 +1,5 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LogOut, Moon, Sun, Type } from "lucide-react";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
@@ -10,7 +11,8 @@ import { supabase } from "../lib/supabaseClient";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Settings() {
-  useDocumentTitle("Paramètres");
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("settings.title"));
   const { profile, session, refreshProfile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const { showToast } = useToast();
@@ -22,9 +24,9 @@ export function Settings() {
     try {
       await updateProfile(profile.id, { note_notation: notation });
       await refreshProfile();
-      showToast("Préférence enregistrée.", "success");
+      showToast(t("settings.preferenceSaved"), "success");
     } catch {
-      showToast("Échec de la mise à jour.", "error");
+      showToast(t("settings.updateFailed"), "error");
     } finally {
       setSaving(false);
     }
@@ -32,26 +34,26 @@ export function Settings() {
 
   return (
     <div className="max-w-xl space-y-6">
-      <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Paramètres</h1>
+      <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("settings.title")}</h1>
 
       <Card className="p-4">
-        <h2 className="mb-3 text-sm font-semibold text-muted">Apparence</h2>
+        <h2 className="mb-3 text-sm font-semibold text-muted">{t("settings.appearance")}</h2>
         <button
           onClick={toggleTheme}
           className="flex w-full items-center justify-between rounded-lg border border-border px-3 py-2.5 text-sm text-ink hover:border-accent"
         >
           <span className="flex items-center gap-2">
             {theme === "dark" ? <Moon size={16} /> : <Sun size={16} />}
-            Thème {theme === "dark" ? "sombre" : "clair"}
+            {theme === "dark" ? t("settings.themeDark") : t("settings.themeLight")}
           </span>
-          <span className="text-xs text-accent-ink">Changer</span>
+          <span className="text-xs text-accent-ink">{t("settings.change")}</span>
         </button>
       </Card>
 
       <Card className="p-4">
         <h2 className="mb-3 flex items-center gap-1.5 text-sm font-semibold text-muted">
           <Type size={15} />
-          Notation musicale
+          {t("settings.musicNotation")}
         </h2>
         <div className="flex gap-2">
           <button
@@ -61,7 +63,7 @@ export function Settings() {
               profile?.note_notation === "solfege" ? "border-accent bg-accent/10 text-accent-ink" : "border-border text-ink"
             }`}
           >
-            Solfège (do ré mi)
+            {t("settings.solfege")}
           </button>
           <button
             disabled={saving}
@@ -70,17 +72,17 @@ export function Settings() {
               profile?.note_notation === "letters" ? "border-accent bg-accent/10 text-accent-ink" : "border-border text-ink"
             }`}
           >
-            Lettres (C D E)
+            {t("settings.letters")}
           </button>
         </div>
       </Card>
 
       <Card className="p-4">
-        <h2 className="mb-3 text-sm font-semibold text-muted">Compte</h2>
+        <h2 className="mb-3 text-sm font-semibold text-muted">{t("settings.account")}</h2>
         <p className="mb-3 break-all text-sm text-ink">{session?.user.email}</p>
         <Button variant="danger" onClick={() => supabase.auth.signOut()}>
           <LogOut size={15} />
-          Déconnexion
+          {t("settings.logout")}
         </Button>
       </Card>
     </div>

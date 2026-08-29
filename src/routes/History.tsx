@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Clock, Music2 } from "lucide-react";
 import { CoverPlaceholder } from "../components/catalog/CoverPlaceholder";
 import { Skeleton } from "../components/ui/Skeleton";
@@ -9,15 +10,18 @@ import { listHistory } from "../lib/library";
 import type { HistoryEntry } from "../types/library";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleString("fr-FR", { dateStyle: "medium", timeStyle: "short" });
-}
+const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US" };
 
 export function HistoryPage() {
-  useDocumentTitle("Historique");
+  const { t, i18n } = useTranslation("pages");
+  useDocumentTitle(t("history.title"));
   const { profile } = useAuth();
   const [entries, setEntries] = useState<HistoryEntry[]>([]);
   const [loading, setLoading] = useState(true);
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleString(LOCALE_MAP[i18n.language] ?? "fr-FR", { dateStyle: "medium", timeStyle: "short" });
+  }
 
   useEffect(() => {
     if (!profile) return;
@@ -28,7 +32,7 @@ export function HistoryPage() {
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Historique</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("history.title")}</h1>
 
       {loading ? (
         <div className="space-y-2">
@@ -37,7 +41,7 @@ export function HistoryPage() {
           ))}
         </div>
       ) : entries.length === 0 ? (
-        <EmptyState icon={Clock} title="Aucune consultation récente" description="Les chansons que tu ouvres apparaîtront ici." />
+        <EmptyState icon={Clock} title={t("history.emptyTitle")} description={t("history.emptyDescription")} />
       ) : (
         <div className="max-w-xl space-y-2">
           {entries.map((entry) => (
@@ -51,7 +55,7 @@ export function HistoryPage() {
               </div>
               <div className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-ink">{entry.song.title}</p>
-                <p className="truncate text-xs text-muted">{entry.song.artist?.name ?? "Artiste inconnu"}</p>
+                <p className="truncate text-xs text-muted">{entry.song.artist?.name ?? t("history.unknownArtist")}</p>
               </div>
               <span className="shrink-0 text-xs text-muted">{formatDate(entry.viewed_at)}</span>
             </Link>

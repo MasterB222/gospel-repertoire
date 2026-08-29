@@ -1,10 +1,12 @@
 import type { ReactNode } from "react";
 import { Navigate, useLocation } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { useAuth } from "../context/AuthContext";
 import { EmptyState } from "../components/ui/EmptyState";
 import { ShieldAlert } from "lucide-react";
 
 export function RequireAdmin({ children }: { children: ReactNode }) {
+  const { t } = useTranslation(["pages", "common"]);
   const { isAuthenticated, loading, profile } = useAuth();
   const location = useLocation();
 
@@ -19,8 +21,8 @@ export function RequireAdmin({ children }: { children: ReactNode }) {
       <div className="p-6">
         <EmptyState
           icon={ShieldAlert}
-          title="Accès réservé aux administrateurs"
-          description="Cette section n'est accessible qu'aux comptes ayant le rôle Responsable."
+          title={t("requireAdmin.title")}
+          description={t("requireAdmin.description", { role: t("roles.admin", { ns: "common" }) })}
         />
       </div>
     );

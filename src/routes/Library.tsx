@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Heart, ListMusic, Clock, FileMusic } from "lucide-react";
 import { SongCard } from "../components/catalog/SongCard";
 import { Card } from "../components/ui/Card";
@@ -12,7 +13,8 @@ import type { Playlist } from "../types/library";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
 export function Library() {
-  useDocumentTitle("Ma bibliothèque");
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("library.title"));
   const { profile } = useAuth();
   const [favorites, setFavorites] = useState<Song[]>([]);
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -42,20 +44,20 @@ export function Library() {
 
   return (
     <div className="space-y-10">
-      <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Ma bibliothèque</h1>
+      <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("library.title")}</h1>
 
       <section>
         <div className="mb-3 flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 font-serif text-lg font-semibold text-ink">
             <Heart size={18} />
-            Favoris
+            {t("library.favorites")}
           </h2>
           <Link to="/favorites" className="text-xs text-accent-ink hover:underline">
-            Tout voir
+            {t("library.viewAll")}
           </Link>
         </div>
         {favorites.length === 0 ? (
-          <p className="text-sm text-muted">Aucun favori pour l'instant.</p>
+          <p className="text-sm text-muted">{t("library.noFavorites")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {favorites.slice(0, 4).map((song) => (
@@ -69,14 +71,14 @@ export function Library() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 font-serif text-lg font-semibold text-ink">
             <ListMusic size={18} />
-            Playlists
+            {t("library.playlists")}
           </h2>
           <Link to="/playlists" className="text-xs text-accent-ink hover:underline">
-            Tout voir
+            {t("library.viewAll")}
           </Link>
         </div>
         {playlists.length === 0 ? (
-          <p className="text-sm text-muted">Aucune playlist pour l'instant.</p>
+          <p className="text-sm text-muted">{t("library.noPlaylists")}</p>
         ) : (
           <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
             {playlists.map((p) => (
@@ -94,14 +96,14 @@ export function Library() {
         <div className="mb-3 flex items-center justify-between">
           <h2 className="flex items-center gap-1.5 font-serif text-lg font-semibold text-ink">
             <Clock size={18} />
-            Récemment consultés
+            {t("library.recentlyViewed")}
           </h2>
           <Link to="/history" className="text-xs text-accent-ink hover:underline">
-            Tout voir
+            {t("library.viewAll")}
           </Link>
         </div>
         {history.length === 0 ? (
-          <p className="text-sm text-muted">Aucune consultation récente.</p>
+          <p className="text-sm text-muted">{t("library.noRecentlyViewed")}</p>
         ) : (
           <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4">
             {history.map((h) => (
@@ -114,11 +116,9 @@ export function Library() {
       <section>
         <h2 className="mb-3 flex items-center gap-1.5 font-serif text-lg font-semibold text-ink">
           <FileMusic size={18} />
-          Mes partitions
+          {t("library.myPartitions")}
         </h2>
-        <p className="text-sm text-muted">
-          Pas encore disponible — arrivera avec la gestion des partitions (module multimédia).
-        </p>
+        <p className="text-sm text-muted">{t("library.partitionsComingSoon")}</p>
       </section>
     </div>
   );

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ClipboardList, Users } from "lucide-react";
 import { Card } from "../components/ui/Card";
 import { Skeleton } from "../components/ui/Skeleton";
@@ -18,16 +19,20 @@ import {
 import type { Assignment, Comment, Group, GroupMember } from "../types/collaboration";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
 
-function formatDate(iso: string) {
-  return new Date(iso).toLocaleString("fr-FR", { dateStyle: "short", timeStyle: "short" });
-}
+const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US" };
 
 function ChefDashboard() {
+  const { t, i18n } = useTranslation("pages");
+  useDocumentTitle(t("dashboard.chef.title"));
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [comments, setComments] = useState<(Comment & { song: { id: string; title: string } | null })[]>([]);
   const [group, setGroup] = useState<Group | null>(null);
   const [members, setMembers] = useState<GroupMember[]>([]);
   const [loading, setLoading] = useState(true);
+
+  function formatDate(iso: string) {
+    return new Date(iso).toLocaleString(LOCALE_MAP[i18n.language] ?? "fr-FR", { dateStyle: "short", timeStyle: "short" });
+  }
 
   useEffect(() => {
     Promise.all([listAllAssignments(), listRecentComments(8), listGroups()]).then(async ([a, c, groups]) => {
@@ -64,44 +69,46 @@ function ChefDashboard() {
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Dashboard chef de chœur</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("dashboard.chef.title")}</h1>
 
       <div className="grid gap-4 sm:grid-cols-3">
         <Card className="p-4">
           <p className="text-3xl font-bold text-danger">{toRevisit}</p>
-          <p className="text-sm text-muted">Assignations à revoir</p>
+          <p className="text-sm text-muted">{t("dashboard.chef.stats.toRevisit")}</p>
         </Card>
         <Card className="p-4">
           <p className="text-3xl font-bold text-orange-400">{songsInProgress}</p>
-          <p className="text-sm text-muted">Chansons en cours</p>
+          <p className="text-sm text-muted">{t("dashboard.chef.stats.inProgress")}</p>
         </Card>
         <Card className="p-4">
           <p className="text-3xl font-bold text-emerald-400">{songsDone}</p>
-          <p className="text-sm text-muted">Chansons terminées</p>
+          <p className="text-sm text-muted">{t("dashboard.chef.stats.done")}</p>
         </Card>
       </div>
 
       <div className="mt-8 grid gap-6 lg:grid-cols-2">
         <div>
-          <h2 className="mb-3 font-serif text-lg font-semibold text-ink">Activité récente</h2>
+          <h2 className="mb-3 font-serif text-lg font-semibold text-ink">{t("dashboard.chef.recentActivity")}</h2>
           {activity.length === 0 ? (
-            <EmptyState icon={ClipboardList} title="Aucune activité pour l'instant" />
+            <EmptyState icon={ClipboardList} title={t("dashboard.chef.noActivity")} />
           ) : (
             <div className="space-y-2">
               {activity.map((item, i) =>
                 item.kind === "assignment" ? (
                   <div key={i} className="rounded-lg bg-surface-raised px-3 py-2 text-sm">
                     <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent-ink">
-                      {item.data.song?.title ?? "Chanson"}
+                      {item.data.song?.title ?? t("dashboard.chef.defaultSongTitle")}
                     </Link>
-                    <span className="text-muted"> — assignation mise à jour ({formatDate(item.at)})</span>
+                    <span className="text-muted">{t("dashboard.chef.assignmentUpdated", { date: formatDate(item.at) })}</span>
                   </div>
                 ) : (
                   <div key={i} className="rounded-lg bg-surface-raised px-3 py-2 text-sm">
                     <Link to={`/songs/${item.data.song_id}`} className="font-semibold text-ink hover:text-accent-ink">
-                      {item.data.song?.title ?? "Chanson"}
+                      {item.data.song?.title ?? t("dashboard.chef.defaultSongTitle")}
                     </Link>
-                    <span className="text-muted"> — commentaire : "{item.data.text}" ({formatDate(item.at)})</span>
+                    <span className="text-muted">
+                      {t("dashboard.chef.commentActivity", { text: item.data.text, date: formatDate(item.at) })}
+                    </span>
                   </div>
                 )
               )}
@@ -112,10 +119,10 @@ function ChefDashboard() {
         <div>
           <h2 className="mb-3 flex items-center gap-1.5 font-serif text-lg font-semibold text-ink">
             <Users size={18} />
-            {group?.name ?? "Groupe"}
+            {group?.name ?? t("dashboard.chef.defaultGroupName")}
           </h2>
           {members.length === 0 ? (
-            <EmptyState icon={Users} title="Aucun membre pour l'instant" />
+            <EmptyState icon={Users} title={t("dashboard.chef.noMembers")} />
           ) : (
             <div className="space-y-1.5">
               {members.map((m) => (
@@ -135,6 +142,8 @@ function ChefDashboard() {
 }
 
 function MemberDashboard({ userId }: { userId: string }) {
+  const { t } = useTranslation("pages");
+  useDocumentTitle(t("dashboard.member.title"));
   const [assignments, setAssignments] = useState<Assignment[]>([]);
   const [loading, setLoading] = useState(true);
   const { showToast } = useToast();
@@ -152,15 +161,15 @@ function MemberDashboard({ userId }: { userId: string }) {
     try {
       await updateAssignmentStatus(id, status);
       setAssignments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
-      showToast("Statut mis à jour.", "success");
+      showToast(t("dashboard.member.statusUpdated"), "success");
     } catch {
-      showToast("Échec de la mise à jour.", "error");
+      showToast(t("dashboard.member.statusUpdateFailed"), "error");
     }
   }
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Mes assignations</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("dashboard.member.title")}</h1>
       {loading ? (
         <div className="space-y-2">
           {Array.from({ length: 3 }).map((_, i) => (
@@ -170,8 +179,8 @@ function MemberDashboard({ userId }: { userId: string }) {
       ) : assignments.length === 0 ? (
         <EmptyState
           icon={ClipboardList}
-          title="Aucune assignation pour l'instant"
-          description="Ton chef de chœur t'assignera des parties depuis la fiche d'une chanson."
+          title={t("dashboard.member.noAssignmentsTitle")}
+          description={t("dashboard.member.noAssignmentsDescription")}
         />
       ) : (
         <div className="space-y-2">
@@ -187,7 +196,7 @@ function MemberDashboard({ userId }: { userId: string }) {
                 to={`/songs/${a.song_id}/learn?assignment=${a.id}`}
                 className="inline-block text-xs font-semibold text-accent-ink hover:underline"
               >
-                Ouvrir en mode Apprentissage →
+                {t("dashboard.member.openLearnMode")}
               </Link>
             </div>
           ))}
@@ -198,7 +207,6 @@ function MemberDashboard({ userId }: { userId: string }) {
 }
 
 export function Dashboard() {
-  useDocumentTitle("Dashboard");
   const { profile } = useAuth();
   if (!profile) return null;
   const isChef = profile.role === "chef_choeur" || profile.role === "admin";

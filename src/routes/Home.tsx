@@ -1,9 +1,11 @@
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowRight, LogIn } from "lucide-react";
 import { ArtisticBackdrop } from "../components/brand/ArtisticBackdrop";
 import { useAuth } from "../context/AuthContext";
 
 export function Home() {
+  const { t } = useTranslation("pages");
   const { isAuthenticated, profile } = useAuth();
 
   return (
@@ -14,14 +16,11 @@ export function Home() {
               dans les deux thèmes : le texte ici utilise donc des couleurs fixes,
               pas les jetons de thème (ink/accent-ink), sinon il devient illisible
               en mode clair. */}
-          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A94A]">Atelier musical gospel</p>
+          <p className="text-xs font-semibold uppercase tracking-[0.2em] text-[#D4A94A]">{t("home.eyebrow")}</p>
           <h1 className="max-w-xl font-serif text-4xl font-semibold leading-tight text-[#F6E9DC] sm:text-5xl">
-            {isAuthenticated ? `Bienvenue, ${profile?.first_name ?? ""}` : "Le répertoire gospel de votre groupe"}
+            {isAuthenticated ? t("home.welcome", { name: profile?.first_name ?? "" }) : t("home.title")}
           </h1>
-          <p className="max-w-lg text-sm text-[#F6E9DC]/80 sm:text-base">
-            Créez, structurez et répétez vos chansons ensemble — paroles, accords, notes et assignations, du
-            premier brouillon à la présentation sur scène.
-          </p>
+          <p className="max-w-lg text-sm text-[#F6E9DC]/80 sm:text-base">{t("home.subtitle")}</p>
 
           {!isAuthenticated && (
             <div className="mt-2 flex flex-wrap gap-3">
@@ -29,7 +28,7 @@ export function Home() {
                 to="/register"
                 className="inline-flex items-center gap-2 rounded-xl bg-accent px-5 py-3 text-sm font-semibold text-[#2A0F1E] shadow-[0_8px_24px_-8px_rgba(212,169,74,0.6)] transition-colors hover:bg-accent-soft"
               >
-                Créer un compte
+                {t("home.createAccount")}
                 <ArrowRight size={16} strokeWidth={2} />
               </Link>
               <Link
@@ -37,7 +36,7 @@ export function Home() {
                 className="inline-flex items-center gap-2 rounded-xl border border-white/25 bg-white/5 px-5 py-3 text-sm font-semibold text-[#F6E9DC] backdrop-blur-glass transition-colors hover:bg-white/10"
               >
                 <LogIn size={16} strokeWidth={2} />
-                Connexion
+                {t("home.login")}
               </Link>
             </div>
           )}
