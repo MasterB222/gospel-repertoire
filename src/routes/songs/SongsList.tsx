@@ -27,6 +27,48 @@ const EMPTY_FILTERS = {
 const selectClasses =
   "rounded-xl border border-border bg-surface-raised px-3 py-2 text-sm text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
+type Filters = typeof EMPTY_FILTERS;
+type FilterKey = keyof Filters;
+
+const DIFFICULTIES = ["Facile", "Intermédiaire", "Avancé"];
+
+function songMatchesText(s: Song, q: string): boolean {
+  if (!q) return true;
+  const haystack = [s.title, s.lyrics, s.artist?.name, s.category?.name, s.language, s.original_key]
+    .join(" ")
+    .toLowerCase();
+  return haystack.includes(q);
+}
+
+function songMatchesFilter(s: Song, key: FilterKey, value: string): boolean {
+  if (!value) return true;
+  switch (key) {
+    case "artist":
+      return s.artist?.name === value;
+    case "category":
+      return s.category?.name === value;
+    case "language":
+      return s.language === value;
+    case "key":
+      return s.original_key === value;
+    case "difficulty":
+      return s.difficulty === value;
+    case "year":
+      return s.year?.toString() === value;
+    case "chords":
+      return value === "avec" ? !!s.chords?.trim() : !s.chords?.trim();
+    case "video":
+      return value === "avec" ? !!s.youtube_url?.trim() : !s.youtube_url?.trim();
+  }
+}
+
+// exclude ignore la dimension en cours d'édition, pour que ses propres options
+// restent calculées à partir des AUTRES filtres actifs (facettes en cascade).
+function songMatches(s: Song, filters: Filters, q: string, exclude?: FilterKey): boolean {
+  if (!songMatchesText(s, q)) return false;
+  return (Object.keys(filters) as FilterKey[]).every((key) => key === exclude || songMatchesFilter(s, key, filters[key]));
+}
+
 export function SongsList() {
   useDocumentTitle("Répertoire");
   const [searchParams] = useSearchParams();
@@ -60,38 +102,23 @@ export function SongsList() {
   }, [searchParams]);
 
   const options = useMemo(() => {
+    const q = query.trim().toLowerCase();
     const uniq = (values: (string | null | undefined)[]) =>
       Array.from(new Set(values.filter((v): v is string => !!v))).sort();
+    const forKey = (key: FilterKey) => songs.filter((s) => songMatches(s, filters, q, key));
     return {
-      artists: uniq(songs.map((s) => s.artist?.name)),
-      categories: uniq(songs.map((s) => s.category?.name)),
-      languages: uniq(songs.map((s) => s.language)),
-      keys: uniq(songs.map((s) => s.original_key)),
-      years: uniq(songs.map((s) => s.year?.toString())),
+      artists: uniq(forKey("artist").map((s) => s.artist?.name)),
+      categories: uniq(forKey("category").map((s) => s.category?.name)),
+      languages: uniq(forKey("language").map((s) => s.language)),
+      keys: uniq(forKey("key").map((s) => s.original_key)),
+      years: uniq(forKey("year").map((s) => s.year?.toString())),
+      difficulties: DIFFICULTIES.filter((d) => forKey("difficulty").some((s) => s.difficulty === d)),
     };
-  }, [songs]);
+  }, [songs, filters, query]);
 
   const filtered = useMemo(() => {
     const q = query.trim().toLowerCase();
-    let result = songs.filter((s) => {
-      if (q) {
-        const haystack = [s.title, s.lyrics, s.artist?.name, s.category?.name, s.language, s.original_key]
-          .join(" ")
-          .toLowerCase();
-        if (!haystack.includes(q)) return false;
-      }
-      if (filters.artist && s.artist?.name !== filters.artist) return false;
-      if (filters.category && s.category?.name !== filters.category) return false;
-      if (filters.language && s.language !== filters.language) return false;
-      if (filters.key && s.original_key !== filters.key) return false;
-      if (filters.difficulty && s.difficulty !== filters.difficulty) return false;
-      if (filters.year && s.year?.toString() !== filters.year) return false;
-      if (filters.chords === "avec" && !s.chords.trim()) return false;
-      if (filters.chords === "sans" && s.chords.trim()) return false;
-      if (filters.video === "avec" && !s.youtube_url.trim()) return false;
-      if (filters.video === "sans" && s.youtube_url.trim()) return false;
-      return true;
-    });
+    let result = songs.filter((s) => songMatches(s, filters, q));
 
     result = [...result].sort((a, b) => {
       if (sortBy === "az") return a.title.localeCompare(b.title);
@@ -190,9 +217,11 @@ export function SongsList() {
             className={selectClasses}
           >
             <option value="">Toute difficulté</option>
-            <option value="Facile">Facile</option>
-            <option value="Intermédiaire">Intermédiaire</option>
-            <option value="Avancé">Avancé</option>
+            {options.difficulties.map((d) => (
+              <option key={d} value={d}>
+                {d}
+              </option>
+            ))}
           </select>
           <select
             value={filters.year}
