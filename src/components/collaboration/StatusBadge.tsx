@@ -1,3 +1,4 @@
+import { useTranslation } from "react-i18next";
 import { STATUS_META, type AssignmentStatus } from "../../types/collaboration";
 
 const ORDER: AssignmentStatus[] = ["a_faire", "en_cours", "termine", "a_revoir"];
@@ -9,12 +10,13 @@ export function StatusBadge({
   status: AssignmentStatus;
   onChange?: (status: AssignmentStatus) => void;
 }) {
+  const { t } = useTranslation("editor");
   const meta = STATUS_META[status];
 
   if (!onChange) {
     return (
       <span className={`inline-flex items-center gap-1 text-xs font-semibold ${meta.color}`}>
-        {meta.emoji} {meta.label}
+        {meta.emoji} {t(`status.${status}`)}
       </span>
     );
   }
@@ -27,7 +29,7 @@ export function StatusBadge({
     >
       {ORDER.map((s) => (
         <option key={s} value={s}>
-          {STATUS_META[s].emoji} {STATUS_META[s].label}
+          {STATUS_META[s].emoji} {t(`status.${s}`)}
         </option>
       ))}
     </select>

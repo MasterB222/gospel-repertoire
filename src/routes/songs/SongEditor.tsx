@@ -24,6 +24,7 @@ import { createEmptyMeasure, createEmptySection, type Annotation, type NoteDurat
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { Music2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 const NotationEditorPanel = lazy(() =>
   import("../../components/notation/NotationEditorPanel").then((m) => ({ default: m.NotationEditorPanel }))
@@ -40,13 +41,14 @@ function bumpMajorVersion(version: string): string {
 }
 
 export function SongEditor() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { showToast } = useToast();
   const presentUsers = useSongPresence(
     id,
-    profile ? { id: profile.id, name: profile.first_name || "Anonyme" } : null
+    profile ? { id: profile.id, name: profile.first_name || t("editor.anonymous") } : null
   );
 
   const [songTitle, setSongTitle] = useState("");
@@ -153,7 +155,7 @@ export function SongEditor() {
     setSaveStatus("saving");
     saveTimer.current = window.setTimeout(async () => {
       const newVersion = bumpMinorVersion(version);
-      const entry = { version: newVersion, author: profile ? `${profile.first_name} ${profile.last_name}`.trim() : "Anonyme", at: new Date().toISOString() };
+      const entry = { version: newVersion, author: profile ? `${profile.first_name} ${profile.last_name}`.trim() : t("editor.anonymous"), at: new Date().toISOString() };
       const newHistory = [...versionHistory, entry].slice(-20);
       try {
         await saveSongStructure(id, {
@@ -167,7 +169,7 @@ export function SongEditor() {
         setVersionHistory(newHistory);
         setSaveStatus("saved");
       } catch {
-        showToast("Échec de la sauvegarde automatique.", "error");
+        showToast(t("editor.autosaveError"), "error");
         setSaveStatus("idle");
       }
     }, 1500);
@@ -201,7 +203,7 @@ export function SongEditor() {
       const clone: Section = {
         ...current[idx],
         id: crypto.randomUUID(),
-        name: `${current[idx].name} (copie)`,
+        name: `${current[idx].name} ${t("editor.duplicateSuffix")}`,
         order: idx + 1,
       };
       const next = [...current];
@@ -289,7 +291,7 @@ export function SongEditor() {
                       ...m,
                       annotations: [
                         ...m.annotations,
-                        { ...annotation, id: crypto.randomUUID(), author: profile ? profile.first_name : "Anonyme" },
+                        { ...annotation, id: crypto.randomUUID(), author: profile ? profile.first_name : t("editor.anonymous") },
                       ],
                     }
                   : m
@@ -380,7 +382,7 @@ export function SongEditor() {
     if (!selectedSection) return;
     const allNotes = selectedSection.measures.flatMap((m) => m.score ?? []);
     if (allNotes.length === 0) {
-      showToast("Aucune note saisie dans cette section.", "info");
+      showToast(t("editor.noNotesInSection"), "info");
       return;
     }
     const bpm = parseInt(tempo, 10) || 90;
@@ -427,7 +429,7 @@ export function SongEditor() {
   function handlePublish() {
     if (!id) return;
     const newVersion = bumpMajorVersion(version);
-    const entry = { version: newVersion, author: profile ? `${profile.first_name} ${profile.last_name}`.trim() : "Anonyme", at: new Date().toISOString() };
+    const entry = { version: newVersion, author: profile ? `${profile.first_name} ${profile.last_name}`.trim() : t("editor.anonymous"), at: new Date().toISOString() };
     const newHistory = [...versionHistory, entry].slice(-20);
     setSaveStatus("saving");
     saveSongStructure(id, { structure: sections, original_key: displayKey, tempo, version: newVersion, version_history: newHistory })
@@ -435,9 +437,9 @@ export function SongEditor() {
         setVersion(newVersion);
         setVersionHistory(newHistory);
         setSaveStatus("saved");
-        showToast(`Chanson publiée en version ${newVersion}.`, "success");
+        showToast(t("editor.publishSuccess", { version: newVersion }), "success");
       })
-      .catch(() => showToast("Échec de la publication.", "error"));
+      .catch(() => showToast(t("editor.publishError"), "error"));
   }
 
   // Raccourcis clavier
@@ -486,10 +488,10 @@ export function SongEditor() {
     return (
       <EmptyState
         icon={Music2}
-        title="Chanson introuvable"
+        title={t("editor.notFoundTitle")}
         action={
           <button onClick={() => navigate("/songs")} className="text-sm font-semibold text-accent-ink hover:underline">
-            Retour au répertoire
+            {t("editor.backToRepertoire")}
           </button>
         }
       />
@@ -524,7 +526,7 @@ export function SongEditor() {
           className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink md:hidden"
         >
           <Rows3 size={14} />
-          Sections
+          {t("editor.sections")}
         </button>
         <div className="flex items-center gap-1 rounded-lg border border-border p-0.5">
           <button
@@ -534,7 +536,7 @@ export function SongEditor() {
             }`}
           >
             <LayoutGrid size={13} />
-            Grille
+            {t("editor.gridView")}
           </button>
           <button
             onClick={() => setEditorView("score")}
@@ -543,7 +545,7 @@ export function SongEditor() {
             }`}
           >
             <Music4 size={13} />
-            Portée
+            {t("editor.scoreView")}
           </button>
         </div>
         {editorView === "grid" && (
@@ -553,7 +555,7 @@ export function SongEditor() {
             className="ml-auto flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs text-ink disabled:opacity-40 md:hidden"
           >
             <PanelRight size={14} />
-            Propriétés
+            {t("editor.propertiesButton")}
           </button>
         )}
       </div>
@@ -592,7 +594,7 @@ export function SongEditor() {
                 section={selectedSection}
                 measure={selectedMeasure}
                 notation={notation}
-                authorName={profile?.first_name ?? "Anonyme"}
+                authorName={profile?.first_name ?? t("editor.anonymous")}
                 onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
                 onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
                 onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}
@@ -625,7 +627,7 @@ export function SongEditor() {
         )}
       </div>
 
-      <Modal open={mobileSectionsOpen} onClose={() => setMobileSectionsOpen(false)} title="Structure">
+      <Modal open={mobileSectionsOpen} onClose={() => setMobileSectionsOpen(false)} title={t("editor.structureModalTitle")}>
         <SectionList
           sections={sections}
           selectedId={selectedSectionId}
@@ -639,12 +641,12 @@ export function SongEditor() {
         />
       </Modal>
 
-      <Modal open={mobilePanelOpen} onClose={() => setMobilePanelOpen(false)} title="Propriétés">
+      <Modal open={mobilePanelOpen} onClose={() => setMobilePanelOpen(false)} title={t("editor.propertiesModalTitle")}>
         <PropertiesPanel
           section={selectedSection}
           measure={selectedMeasure}
           notation={notation}
-          authorName={profile?.first_name ?? "Anonyme"}
+          authorName={profile?.first_name ?? t("editor.anonymous")}
           onUpdateMeasure={(patch) => selectedSectionId && selectedMeasureNumber != null && updateMeasure(selectedSectionId, selectedMeasureNumber, patch)}
           onAddAnnotation={(a) => selectedSectionId && selectedMeasureNumber != null && addAnnotation(selectedSectionId, selectedMeasureNumber, a)}
           onRemoveAnnotation={(annotationId) => selectedSectionId && selectedMeasureNumber != null && removeAnnotation(selectedSectionId, selectedMeasureNumber, annotationId)}

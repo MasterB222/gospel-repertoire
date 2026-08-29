@@ -1,1 +1,127 @@
-{}
+{
+  "topBar": {
+    "tempoLabel": "Tempo (BPM)",
+    "autoSaving": "Auto-saving…",
+    "saved": "Saved",
+    "publish": "Publish"
+  },
+  "measureGrid": {
+    "emptyState": "Select or create a section to start editing.",
+    "addMeasure": "Add a measure"
+  },
+  "propertiesPanel": {
+    "nashville": {
+      "hold": "Hold (diamond)",
+      "push": "Anticipation (push)",
+      "removeSlash": "Remove a rhythm slash",
+      "addSlash": "Add a rhythm slash",
+      "rhythm": "Nashville rhythm",
+      "chord1": "Chord 1",
+      "chord2": "Chord 2"
+    },
+    "annotationTypes": {
+      "chant": "Vocals",
+      "instrument": "Instrument",
+      "dynamique": "Dynamics"
+    },
+    "annotationMarkerOptions": {
+      "chant": ["Vocal entry", "Solo", "Choir", "Response", "Unison", "Harmony"],
+      "instrument": ["Piano", "Guitar", "Bass", "Drums", "Keyboard", "Brass"],
+      "dynamique": ["Piano (p)", "Mezzo (mf)", "Forte (f)", "Crescendo", "Decrescendo"]
+    },
+    "selectSection": "Select a section to get started.",
+    "timeSignatureLabel": "Time signature (whole section)",
+    "assignedToLabel": "Assigned to (whole section)",
+    "assignedToPlaceholder": "e.g. Tenor section, Paul...",
+    "selectMeasure": "Select a measure to edit it.",
+    "measureNumber": "Measure #{{number}}",
+    "chordLabel": "Chord",
+    "chordPlaceholder": "e.g. Cm7, G/B...",
+    "chord2Label": "Chord 2 (split measure)",
+    "chord2Placeholder": "e.g. F...",
+    "removeChord2": "Remove",
+    "splitMeasure": "+ Split the measure (2 chords)",
+    "lyricsLabel": "Lyrics",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "C D E...",
+    "pianoHint": "Piano — click to add a note",
+    "annotationsLabel": "Annotations",
+    "markerOptional": "Marker (optional)",
+    "annotationPlaceholder": "e.g. \"The tenors come in here\"",
+    "addAnnotation": "Add annotation"
+  },
+  "quickEntry": {
+    "placeholder": "Quick note entry: \"C C G F\" — spread across the measures",
+    "submit": "Distribute"
+  },
+  "sectionList": {
+    "title": "Structure",
+    "addSection": "Section",
+    "rename": "Rename",
+    "duplicate": "Duplicate",
+    "hide": "Hide",
+    "delete": "Delete"
+  },
+  "transpose": {
+    "downLabel": "Transpose down a semitone",
+    "upLabel": "Transpose up a semitone",
+    "resetLabel": "Reset the key",
+    "confirmPrompt": "Transpose the chords automatically?",
+    "yes": "Yes",
+    "no": "No"
+  },
+  "durationPicker": {
+    "durations": {
+      "whole": "Whole note",
+      "half": "Half note",
+      "quarter": "Quarter note",
+      "eighth": "Eighth note",
+      "sixteenth": "Sixteenth note"
+    },
+    "dotted": "Dotted note",
+    "dottedButton": "·dotted",
+    "addRestTitle": "Add a rest of the selected duration",
+    "addRestButton": "𝄽 rest"
+  },
+  "metronome": {
+    "title": "Metronome",
+    "label": "Metronome {{bpm}} BPM"
+  },
+  "notationEditor": {
+    "emptyState": "Select or create a section to start notating the melody.",
+    "stop": "Stop",
+    "playSection": "Play the section",
+    "clearLastNoteTitle": "Clear the last note of the selected measure",
+    "clearLastNoteButton": "Last note",
+    "clearMeasureTitle": "Clear the selected measure",
+    "clearMeasureButton": "Clear the measure",
+    "selectMeasureHint": "Select a measure above, then play on the piano to write the melody."
+  },
+  "pianoKeyboard": {
+    "noteLabel": "Note {{note}}"
+  },
+  "assignment": {
+    "measureLabel": "Measure {{number}}",
+    "sectionLabel": "Section {{id}}",
+    "wholeSong": "Whole song",
+    "wholeSection": "Whole section",
+    "typeGroup": "Group/section",
+    "typeMember": "Member",
+    "searchMemberPlaceholder": "Search for a member by name...",
+    "partPlaceholder": "Part (e.g. Bass, Alto...)",
+    "submit": "Assign"
+  },
+  "comments": {
+    "empty": "No comments yet.",
+    "anonymous": "Anonymous",
+    "measureLabel": "Measure {{number}}",
+    "placeholder": "e.g. \"Watch the B note here\"",
+    "send": "Send"
+  },
+  "status": {
+    "a_faire": "To do",
+    "en_cours": "In progress",
+    "termine": "Done",
+    "a_revoir": "Needs review"
+  }
+}

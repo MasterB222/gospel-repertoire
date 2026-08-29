@@ -1,4 +1,5 @@
 import { Plus } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { MeasureCard } from "./MeasureCard";
 import { QuickEntryBar } from "./QuickEntryBar";
 import type { NoteNotation, Section } from "../../types/editor";
@@ -22,10 +23,12 @@ export function MeasureGrid({
   onQuickEntry,
   onAddMeasure,
 }: MeasureGridProps) {
+  const { t } = useTranslation("editor");
+
   if (!section) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted">
-        Sélectionne ou crée une section pour commencer à éditer.
+        {t("measureGrid.emptyState")}
       </div>
     );
   }
@@ -53,7 +56,7 @@ export function MeasureGrid({
         <button
           onClick={onAddMeasure}
           className="flex h-28 w-16 shrink-0 items-center justify-center rounded-xl border border-dashed border-border text-muted hover:border-accent hover:text-accent-ink"
-          aria-label="Ajouter une mesure"
+          aria-label={t("measureGrid.addMeasure")}
         >
           <Plus size={18} />
         </button>

@@ -1,5 +1,6 @@
 import { useState } from "react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 
 const WHITE_KEYS = ["c", "d", "e", "f", "g", "a", "b"];
 // Touche noire placée juste après la touche blanche d'index correspondant (pas de noire après e ni après b).
@@ -13,6 +14,7 @@ interface PianoKeyboardProps {
 }
 
 export function PianoKeyboard({ fromOctave, toOctave, activeKey, onPlay }: PianoKeyboardProps) {
+  const { t } = useTranslation("editor");
   const [pressed, setPressed] = useState<string | null>(null);
   const octaves: number[] = [];
   for (let o = fromOctave; o <= toOctave; o++) octaves.push(o);
@@ -36,7 +38,7 @@ export function PianoKeyboard({ fromOctave, toOctave, activeKey, onPlay }: Piano
                 <button
                   type="button"
                   onClick={() => press(vexKey)}
-                  aria-label={`Note ${letter.toUpperCase()}${octave}`}
+                  aria-label={t("pianoKeyboard.noteLabel", { note: `${letter.toUpperCase()}${octave}` })}
                   className={clsx(
                     // Les touches restent blanches/noires quel que soit le thème du
                     // site (comme un vrai piano) : le texte ne peut donc pas utiliser
@@ -51,7 +53,7 @@ export function PianoKeyboard({ fromOctave, toOctave, activeKey, onPlay }: Piano
                   <button
                     type="button"
                     onClick={() => press(`${blackLetter}/${octave}`)}
-                    aria-label={`Note ${blackLetter.toUpperCase()}${octave}`}
+                    aria-label={t("pianoKeyboard.noteLabel", { note: `${blackLetter.toUpperCase()}${octave}` })}
                     className={clsx(
                       "absolute -right-3 top-0 z-10 h-14 w-6 rounded-b-md border border-black/40 transition-colors",
                       activeKey === `${blackLetter}/${octave}` || pressed === `${blackLetter}/${octave}`

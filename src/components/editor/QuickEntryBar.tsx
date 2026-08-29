@@ -1,7 +1,9 @@
 import { useState, type FormEvent } from "react";
 import { Wand2 } from "lucide-react";
+import { useTranslation } from "react-i18next";
 
 export function QuickEntryBar({ onSubmit }: { onSubmit: (text: string) => void }) {
+  const { t } = useTranslation("editor");
   const [value, setValue] = useState("");
 
   function handleSubmit(e: FormEvent) {
@@ -17,11 +19,11 @@ export function QuickEntryBar({ onSubmit }: { onSubmit: (text: string) => void }
       <input
         value={value}
         onChange={(e) => setValue(e.target.value)}
-        placeholder='Saisie rapide des notes : "do do sol fa" — réparties dans les mesures'
+        placeholder={t("quickEntry.placeholder")}
         className="w-full max-w-md rounded-lg border border-border bg-surface-raised px-3 py-1.5 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
       />
       <button type="submit" className="rounded-lg border border-border px-3 py-1.5 text-xs font-semibold text-ink hover:border-accent">
-        Répartir
+        {t("quickEntry.submit")}
       </button>
     </form>
   );

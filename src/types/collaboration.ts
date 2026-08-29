@@ -43,9 +43,9 @@ export interface Comment {
   author: { id: string; first_name: string; last_name: string } | null;
 }
 
-export const STATUS_META: Record<AssignmentStatus, { emoji: string; label: string; color: string }> = {
-  a_faire: { emoji: "⚪", label: "À faire", color: "text-muted" },
-  en_cours: { emoji: "🟠", label: "En cours", color: "text-orange-400" },
-  termine: { emoji: "🟢", label: "Terminé", color: "text-emerald-400" },
-  a_revoir: { emoji: "🔴", label: "À revoir", color: "text-danger" },
+export const STATUS_META: Record<AssignmentStatus, { emoji: string; color: string }> = {
+  a_faire: { emoji: "⚪", color: "text-muted" },
+  en_cours: { emoji: "🟠", color: "text-orange-400" },
+  termine: { emoji: "🟢", color: "text-emerald-400" },
+  a_revoir: { emoji: "🔴", color: "text-danger" },
 };

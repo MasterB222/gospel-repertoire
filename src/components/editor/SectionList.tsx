@@ -1,6 +1,7 @@
 import { useState } from "react";
 import clsx from "clsx";
 import { GripVertical, Plus, Pencil, Copy, Trash2, Eye, EyeOff } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { Section } from "../../types/editor";
 
 interface SectionListProps {
@@ -26,6 +27,7 @@ export function SectionList({
   onToggleHidden,
   onReorder,
 }: SectionListProps) {
+  const { t } = useTranslation("editor");
   const [editingId, setEditingId] = useState<string | null>(null);
   const [draftName, setDraftName] = useState("");
   const [dragId, setDragId] = useState<string | null>(null);
@@ -43,13 +45,13 @@ export function SectionList({
   return (
     <div className="flex h-full flex-col">
       <div className="mb-2 flex items-center justify-between px-1">
-        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">Structure</h2>
+        <h2 className="text-xs font-semibold uppercase tracking-wide text-muted">{t("sectionList.title")}</h2>
         <button
           onClick={onAdd}
           className="flex items-center gap-1 rounded-lg px-2 py-1 text-xs font-semibold text-accent-ink hover:bg-accent/10"
         >
           <Plus size={14} strokeWidth={2} />
-          Section
+          {t("sectionList.addSection")}
         </button>
       </div>
 
@@ -91,16 +93,16 @@ export function SectionList({
             )}
 
             <div className="hidden shrink-0 items-center gap-0.5 group-hover:flex">
-              <button onClick={() => startEdit(section)} aria-label="Renommer" className="rounded p-1 text-muted hover:text-ink">
+              <button onClick={() => startEdit(section)} aria-label={t("sectionList.rename")} className="rounded p-1 text-muted hover:text-ink">
                 <Pencil size={13} />
               </button>
-              <button onClick={() => onDuplicate(section.id)} aria-label="Dupliquer" className="rounded p-1 text-muted hover:text-ink">
+              <button onClick={() => onDuplicate(section.id)} aria-label={t("sectionList.duplicate")} className="rounded p-1 text-muted hover:text-ink">
                 <Copy size={13} />
               </button>
-              <button onClick={() => onToggleHidden(section.id)} aria-label="Masquer" className="rounded p-1 text-muted hover:text-ink">
+              <button onClick={() => onToggleHidden(section.id)} aria-label={t("sectionList.hide")} className="rounded p-1 text-muted hover:text-ink">
                 {section.hidden ? <EyeOff size={13} /> : <Eye size={13} />}
               </button>
-              <button onClick={() => onDelete(section.id)} aria-label="Supprimer" className="rounded p-1 text-muted hover:text-danger">
+              <button onClick={() => onDelete(section.id)} aria-label={t("sectionList.delete")} className="rounded p-1 text-muted hover:text-danger">
                 <Trash2 size={13} />
               </button>
             </div>

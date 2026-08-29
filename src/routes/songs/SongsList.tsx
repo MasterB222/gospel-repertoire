@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { useSearchParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Search, RotateCcw } from "lucide-react";
 import { SongCard } from "../../components/catalog/SongCard";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -70,7 +71,8 @@ function songMatches(s: Song, filters: Filters, q: string, exclude?: FilterKey):
 }
 
 export function SongsList() {
-  useDocumentTitle("Répertoire");
+  const { t } = useTranslation("songs");
+  useDocumentTitle(t("list.title"));
   const [searchParams] = useSearchParams();
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
@@ -145,8 +147,8 @@ export function SongsList() {
     <div>
       <div className="mb-6 flex items-center justify-between">
         <div>
-          <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Répertoire</h1>
-          <p className="mt-1 text-sm text-muted">{filtered.length} chanson(s)</p>
+          <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("list.title")}</h1>
+          <p className="mt-1 text-sm text-muted">{t("list.resultsCount", { count: filtered.length })}</p>
         </div>
       </div>
 
@@ -157,7 +159,7 @@ export function SongsList() {
             type="search"
             value={query}
             onChange={(e) => setQuery(e.target.value)}
-            placeholder="Rechercher par titre, artiste, paroles..."
+            placeholder={t("list.searchPlaceholder")}
             className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           />
         </div>
@@ -168,7 +170,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, artist: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Tous les artistes</option>
+            <option value="">{t("list.filters.allArtists")}</option>
             {options.artists.map((a) => (
               <option key={a} value={a}>
                 {a}
@@ -180,7 +182,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, category: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Toutes les catégories</option>
+            <option value="">{t("list.filters.allCategories")}</option>
             {options.categories.map((c) => (
               <option key={c} value={c}>
                 {c}
@@ -192,7 +194,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, language: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Toutes les langues</option>
+            <option value="">{t("list.filters.allLanguages")}</option>
             {options.languages.map((l) => (
               <option key={l} value={l}>
                 {l}
@@ -204,7 +206,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, key: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Toutes les tonalités</option>
+            <option value="">{t("list.filters.allKeys")}</option>
             {options.keys.map((k) => (
               <option key={k} value={k}>
                 {k}
@@ -216,7 +218,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, difficulty: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Toute difficulté</option>
+            <option value="">{t("list.filters.allDifficulties")}</option>
             {options.difficulties.map((d) => (
               <option key={d} value={d}>
                 {d}
@@ -228,7 +230,7 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, year: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Toute année</option>
+            <option value="">{t("list.filters.allYears")}</option>
             {options.years.map((y) => (
               <option key={y} value={y}>
                 {y}
@@ -240,33 +242,33 @@ export function SongsList() {
             onChange={(e) => setFilters((f) => ({ ...f, chords: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Accords : indifférent</option>
-            <option value="avec">Avec accords</option>
-            <option value="sans">Sans accords</option>
+            <option value="">{t("list.filters.chordsIndifferent")}</option>
+            <option value="avec">{t("list.filters.chordsWith")}</option>
+            <option value="sans">{t("list.filters.chordsWithout")}</option>
           </select>
           <select
             value={filters.video}
             onChange={(e) => setFilters((f) => ({ ...f, video: e.target.value }))}
             className={selectClasses}
           >
-            <option value="">Vidéo : indifférent</option>
-            <option value="avec">Avec vidéo</option>
-            <option value="sans">Sans vidéo</option>
+            <option value="">{t("list.filters.videoIndifferent")}</option>
+            <option value="avec">{t("list.filters.videoWith")}</option>
+            <option value="sans">{t("list.filters.videoWithout")}</option>
           </select>
           <select
             value={sortBy}
             onChange={(e) => setSortBy(e.target.value as SortKey)}
             className={selectClasses}
           >
-            <option value="recent">Trier : récent</option>
-            <option value="az">Trier : A-Z</option>
-            <option value="artist">Trier : artiste</option>
+            <option value="recent">{t("list.filters.sortRecent")}</option>
+            <option value="az">{t("list.filters.sortAz")}</option>
+            <option value="artist">{t("list.filters.sortArtist")}</option>
           </select>
 
           {hasActiveFilters && (
             <Button variant="ghost" onClick={resetFilters} className="!px-3">
               <RotateCcw size={15} strokeWidth={1.8} />
-              Réinitialiser
+              {t("list.filters.reset")}
             </Button>
           )}
         </div>
@@ -283,21 +285,21 @@ export function SongsList() {
       {!loading && error && (
         <EmptyState
           icon={Search}
-          title="Impossible de charger le répertoire"
-          description="Une erreur est survenue en contactant la base de données."
-          action={<Button onClick={load}>Réessayer</Button>}
+          title={t("list.loadError.title")}
+          description={t("list.loadError.description")}
+          action={<Button onClick={load}>{t("list.loadError.retry")}</Button>}
         />
       )}
 
       {!loading && !error && filtered.length === 0 && (
         <EmptyState
           icon={Search}
-          title="Aucune chanson trouvée"
-          description="Essaie une autre recherche ou réinitialise les filtres."
+          title={t("list.empty.title")}
+          description={t("list.empty.description")}
           action={
             hasActiveFilters ? (
               <Button variant="secondary" onClick={resetFilters}>
-                Réinitialiser les filtres
+                {t("list.empty.resetFilters")}
               </Button>
             ) : undefined
           }
@@ -314,7 +316,7 @@ export function SongsList() {
           {visibleCount < filtered.length && (
             <div className="mt-6 flex justify-center">
               <Button variant="secondary" onClick={() => setVisibleCount((c) => c + PAGE_SIZE)}>
-                Charger plus ({filtered.length - visibleCount} restantes)
+                {t("list.loadMore", { count: filtered.length - visibleCount })}
               </Button>
             </div>
           )}

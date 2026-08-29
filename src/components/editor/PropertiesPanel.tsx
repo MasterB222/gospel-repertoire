@@ -1,7 +1,8 @@
 import { useState } from "react";
 import { X } from "lucide-react";
 import clsx from "clsx";
-import { ANNOTATION_MARKERS } from "../../lib/annotationMarkers";
+import { useTranslation } from "react-i18next";
+import { ANNOTATION_TYPES, ANNOTATION_EMOJIS } from "../../lib/annotationMarkers";
 import { noteToDisplay } from "../../lib/music";
 import { playTone, vexKeyToFrequency, vexKeyToLetter } from "../../lib/notation";
 import { PianoKeyboard } from "../notation/PianoKeyboard";
@@ -33,13 +34,14 @@ function NashvilleMarkEditor({
   mark: NashvilleMark;
   onChange: (mark: NashvilleMark) => void;
 }) {
+  const { t } = useTranslation("editor");
   return (
     <div className="flex items-center justify-between gap-2 rounded-lg bg-surface-raised px-2 py-1.5 text-xs">
       <span className="text-muted">{label}</span>
       <div className="flex items-center gap-1">
         <button
           type="button"
-          title="Tenue (losange)"
+          title={t("propertiesPanel.nashville.hold")}
           onClick={() => onChange({ ...mark, hold: !mark.hold })}
           className={clsx(
             "rounded px-1.5 py-0.5",
@@ -50,7 +52,7 @@ function NashvilleMarkEditor({
         </button>
         <button
           type="button"
-          title="Anticipation (push)"
+          title={t("propertiesPanel.nashville.push")}
           onClick={() => onChange({ ...mark, push: !mark.push })}
           className={clsx(
             "rounded px-1.5 py-0.5",
@@ -61,7 +63,7 @@ function NashvilleMarkEditor({
         </button>
         <button
           type="button"
-          title="Retirer une barre rythmique"
+          title={t("propertiesPanel.nashville.removeSlash")}
           onClick={() => onChange({ ...mark, slashes: Math.max(0, mark.slashes - 1) })}
           className="rounded border border-border px-1.5 py-0.5 text-ink hover:border-accent"
         >
@@ -70,7 +72,7 @@ function NashvilleMarkEditor({
         <span className="w-6 text-center font-semibold text-accent-ink">{"/".repeat(mark.slashes) || "0"}</span>
         <button
           type="button"
-          title="Ajouter une barre rythmique"
+          title={t("propertiesPanel.nashville.addSlash")}
           onClick={() => onChange({ ...mark, slashes: Math.min(3, mark.slashes + 1) })}
           className="rounded border border-border px-1.5 py-0.5 text-ink hover:border-accent"
         >
@@ -91,12 +93,13 @@ export function PropertiesPanel({
   onUpdateSectionAssignment,
   onUpdateSectionTimeSignature,
 }: PropertiesPanelProps) {
+  const { t } = useTranslation("editor");
   const [annotationType, setAnnotationType] = useState<AnnotationType>("chant");
   const [annotationMarker, setAnnotationMarker] = useState("");
   const [annotationText, setAnnotationText] = useState("");
 
   if (!section) {
-    return <p className="p-4 text-sm text-muted">Sélectionne une section pour commencer.</p>;
+    return <p className="p-4 text-sm text-muted">{t("propertiesPanel.selectSection")}</p>;
   }
 
   function submitAnnotation() {
@@ -109,7 +112,7 @@ export function PropertiesPanel({
   return (
     <div className="space-y-5 p-4">
       <div>
-        <label className="mb-1.5 block text-xs font-semibold text-muted">Mesure rythmique (section entière)</label>
+        <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.timeSignatureLabel")}</label>
         <select
           value={section.time_signature ?? "4/4"}
           onChange={(e) => onUpdateSectionTimeSignature(e.target.value)}
@@ -124,35 +127,35 @@ export function PropertiesPanel({
       </div>
 
       <div>
-        <label className="mb-1.5 block text-xs font-semibold text-muted">Assigné à (section entière)</label>
+        <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.assignedToLabel")}</label>
         <input
           value={section.assigned_to ?? ""}
           onChange={(e) => onUpdateSectionAssignment(e.target.value)}
-          placeholder="ex. Pupitre Ténors, Paul..."
+          placeholder={t("propertiesPanel.assignedToPlaceholder")}
           className={fieldClasses}
         />
       </div>
 
       {!measure ? (
-        <p className="text-sm text-muted">Sélectionne une mesure pour l'éditer.</p>
+        <p className="text-sm text-muted">{t("propertiesPanel.selectMeasure")}</p>
       ) : (
         <>
-          <p className="text-xs font-semibold uppercase tracking-wide text-muted">Mesure #{measure.number}</p>
+          <p className="text-xs font-semibold uppercase tracking-wide text-muted">{t("propertiesPanel.measureNumber", { number: measure.number })}</p>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-muted">Accord</label>
+            <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.chordLabel")}</label>
             <input
               value={measure.chord}
               onChange={(e) => onUpdateMeasure({ chord: e.target.value })}
-              placeholder="ex. Cm7, G/B..."
+              placeholder={t("propertiesPanel.chordPlaceholder")}
               className={fieldClasses}
             />
           </div>
 
           {notation === "nashville" && (
             <div className="space-y-2 rounded-lg border border-border p-2.5">
-              <p className="text-xs font-semibold text-muted">Rythme Nashville</p>
+              <p className="text-xs font-semibold text-muted">{t("propertiesPanel.nashville.rhythm")}</p>
               <NashvilleMarkEditor
-                label={measure.chord ? "Accord 1" : "Accord"}
+                label={measure.chord ? t("propertiesPanel.nashville.chord1") : t("propertiesPanel.chordLabel")}
                 mark={measure.nashvilleMark ?? createEmptyNashvilleMark()}
                 onChange={(mark) => onUpdateMeasure({ nashvilleMark: mark })}
               />
@@ -160,12 +163,12 @@ export function PropertiesPanel({
               {measure.chord2 !== undefined ? (
                 <>
                   <div>
-                    <label className="mb-1.5 block text-xs font-semibold text-muted">Accord 2 (mesure fractionnée)</label>
+                    <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.chord2Label")}</label>
                     <div className="flex gap-1.5">
                       <input
                         value={measure.chord2}
                         onChange={(e) => onUpdateMeasure({ chord2: e.target.value })}
-                        placeholder="ex. F..."
+                        placeholder={t("propertiesPanel.chord2Placeholder")}
                         className={fieldClasses}
                       />
                       <button
@@ -173,12 +176,12 @@ export function PropertiesPanel({
                         onClick={() => onUpdateMeasure({ chord2: undefined, nashvilleMark2: undefined })}
                         className="shrink-0 rounded-lg border border-border px-2 text-xs text-ink hover:border-accent"
                       >
-                        Retirer
+                        {t("propertiesPanel.removeChord2")}
                       </button>
                     </div>
                   </div>
                   <NashvilleMarkEditor
-                    label="Accord 2"
+                    label={t("propertiesPanel.nashville.chord2")}
                     mark={measure.nashvilleMark2 ?? createEmptyNashvilleMark()}
                     onChange={(mark) => onUpdateMeasure({ nashvilleMark2: mark })}
                   />
@@ -189,14 +192,14 @@ export function PropertiesPanel({
                   onClick={() => onUpdateMeasure({ chord2: "" })}
                   className="w-full rounded-lg border border-dashed border-border py-1.5 text-xs text-muted hover:border-accent hover:text-accent-ink"
                 >
-                  + Fractionner la mesure (2 accords)
+                  {t("propertiesPanel.splitMeasure")}
                 </button>
               )}
             </div>
           )}
 
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-muted">Paroles</label>
+            <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.lyricsLabel")}</label>
             <textarea
               value={measure.lyrics}
               onChange={(e) => onUpdateMeasure({ lyrics: e.target.value })}
@@ -205,17 +208,17 @@ export function PropertiesPanel({
             />
           </div>
           <div>
-            <label className="mb-1.5 block text-xs font-semibold text-muted">Notes</label>
+            <label className="mb-1.5 block text-xs font-semibold text-muted">{t("propertiesPanel.notesLabel")}</label>
             <input
               value={measure.notes}
               onChange={(e) => onUpdateMeasure({ notes: e.target.value })}
-              placeholder="do ré mi..."
+              placeholder={t("propertiesPanel.notesPlaceholder")}
               className={fieldClasses}
             />
           </div>
 
           <div>
-            <p className="mb-1.5 text-xs font-semibold text-muted">Piano — clique pour ajouter une note</p>
+            <p className="mb-1.5 text-xs font-semibold text-muted">{t("propertiesPanel.pianoHint")}</p>
             <PianoKeyboard
               fromOctave={3}
               toOctave={5}
@@ -228,7 +231,7 @@ export function PropertiesPanel({
           </div>
 
           <div>
-            <p className="mb-2 text-xs font-semibold text-muted">Annotations</p>
+            <p className="mb-2 text-xs font-semibold text-muted">{t("propertiesPanel.annotationsLabel")}</p>
             <div className="space-y-1.5">
               {measure.annotations.map((a) => (
                 <div key={a.id} className="flex items-center justify-between gap-2 rounded-lg bg-surface-raised px-2.5 py-1.5 text-xs">
@@ -244,18 +247,18 @@ export function PropertiesPanel({
 
             <div className="mt-2 space-y-1.5 rounded-lg border border-border p-2">
               <div className="flex gap-1.5">
-                {(Object.keys(ANNOTATION_MARKERS) as (keyof typeof ANNOTATION_MARKERS)[]).map((t) => (
+                {ANNOTATION_TYPES.map((type) => (
                   <button
-                    key={t}
+                    key={type}
                     onClick={() => {
-                      setAnnotationType(t);
+                      setAnnotationType(type);
                       setAnnotationMarker("");
                     }}
                     className={`rounded-full px-2 py-1 text-[11px] ${
-                      annotationType === t ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"
+                      annotationType === type ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"
                     }`}
                   >
-                    {ANNOTATION_MARKERS[t].emoji} {ANNOTATION_MARKERS[t].label}
+                    {ANNOTATION_EMOJIS[type]} {t(`propertiesPanel.annotationTypes.${type}`)}
                   </button>
                 ))}
               </div>
@@ -264,8 +267,10 @@ export function PropertiesPanel({
                 onChange={(e) => setAnnotationMarker(e.target.value)}
                 className={fieldClasses}
               >
-                <option value="">Marqueur (optionnel)</option>
-                {ANNOTATION_MARKERS[annotationType as keyof typeof ANNOTATION_MARKERS].markers.map((m) => (
+                <option value="">{t("propertiesPanel.markerOptional")}</option>
+                {(
+                  t(`propertiesPanel.annotationMarkerOptions.${annotationType}`, { returnObjects: true }) as string[]
+                ).map((m) => (
                   <option key={m} value={m}>
                     {m}
                   </option>
@@ -274,14 +279,14 @@ export function PropertiesPanel({
               <input
                 value={annotationText}
                 onChange={(e) => setAnnotationText(e.target.value)}
-                placeholder='ex. "Les ténors entrent ici"'
+                placeholder={t("propertiesPanel.annotationPlaceholder")}
                 className={fieldClasses}
               />
               <button
                 onClick={submitAnnotation}
                 className="w-full rounded-lg bg-accent py-1.5 text-xs font-semibold text-[#2A0F1E] hover:bg-accent-soft"
               >
-                Ajouter l'annotation
+                {t("propertiesPanel.addAnnotation")}
               </button>
             </div>
           </div>

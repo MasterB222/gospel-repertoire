@@ -1,8 +1,10 @@
 import { useEffect, useRef, useState } from "react";
 import { Volume2, VolumeX } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { playMetronomeClick, quarterNoteSeconds } from "../../lib/notation";
 
 export function Metronome({ bpm, beatsPerMeasure }: { bpm: number; beatsPerMeasure: number }) {
+  const { t } = useTranslation("editor");
   const [running, setRunning] = useState(false);
   const beatRef = useRef(0);
 
@@ -25,10 +27,10 @@ export function Metronome({ bpm, beatsPerMeasure }: { bpm: number; beatsPerMeasu
       className={`flex h-9 items-center gap-1.5 rounded-lg border px-2.5 text-xs font-semibold ${
         running ? "border-accent bg-accent/20 text-accent-ink" : "border-border text-ink hover:border-accent/40"
       }`}
-      title="Métronome"
+      title={t("metronome.title")}
     >
       {running ? <Volume2 size={14} /> : <VolumeX size={14} />}
-      Métronome {bpm || 90} BPM
+      {t("metronome.label", { bpm: bpm || 90 })}
     </button>
   );
 }

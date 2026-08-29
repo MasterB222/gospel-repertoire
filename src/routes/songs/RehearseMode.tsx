@@ -1,6 +1,7 @@
 import { useEffect, useRef, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight, Pause, Play, RotateCcw } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getSong } from "../../lib/catalog";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -8,6 +9,7 @@ import { Music2 } from "lucide-react";
 import type { Song } from "../../types/catalog";
 
 export function RehearseMode() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const [song, setSong] = useState<Song | null | undefined>(undefined);
   const [sectionIdx, setSectionIdx] = useState(0);
@@ -72,9 +74,9 @@ export function RehearseMode() {
   if (song === null || sections.length === 0) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
-        <EmptyState icon={Music2} title="Rien à répéter" description="Cette chanson n'a pas encore de structure." />
+        <EmptyState icon={Music2} title={t("rehearseMode.nothingToRehearseTitle")} description={t("rehearseMode.nothingToRehearseDescription")} />
         <Link to={id ? `/songs/${id}` : "/songs"} className="text-sm text-accent-ink hover:underline">
-          Retour
+          {t("rehearseMode.back")}
         </Link>
       </div>
     );
@@ -84,7 +86,7 @@ export function RehearseMode() {
     <div className="flex min-h-screen flex-col bg-background text-ink">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted">Mode Répétition</p>
+          <p className="text-xs uppercase tracking-wide text-muted">{t("rehearseMode.modeLabel")}</p>
           <p className="font-serif text-lg font-semibold">{song.title}</p>
         </div>
         <Link to={`/songs/${id}`} className="rounded-full p-2 text-muted hover:bg-surface-raised hover:text-ink">
@@ -95,7 +97,7 @@ export function RehearseMode() {
       <div className="flex flex-1 flex-col items-center justify-center gap-6 px-6 text-center">
         <p className="text-sm font-semibold uppercase tracking-[0.2em] text-accent-ink">{section.name}</p>
         <p className="text-xs text-muted">
-          Mesure {measure?.number} / {section.measures.length}
+          {t("rehearseMode.measureCount", { current: measure?.number, total: section.measures.length })}
         </p>
 
         {measure?.chord && <p className="font-serif text-3xl font-bold text-accent-ink">{measure.chord}</p>}
@@ -115,20 +117,20 @@ export function RehearseMode() {
       </div>
 
       <div className="flex items-center justify-center gap-4 pb-8 pt-4">
-        <button onClick={goPrev} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label="Précédent">
+        <button onClick={goPrev} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label={t("rehearseMode.previous")}>
           <ChevronLeft size={20} />
         </button>
         <button
           onClick={() => setAutoPlay((a) => !a)}
           className="flex h-14 w-14 items-center justify-center rounded-full bg-accent text-[#2A0F1E] hover:bg-accent-soft"
-          aria-label={autoPlay ? "Pause" : "Lecture automatique"}
+          aria-label={autoPlay ? t("rehearseMode.pause") : t("rehearseMode.autoPlay")}
         >
           {autoPlay ? <Pause size={22} /> : <Play size={22} className="ml-1" />}
         </button>
-        <button onClick={goNext} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label="Suivant">
+        <button onClick={goNext} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label={t("rehearseMode.next")}>
           <ChevronRight size={20} />
         </button>
-        <button onClick={repeatSection} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label="Répéter la section">
+        <button onClick={repeatSection} className="rounded-full border border-border p-3 text-ink hover:border-accent" aria-label={t("rehearseMode.repeatSection")}>
           <RotateCcw size={18} />
         </button>
       </div>

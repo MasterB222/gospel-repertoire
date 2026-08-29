@@ -1,1 +1,127 @@
-{}
+{
+  "topBar": {
+    "tempoLabel": "Tempo (BPM)",
+    "autoSaving": "Sauvegarde automatique…",
+    "saved": "Enregistré",
+    "publish": "Publier"
+  },
+  "measureGrid": {
+    "emptyState": "Sélectionne ou crée une section pour commencer à éditer.",
+    "addMeasure": "Ajouter une mesure"
+  },
+  "propertiesPanel": {
+    "nashville": {
+      "hold": "Tenue (losange)",
+      "push": "Anticipation (push)",
+      "removeSlash": "Retirer une barre rythmique",
+      "addSlash": "Ajouter une barre rythmique",
+      "rhythm": "Rythme Nashville",
+      "chord1": "Accord 1",
+      "chord2": "Accord 2"
+    },
+    "annotationTypes": {
+      "chant": "Chant",
+      "instrument": "Instrument",
+      "dynamique": "Dynamique"
+    },
+    "annotationMarkerOptions": {
+      "chant": ["Entrée voix", "Solo", "Chœur", "Réponse", "Unisson", "Harmonisation"],
+      "instrument": ["Piano", "Guitare", "Basse", "Batterie", "Clavier", "Cuivres"],
+      "dynamique": ["Piano (p)", "Mezzo (mf)", "Forte (f)", "Crescendo", "Decrescendo"]
+    },
+    "selectSection": "Sélectionne une section pour commencer.",
+    "timeSignatureLabel": "Mesure rythmique (section entière)",
+    "assignedToLabel": "Assigné à (section entière)",
+    "assignedToPlaceholder": "ex. Pupitre Ténors, Paul...",
+    "selectMeasure": "Sélectionne une mesure pour l'éditer.",
+    "measureNumber": "Mesure #{{number}}",
+    "chordLabel": "Accord",
+    "chordPlaceholder": "ex. Cm7, G/B...",
+    "chord2Label": "Accord 2 (mesure fractionnée)",
+    "chord2Placeholder": "ex. F...",
+    "removeChord2": "Retirer",
+    "splitMeasure": "+ Fractionner la mesure (2 accords)",
+    "lyricsLabel": "Paroles",
+    "notesLabel": "Notes",
+    "notesPlaceholder": "do ré mi...",
+    "pianoHint": "Piano — clique pour ajouter une note",
+    "annotationsLabel": "Annotations",
+    "markerOptional": "Marqueur (optionnel)",
+    "annotationPlaceholder": "ex. \"Les ténors entrent ici\"",
+    "addAnnotation": "Ajouter l'annotation"
+  },
+  "quickEntry": {
+    "placeholder": "Saisie rapide des notes : \"do do sol fa\" — réparties dans les mesures",
+    "submit": "Répartir"
+  },
+  "sectionList": {
+    "title": "Structure",
+    "addSection": "Section",
+    "rename": "Renommer",
+    "duplicate": "Dupliquer",
+    "hide": "Masquer",
+    "delete": "Supprimer"
+  },
+  "transpose": {
+    "downLabel": "Transposer d'un demi-ton vers le bas",
+    "upLabel": "Transposer d'un demi-ton vers le haut",
+    "resetLabel": "Réinitialiser la tonalité",
+    "confirmPrompt": "Transposer les accords automatiquement ?",
+    "yes": "Oui",
+    "no": "Non"
+  },
+  "durationPicker": {
+    "durations": {
+      "whole": "Ronde",
+      "half": "Blanche",
+      "quarter": "Noire",
+      "eighth": "Croche",
+      "sixteenth": "Double croche"
+    },
+    "dotted": "Note pointée",
+    "dottedButton": "·pointée",
+    "addRestTitle": "Ajouter un silence de la durée sélectionnée",
+    "addRestButton": "𝄽 silence"
+  },
+  "metronome": {
+    "title": "Métronome",
+    "label": "Métronome {{bpm}} BPM"
+  },
+  "notationEditor": {
+    "emptyState": "Sélectionne ou crée une section pour commencer à noter la mélodie.",
+    "stop": "Stop",
+    "playSection": "Écouter la section",
+    "clearLastNoteTitle": "Effacer la dernière note de la mesure sélectionnée",
+    "clearLastNoteButton": "Dernière note",
+    "clearMeasureTitle": "Vider la mesure sélectionnée",
+    "clearMeasureButton": "Vider la mesure",
+    "selectMeasureHint": "Sélectionne une mesure ci-dessus, puis joue sur le piano pour écrire la mélodie."
+  },
+  "pianoKeyboard": {
+    "noteLabel": "Note {{note}}"
+  },
+  "assignment": {
+    "measureLabel": "Mesure {{number}}",
+    "sectionLabel": "Section {{id}}",
+    "wholeSong": "Chanson entière",
+    "wholeSection": "Toute la section",
+    "typeGroup": "Groupe/pupitre",
+    "typeMember": "Membre",
+    "searchMemberPlaceholder": "Chercher un membre par nom...",
+    "partPlaceholder": "Partie (ex. Basse, Alto...)",
+    "submit": "Assigner"
+  },
+  "comments": {
+    "empty": "Aucun commentaire pour l'instant.",
+    "anonymous": "Anonyme",
+    "measureLabel": "Mesure {{number}}",
+    "placeholder": "ex. \"Attention à la note SI ici\"",
+    "send": "Envoyer"
+  },
+  "status": {
+    "a_faire": "À faire",
+    "en_cours": "En cours",
+    "termine": "Terminé",
+    "a_revoir": "À revoir"
+  }
+}

@@ -20,6 +20,8 @@ import {
   type LucideIcon,
 } from "lucide-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
+import type { TFunction } from "i18next";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
 import { FavoriteButton } from "../../components/catalog/FavoriteButton";
 import { AddToPlaylistButton } from "../../components/catalog/AddToPlaylistButton";
@@ -57,18 +59,21 @@ const NOTATION_OPTIONS: { value: NoteNotation; label: string }[] = [
   { value: "nashville", label: "1 2 3" },
 ];
 
-const TABS: { key: TabKey; label: string; icon: LucideIcon }[] = [
-  { key: "presentation", label: "Présentation", icon: Info },
-  { key: "lyrics", label: "Paroles", icon: AlignLeft },
-  { key: "chords", label: "Accords", icon: Guitar },
-  { key: "structure", label: "Structure", icon: ListTree },
-  { key: "assignments", label: "Assignations", icon: Users },
-  { key: "history", label: "Historique", icon: History },
-  { key: "sheet", label: "Partition", icon: FileMusic },
-  { key: "learning", label: "Apprentissage", icon: GraduationCap },
-];
+function getTabs(t: TFunction): { key: TabKey; label: string; icon: LucideIcon }[] {
+  return [
+    { key: "presentation", label: t("detail.tabs.presentation"), icon: Info },
+    { key: "lyrics", label: t("detail.tabs.lyrics"), icon: AlignLeft },
+    { key: "chords", label: t("detail.tabs.chords"), icon: Guitar },
+    { key: "structure", label: t("detail.tabs.structure"), icon: ListTree },
+    { key: "assignments", label: t("detail.tabs.assignments"), icon: Users },
+    { key: "history", label: t("detail.tabs.history"), icon: History },
+    { key: "sheet", label: t("detail.tabs.sheet"), icon: FileMusic },
+    { key: "learning", label: t("detail.tabs.learning"), icon: GraduationCap },
+  ];
+}
 
 function AssignmentsPanel({ song }: { song: Song }) {
+  const { t } = useTranslation("songs");
   const { profile } = useAuth();
   const { showToast } = useToast();
   const [assignments, setAssignments] = useState<Assignment[]>([]);
@@ -93,7 +98,7 @@ function AssignmentsPanel({ song }: { song: Song }) {
       await updateAssignmentStatus(id, status);
       setAssignments((prev) => prev.map((a) => (a.id === id ? { ...a, status } : a)));
     } catch {
-      showToast("Échec de la mise à jour du statut.", "error");
+      showToast(t("detail.assignmentsPanel.statusUpdateError"), "error");
     }
   }
 
@@ -107,10 +112,10 @@ function AssignmentsPanel({ song }: { song: Song }) {
     if (!profile) return;
     try {
       await createAssignment({ ...input, song_id: song.id, created_by: profile.id });
-      showToast("Assignation créée.", "success");
+      showToast(t("detail.assignmentsPanel.createSuccess"), "success");
       load();
     } catch {
-      showToast("Échec de la création de l'assignation.", "error");
+      showToast(t("detail.assignmentsPanel.createError"), "error");
     }
   }
 
@@ -120,7 +125,7 @@ function AssignmentsPanel({ song }: { song: Song }) {
       await addComment({ song_id: song.id, section_id: null, measure_number: null, author_id: profile.id, text });
       load();
     } catch {
-      showToast("Échec de l'envoi du commentaire.", "error");
+      showToast(t("detail.assignmentsPanel.commentError"), "error");
     }
   }
 
@@ -129,9 +134,9 @@ function AssignmentsPanel({ song }: { song: Song }) {
   return (
     <div className="max-w-2xl space-y-6">
       <div>
-        <h3 className="mb-2 font-serif text-base font-semibold text-ink">Assignations</h3>
+        <h3 className="mb-2 font-serif text-base font-semibold text-ink">{t("detail.assignmentsPanel.title")}</h3>
         {assignments.length === 0 ? (
-          <p className="text-sm text-muted">Aucune assignation pour l'instant.</p>
+          <p className="text-sm text-muted">{t("detail.assignmentsPanel.empty")}</p>
         ) : (
           <div className="space-y-2">
             {assignments.map((a) => (
@@ -152,7 +157,7 @@ function AssignmentsPanel({ song }: { song: Song }) {
       </div>
 
       <div>
-        <h3 className="mb-2 font-serif text-base font-semibold text-ink">Commentaires</h3>
+        <h3 className="mb-2 font-serif text-base font-semibold text-ink">{t("detail.assignmentsPanel.commentsTitle")}</h3>
         <CommentThread comments={comments} onAdd={handleAddComment} />
       </div>
     </div>
@@ -164,6 +169,7 @@ function formatDate(iso: string) {
 }
 
 export function SongDetail() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const { isAuthenticated, profile } = useAuth();
   const { playSong } = usePlayer();
@@ -201,11 +207,11 @@ export function SongDetail() {
     return (
       <EmptyState
         icon={Music2}
-        title="Chanson introuvable"
-        description="Elle a peut-être été retirée du répertoire."
+        title={t("detail.notFound.title")}
+        description={t("detail.notFound.description")}
         action={
           <Link to="/songs" className="text-sm font-semibold text-accent-ink hover:underline">
-            Retour au répertoire
+            {t("detail.backToRepertoire")}
           </Link>
         }
       />
@@ -219,7 +225,7 @@ export function SongDetail() {
       <div className="mb-4 flex items-center justify-between">
         <Link to="/songs" className="inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink">
           <ArrowLeft size={16} strokeWidth={1.8} />
-          Retour au répertoire
+          {t("detail.backToRepertoire")}
         </Link>
         {isAuthenticated && (
           <Link
@@ -227,7 +233,7 @@ export function SongDetail() {
             className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-[#2A0F1E] hover:bg-accent-soft"
           >
             <Pencil size={13} />
-            Éditer
+            {t("detail.edit")}
           </Link>
         )}
       </div>
@@ -244,14 +250,14 @@ export function SongDetail() {
             </span>
           )}
           <h1 className="font-serif text-3xl font-semibold text-ink sm:text-4xl">{song.title}</h1>
-          <p className="text-muted">{song.artist?.name ?? "Artiste inconnu"}</p>
+          <p className="text-muted">{song.artist?.name ?? t("detail.unknownArtist")}</p>
           <div className="mt-1 flex flex-wrap gap-4 text-sm text-muted">
-            {song.original_key && <span>Tonalité : {song.original_key}</span>}
-            {song.tempo && <span>Tempo : {song.tempo} BPM</span>}
-            <span>Difficulté : {song.difficulty}</span>
-            {song.year && <span>Année : {song.year}</span>}
-            <span>Langue : {song.language}</span>
-            <span>Version {song.version}</span>
+            {song.original_key && <span>{t("detail.key", { value: song.original_key })}</span>}
+            {song.tempo && <span>{t("detail.tempo", { value: song.tempo })}</span>}
+            <span>{t("detail.difficulty", { value: song.difficulty })}</span>
+            {song.year && <span>{t("detail.year", { value: song.year })}</span>}
+            <span>{t("detail.language", { value: song.language })}</span>
+            <span>{t("detail.version", { value: song.version })}</span>
           </div>
           <div className="mt-2 flex flex-wrap gap-2">
             <button
@@ -259,7 +265,7 @@ export function SongDetail() {
               className="inline-flex items-center gap-1.5 rounded-lg bg-accent px-4 py-2 text-sm font-semibold text-[#2A0F1E] hover:bg-accent-soft"
             >
               <Play size={15} className="ml-0.5" />
-              Écouter
+              {t("detail.listen")}
             </button>
             <AddToPlaylistButton songId={song.id} />
             <FavoriteButton
@@ -273,14 +279,14 @@ export function SongDetail() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
                 >
                   <Repeat size={15} />
-                  Mode Répétition
+                  {t("detail.rehearseMode")}
                 </Link>
                 <Link
                   to={`/songs/${song.id}/present`}
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
                 >
                   <Presentation size={15} />
-                  Mode Présentation
+                  {t("detail.presentMode")}
                 </Link>
               </>
             )}
@@ -289,19 +295,19 @@ export function SongDetail() {
       </div>
 
       <div className="mt-8 flex gap-1 overflow-x-auto border-b border-border pb-px">
-        {TABS.map((t) => (
+        {getTabs(t).map((tabItem) => (
           <button
-            key={t.key}
-            onClick={() => setTab(t.key)}
+            key={tabItem.key}
+            onClick={() => setTab(tabItem.key)}
             className={clsx(
               "flex shrink-0 items-center gap-1.5 whitespace-nowrap border-b-2 px-3 py-2.5 text-sm transition-colors",
-              tab === t.key
+              tab === tabItem.key
                 ? "border-accent font-semibold text-accent-ink"
                 : "border-transparent text-muted hover:text-ink"
             )}
           >
-            <t.icon size={15} strokeWidth={1.8} />
-            {t.label}
+            <tabItem.icon size={15} strokeWidth={1.8} />
+            {tabItem.label}
           </button>
         ))}
       </div>
@@ -310,23 +316,23 @@ export function SongDetail() {
         {tab === "learning" ? (
           <EmptyState
             icon={GraduationCap}
-            title="Mode Apprentissage"
-            description="Accessible depuis une assignation précise : ouvre « Mes assignations » sur ton dashboard, puis « Ouvrir en mode Apprentissage »."
+            title={t("detail.learningPanel.title")}
+            description={t("detail.learningPanel.description")}
             action={
               <Link to="/dashboard" className="text-sm font-semibold text-accent-ink hover:underline">
-                Aller au dashboard
+                {t("detail.learningPanel.goToDashboard")}
               </Link>
             }
           />
         ) : tab === "presentation" ? (
           <div className="max-w-2xl space-y-4 text-sm text-ink/90">
-            {song.album && <p>Album : {song.album}</p>}
-            <p>{song.title} fait partie du répertoire {song.category?.name ?? "général"}.</p>
+            {song.album && <p>{t("detail.presentation.album", { value: song.album })}</p>}
+            <p>{t("detail.presentation.partOfRepertoire", { title: song.title, category: song.category?.name ?? t("detail.presentation.generalCategory") })}</p>
 
             {(() => {
               const videoId = song.youtube_url ? extractYouTubeId(song.youtube_url) : null;
               if (!videoId) {
-                return <p className="text-muted">Aucune vidéo disponible pour cette chanson.</p>;
+                return <p className="text-muted">{t("detail.presentation.noVideo")}</p>;
               }
               if (!showVideo) {
                 return (
@@ -335,7 +341,7 @@ export function SongDetail() {
                     className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
                   >
                     <Video size={15} />
-                    Regarder sur YouTube
+                    {t("detail.presentation.watchOnYoutube")}
                   </button>
                 );
               }
@@ -344,7 +350,7 @@ export function SongDetail() {
                   <iframe
                     className="h-full w-full"
                     src={`https://www.youtube.com/embed/${videoId}`}
-                    title={`Vidéo YouTube — ${song.title}`}
+                    title={t("detail.presentation.videoIframeTitle", { title: song.title })}
                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture"
                     allowFullScreen
                   />
@@ -354,18 +360,18 @@ export function SongDetail() {
           </div>
         ) : tab === "lyrics" ? (
           <pre className="max-w-2xl whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
-            {song.lyrics || "Paroles non disponibles pour cette chanson."}
+            {song.lyrics || t("detail.lyricsUnavailable")}
           </pre>
         ) : tab === "chords" ? (
           <pre className="max-w-2xl whitespace-pre-wrap font-sans text-sm leading-relaxed text-ink">
-            {song.chords || "Accords non disponibles pour cette chanson."}
+            {song.chords || t("detail.chordsUnavailable")}
           </pre>
         ) : tab === "sheet" ? (
           !song.partition_url ? (
             <EmptyState
               icon={FileMusic}
-              title="Partition non disponible pour ce chant"
-              description="Aucune partition n'a encore été ajoutée pour cette chanson."
+              title={t("detail.sheet.notAvailableTitle")}
+              description={t("detail.sheet.notAvailableDescription")}
             />
           ) : (
             <div className="max-w-2xl">
@@ -375,7 +381,7 @@ export function SongDetail() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
                 >
                   <Maximize2 size={15} />
-                  Plein écran
+                  {t("detail.sheet.fullscreen")}
                 </button>
                 <a
                   href={song.partition_url}
@@ -385,18 +391,18 @@ export function SongDetail() {
                   className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
                 >
                   <Download size={15} />
-                  Télécharger
+                  {t("detail.sheet.download")}
                 </a>
               </div>
               <div ref={sheetRef} className="aspect-[3/4] w-full overflow-hidden rounded-xl border border-border bg-surface-raised">
                 <iframe
                   src={`https://docs.google.com/viewer?url=${encodeURIComponent(song.partition_url)}&embedded=true`}
-                  title={`Partition — ${song.title}`}
+                  title={t("detail.sheet.iframeTitle", { title: song.title })}
                   className="h-full w-full"
                 />
               </div>
               <p className="mt-2 text-xs text-muted">
-                L'aperçu ne s'affiche pas ? Utilise « Télécharger » ci-dessus pour l'ouvrir directement.
+                {t("detail.sheet.previewHint")}
               </p>
             </div>
           )
@@ -406,8 +412,8 @@ export function SongDetail() {
           visibleSections.length === 0 ? (
             <EmptyState
               icon={ListTree}
-              title="Structure non définie"
-              description="Ouvre l'éditeur pour créer les sections et mesures de cette chanson."
+              title={t("detail.structure.notDefinedTitle")}
+              description={t("detail.structure.notDefinedDescription")}
             />
           ) : (
             <div className="max-w-2xl space-y-4">
@@ -430,7 +436,7 @@ export function SongDetail() {
                   <div className="mb-2 flex items-center justify-between">
                     <h3 className="font-serif text-base font-semibold text-ink">{section.name}</h3>
                     {section.assigned_to && (
-                      <span className="text-xs text-muted">Assigné : {section.assigned_to}</span>
+                      <span className="text-xs text-muted">{t("detail.structure.assignedTo", { value: section.assigned_to })}</span>
                     )}
                   </div>
                   <div className="flex flex-wrap gap-2">
@@ -467,7 +473,7 @@ export function SongDetail() {
           )
         ) : (
           song.version_history.length === 0 ? (
-            <EmptyState icon={History} title="Aucun historique pour l'instant" description="Les modifications apparaîtront ici après un passage dans l'éditeur." />
+            <EmptyState icon={History} title={t("detail.history.emptyTitle")} description={t("detail.history.emptyDescription")} />
           ) : (
             <ul className="max-w-md space-y-2 text-sm">
               {[...song.version_history].reverse().map((entry, i) => (

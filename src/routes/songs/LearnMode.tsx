@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams, useSearchParams } from "react-router-dom";
 import { X, Check, GraduationCap } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { addComment, getAssignment, listCommentsForSong, updateAssignmentStatus } from "../../lib/collaboration";
 import { getSong } from "../../lib/catalog";
 import { EmptyState } from "../../components/ui/EmptyState";
@@ -12,6 +13,7 @@ import type { Assignment, Comment } from "../../types/collaboration";
 import type { Song } from "../../types/catalog";
 
 export function LearnMode() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const [searchParams] = useSearchParams();
   const assignmentId = searchParams.get("assignment");
@@ -58,7 +60,7 @@ export function LearnMode() {
       });
       setComments(await listCommentsForSong(assignment.song_id));
     } catch {
-      showToast("Échec de l'envoi du commentaire.", "error");
+      showToast(t("learnMode.commentError"), "error");
     }
   }
 
@@ -66,9 +68,9 @@ export function LearnMode() {
     if (!assignment) return;
     try {
       await updateAssignmentStatus(assignment.id, "termine");
-      showToast("Assignation marquée comme terminée !", "success");
+      showToast(t("learnMode.completeSuccess"), "success");
     } catch {
-      showToast("Échec de la mise à jour.", "error");
+      showToast(t("learnMode.completeError"), "error");
     }
   }
 
@@ -83,9 +85,9 @@ export function LearnMode() {
   if (assignment === null || !song) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
-        <EmptyState icon={GraduationCap} title="Assignation introuvable" />
+        <EmptyState icon={GraduationCap} title={t("learnMode.notFoundTitle")} />
         <Link to="/dashboard" className="text-sm text-accent-ink hover:underline">
-          Retour au dashboard
+          {t("learnMode.backToDashboard")}
         </Link>
       </div>
     );
@@ -95,7 +97,7 @@ export function LearnMode() {
     <div className="min-h-screen bg-background text-ink">
       <div className="flex items-center justify-between px-4 py-3 sm:px-6">
         <div>
-          <p className="text-xs uppercase tracking-wide text-muted">Mode Apprentissage</p>
+          <p className="text-xs uppercase tracking-wide text-muted">{t("learnMode.modeLabel")}</p>
           <p className="font-serif text-lg font-semibold">{song.title}</p>
         </div>
         <Link to={`/songs/${id ?? song.id}`} className="rounded-full p-2 text-muted hover:bg-surface-raised hover:text-ink">
@@ -106,8 +108,8 @@ export function LearnMode() {
       <div className="mx-auto max-w-xl space-y-6 px-4 py-6 sm:px-6">
         <div className="rounded-xl border border-border bg-surface-raised p-4">
           <p className="text-sm text-muted">
-            {section ? section.name : "Chanson entière"}
-            {assignment.measure_number != null && ` · Mesure ${assignment.measure_number}`}
+            {section ? section.name : t("learnMode.wholeSong")}
+            {assignment.measure_number != null && ` · ${t("learnMode.measure", { number: assignment.measure_number })}`}
             {assignment.part && ` · ${assignment.part}`}
           </p>
         </div>
@@ -116,7 +118,7 @@ export function LearnMode() {
           <div className="space-y-2 rounded-xl border border-border p-4">
             {measure.chord && <p className="font-serif text-2xl font-bold text-accent-ink">{measure.chord}</p>}
             <p className="text-lg">{measure.lyrics || "—"}</p>
-            {measure.notes && <p className="text-sm text-muted">Notes : {measure.notes}</p>}
+            {measure.notes && <p className="text-sm text-muted">{t("learnMode.notes", { value: measure.notes })}</p>}
           </div>
         ) : section ? (
           <div className="space-y-2">
@@ -132,7 +134,7 @@ export function LearnMode() {
         )}
 
         <div>
-          <p className="mb-2 text-sm font-semibold text-muted">Commentaires du chef</p>
+          <p className="mb-2 text-sm font-semibold text-muted">{t("learnMode.chefComments")}</p>
           <CommentThread comments={relevantComments} onAdd={handleAddComment} />
         </div>
 
@@ -142,7 +144,7 @@ export function LearnMode() {
               onClick={() => setUnderstood(true)}
               className="rounded-xl bg-accent px-6 py-3 text-sm font-semibold text-[#2A0F1E] hover:bg-accent-soft"
             >
-              J'ai compris
+              {t("learnMode.understood")}
             </button>
           ) : (
             <button
@@ -150,7 +152,7 @@ export function LearnMode() {
               className="flex items-center gap-2 rounded-xl bg-emerald-500 px-6 py-3 text-sm font-semibold text-white hover:bg-emerald-600"
             >
               <Check size={16} />
-              Marquer comme terminé
+              {t("learnMode.markComplete")}
             </button>
           )}
         </div>

@@ -1,5 +1,6 @@
 import { Link } from "react-router-dom";
 import { Users, User } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { StatusBadge } from "./StatusBadge";
 import type { Assignment, AssignmentStatus } from "../../types/collaboration";
 
@@ -11,11 +12,12 @@ interface AssignmentCardProps {
 }
 
 export function AssignmentCard({ assignment, showSongTitle, canEditStatus, onStatusChange }: AssignmentCardProps) {
+  const { t } = useTranslation("editor");
   const target = assignment.section_id
     ? assignment.measure_number != null
-      ? `Mesure ${assignment.measure_number}`
-      : `Section ${assignment.section_id}`
-    : "Chanson entière";
+      ? t("assignment.measureLabel", { number: assignment.measure_number })
+      : t("assignment.sectionLabel", { id: assignment.section_id })
+    : t("assignment.wholeSong");
 
   return (
     <div className="flex flex-wrap items-center justify-between gap-2 rounded-xl border border-border bg-surface-raised px-3 py-2.5">

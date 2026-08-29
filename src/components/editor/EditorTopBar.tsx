@@ -1,6 +1,7 @@
 import { Link } from "react-router-dom";
 import { ArrowLeft, Check, Loader2, Rocket } from "lucide-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { TransposeControl } from "./TransposeControl";
 import { PresenceAvatars } from "../collaboration/PresenceAvatars";
 import type { NoteNotation } from "../../types/editor";
@@ -32,6 +33,7 @@ interface EditorTopBarProps {
 }
 
 export function EditorTopBar(props: EditorTopBarProps) {
+  const { t } = useTranslation("editor");
   return (
     <div className="border-b border-border bg-surface px-4 py-3">
       <div className="flex flex-wrap items-center gap-x-6 gap-y-3">
@@ -54,7 +56,7 @@ export function EditorTopBar(props: EditorTopBarProps) {
               max={300}
               value={props.bpm}
               onChange={(e) => props.onChangeBpm(e.target.value)}
-              aria-label="Tempo (BPM)"
+              aria-label={t("topBar.tempoLabel")}
               className="w-12 rounded border border-border bg-surface-raised px-1 py-0.5 text-center text-xs text-ink focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50"
             />
             <span>BPM</span>
@@ -96,12 +98,12 @@ export function EditorTopBar(props: EditorTopBarProps) {
             {props.saveStatus === "saving" ? (
               <>
                 <Loader2 size={13} className="animate-spin" />
-                Sauvegarde automatique…
+                {t("topBar.autoSaving")}
               </>
             ) : props.saveStatus === "saved" ? (
               <>
                 <Check size={13} />
-                Enregistré
+                {t("topBar.saved")}
               </>
             ) : null}
           </span>
@@ -111,7 +113,7 @@ export function EditorTopBar(props: EditorTopBarProps) {
             className="flex items-center gap-1.5 rounded-lg bg-accent px-3 py-1.5 text-xs font-semibold text-[#2A0F1E] hover:bg-accent-soft"
           >
             <Rocket size={13} />
-            Publier
+            {t("topBar.publish")}
           </button>
         </div>
       </div>

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, Mic2 } from "lucide-react";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
 import { SongCard } from "../../components/catalog/SongCard";
@@ -10,6 +11,7 @@ import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Artist, Song } from "../../types/catalog";
 
 export function ArtistDetail() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const [artist, setArtist] = useState<Artist | null | undefined>(undefined);
   const [songs, setSongs] = useState<Song[]>([]);
@@ -39,10 +41,10 @@ export function ArtistDetail() {
     return (
       <EmptyState
         icon={Mic2}
-        title="Artiste introuvable"
+        title={t("artists.notFoundTitle")}
         action={
           <Link to="/artists" className="text-sm font-semibold text-accent-ink hover:underline">
-            Retour aux artistes
+            {t("artists.backToArtists")}
           </Link>
         }
       />
@@ -53,7 +55,7 @@ export function ArtistDetail() {
     <div>
       <Link to="/artists" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink">
         <ArrowLeft size={16} strokeWidth={1.8} />
-        Retour aux artistes
+        {t("artists.backToArtists")}
       </Link>
 
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
@@ -67,11 +69,11 @@ export function ArtistDetail() {
       </div>
 
       <h2 className="mb-4 mt-10 font-serif text-lg font-semibold text-ink">
-        {songs.length} chanson{songs.length > 1 ? "s" : ""}
+        {t("artists.songCount", { count: songs.length })}
       </h2>
 
       {songs.length === 0 ? (
-        <EmptyState icon={Mic2} title="Aucune chanson pour cet artiste pour l'instant" />
+        <EmptyState icon={Mic2} title={t("artists.noSongsForArtist")} />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {songs.map((song) => (

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, LayoutGrid } from "lucide-react";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
 import { SongCard } from "../../components/catalog/SongCard";
@@ -10,6 +11,7 @@ import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Category, Song } from "../../types/catalog";
 
 export function CategoryDetail() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const [category, setCategory] = useState<Category | null | undefined>(undefined);
   const [songs, setSongs] = useState<Song[]>([]);
@@ -39,10 +41,10 @@ export function CategoryDetail() {
     return (
       <EmptyState
         icon={LayoutGrid}
-        title="Catégorie introuvable"
+        title={t("categories.notFoundTitle")}
         action={
           <Link to="/categories" className="text-sm font-semibold text-accent-ink hover:underline">
-            Retour aux catégories
+            {t("categories.backToCategories")}
           </Link>
         }
       />
@@ -53,7 +55,7 @@ export function CategoryDetail() {
     <div>
       <Link to="/categories" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink">
         <ArrowLeft size={16} strokeWidth={1.8} />
-        Retour aux catégories
+        {t("categories.backToCategories")}
       </Link>
 
       <div className="flex flex-col gap-6 sm:flex-row sm:items-center">
@@ -67,11 +69,11 @@ export function CategoryDetail() {
       </div>
 
       <h2 className="mb-4 mt-10 font-serif text-lg font-semibold text-ink">
-        {songs.length} chanson{songs.length > 1 ? "s" : ""}
+        {t("categories.songCount", { count: songs.length })}
       </h2>
 
       {songs.length === 0 ? (
-        <EmptyState icon={LayoutGrid} title="Aucune chanson dans cette catégorie pour l'instant" />
+        <EmptyState icon={LayoutGrid} title={t("categories.noSongsInCategory")} />
       ) : (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
           {songs.map((song) => (

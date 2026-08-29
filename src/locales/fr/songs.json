@@ -80,7 +80,8 @@
       "partOfRepertoire": "{{title}} fait partie du répertoire {{category}}.",
       "generalCategory": "général",
       "noVideo": "Aucune vidéo disponible pour cette chanson.",
-      "watchOnYoutube": "Regarder sur YouTube"
+      "watchOnYoutube": "Regarder sur YouTube",
+      "videoIframeTitle": "Vidéo YouTube — {{title}}"
     },
     "lyricsUnavailable": "Paroles non disponibles pour cette chanson.",
     "chordsUnavailable": "Accords non disponibles pour cette chanson.",
@@ -89,7 +90,8 @@
       "notAvailableDescription": "Aucune partition n'a encore été ajoutée pour cette chanson.",
       "fullscreen": "Plein écran",
       "download": "Télécharger",
-      "previewHint": "L'aperçu ne s'affiche pas ? Utilise « Télécharger » ci-dessus pour l'ouvrir directement."
+      "previewHint": "L'aperçu ne s'affiche pas ? Utilise « Télécharger » ci-dessus pour l'ouvrir directement.",
+      "iframeTitle": "Partition — {{title}}"
     },
     "structure": {
       "notDefinedTitle": "Structure non définie",

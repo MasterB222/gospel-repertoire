@@ -80,7 +80,8 @@
       "partOfRepertoire": "{{title}} is part of the {{category}} repertoire.",
       "generalCategory": "general",
       "noVideo": "No video available for this song.",
-      "watchOnYoutube": "Watch on YouTube"
+      "watchOnYoutube": "Watch on YouTube",
+      "videoIframeTitle": "YouTube video — {{title}}"
     },
     "lyricsUnavailable": "Lyrics not available for this song.",
     "chordsUnavailable": "Chords not available for this song.",
@@ -89,7 +90,8 @@
       "notAvailableDescription": "No sheet music has been added for this song yet.",
       "fullscreen": "Fullscreen",
       "download": "Download",
-      "previewHint": "Preview not showing? Use \"Download\" above to open it directly."
+      "previewHint": "Preview not showing? Use \"Download\" above to open it directly.",
+      "iframeTitle": "Sheet music — {{title}}"
     },
     "structure": {
       "notDefinedTitle": "Structure not defined",

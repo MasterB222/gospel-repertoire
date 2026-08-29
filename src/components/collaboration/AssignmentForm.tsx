@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
 import { listGroups, searchProfiles } from "../../lib/collaboration";
 import type { Group } from "../../types/collaboration";
@@ -19,6 +20,7 @@ interface AssignmentFormProps {
 }
 
 export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
+  const { t } = useTranslation("editor");
   const [sectionId, setSectionId] = useState<string>("");
   const [measureNumber, setMeasureNumber] = useState<string>("");
   const [assigneeType, setAssigneeType] = useState<"group" | "user">("group");
@@ -68,7 +70,7 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
     <div className="space-y-2.5 rounded-xl border border-border p-3">
       <div className="grid grid-cols-2 gap-2">
         <select value={sectionId} onChange={(e) => { setSectionId(e.target.value); setMeasureNumber(""); }} className={fieldClasses}>
-          <option value="">Chanson entière</option>
+          <option value="">{t("assignment.wholeSong")}</option>
           {sections.map((s) => (
             <option key={s.id} value={s.id}>
               {s.name}
@@ -76,10 +78,10 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
           ))}
         </select>
         <select value={measureNumber} onChange={(e) => setMeasureNumber(e.target.value)} disabled={!selectedSection} className={fieldClasses}>
-          <option value="">Toute la section</option>
+          <option value="">{t("assignment.wholeSection")}</option>
           {selectedSection?.measures.map((m) => (
             <option key={m.number} value={m.number}>
-              Mesure {m.number}
+              {t("assignment.measureLabel", { number: m.number })}
             </option>
           ))}
         </select>
@@ -90,13 +92,13 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
           onClick={() => setAssigneeType("group")}
           className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "group" ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"}`}
         >
-          Groupe/pupitre
+          {t("assignment.typeGroup")}
         </button>
         <button
           onClick={() => setAssigneeType("user")}
           className={`rounded-full px-2.5 py-1 text-xs ${assigneeType === "user" ? "bg-accent/20 text-accent-ink" : "text-muted hover:bg-surface-raised"}`}
         >
-          Membre
+          {t("assignment.typeMember")}
         </button>
       </div>
 
@@ -116,7 +118,7 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
               setUserQuery(e.target.value);
               setUserId(null);
             }}
-            placeholder="Chercher un membre par nom..."
+            placeholder={t("assignment.searchMemberPlaceholder")}
             className={fieldClasses}
           />
           {userResults.length > 0 && !userId && (
@@ -142,12 +144,12 @@ export function AssignmentForm({ sections, onSubmit }: AssignmentFormProps) {
       <input
         value={part}
         onChange={(e) => setPart(e.target.value)}
-        placeholder="Partie (ex. Basse, Alto...)"
+        placeholder={t("assignment.partPlaceholder")}
         className={fieldClasses}
       />
 
       <Button onClick={handleSubmit} className="w-full">
-        Assigner
+        {t("assignment.submit")}
       </Button>
     </div>
   );

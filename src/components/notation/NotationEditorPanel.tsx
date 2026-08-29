@@ -1,5 +1,6 @@
 import clsx from "clsx";
 import { Delete, Eraser, Play, Square } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import type { NoteDuration, Section } from "../../types/editor";
 import { DurationPicker } from "./DurationPicker";
 import { Metronome } from "./Metronome";
@@ -40,10 +41,12 @@ export function NotationEditorPanel({
   isPlayingMelody,
   onTogglePlayMelody,
 }: NotationEditorPanelProps) {
+  const { t } = useTranslation("editor");
+
   if (!section) {
     return (
       <div className="flex h-full items-center justify-center text-sm text-muted">
-        Sélectionne ou crée une section pour commencer à noter la mélodie.
+        {t("notationEditor.emptyState")}
       </div>
     );
   }
@@ -69,25 +72,25 @@ export function NotationEditorPanel({
           )}
         >
           {isPlayingMelody ? <Square size={13} /> : <Play size={13} />}
-          {isPlayingMelody ? "Stop" : "Écouter la section"}
+          {isPlayingMelody ? t("notationEditor.stop") : t("notationEditor.playSection")}
         </button>
         <button
           type="button"
           onClick={onClearLastNote}
-          title="Effacer la dernière note de la mesure sélectionnée"
+          title={t("notationEditor.clearLastNoteTitle")}
           className="flex h-9 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs font-semibold text-ink hover:border-accent/40"
         >
           <Delete size={13} />
-          Dernière note
+          {t("notationEditor.clearLastNoteButton")}
         </button>
         <button
           type="button"
           onClick={onClearMeasureScore}
-          title="Vider la mesure sélectionnée"
+          title={t("notationEditor.clearMeasureTitle")}
           className="flex h-9 items-center gap-1.5 rounded-lg border border-border px-2.5 text-xs font-semibold text-ink hover:border-accent/40"
         >
           <Eraser size={13} />
-          Vider la mesure
+          {t("notationEditor.clearMeasureButton")}
         </button>
       </div>
 
@@ -110,7 +113,7 @@ export function NotationEditorPanel({
       <StaffRenderer measures={section.measures} timeSignature={section.time_signature ?? "4/4"} selectedMeasureNumber={selectedMeasureNumber} />
 
       {selectedMeasureNumber == null ? (
-        <p className="text-sm text-muted">Sélectionne une mesure ci-dessus, puis joue sur le piano pour écrire la mélodie.</p>
+        <p className="text-sm text-muted">{t("notationEditor.selectMeasureHint")}</p>
       ) : (
         <PianoKeyboard fromOctave={3} toOctave={5} onPlay={onPlayNote} />
       )}

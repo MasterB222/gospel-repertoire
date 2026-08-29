@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { ListPlus, Check, Plus } from "lucide-react";
 import { Modal } from "../ui/Modal";
 import { Button } from "../ui/Button";
@@ -14,6 +15,7 @@ import {
 import type { Playlist } from "../../types/library";
 
 export function AddToPlaylistButton({ songId }: { songId: string }) {
+  const { t } = useTranslation("songs");
   const { isAuthenticated, profile } = useAuth();
   const { showToast } = useToast();
   const [open, setOpen] = useState(false);
@@ -45,7 +47,7 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
         return next;
       });
     } catch {
-      showToast("Échec de la mise à jour de la playlist.", "error");
+      showToast(t("addToPlaylist.updateError"), "error");
     }
   }
 
@@ -58,7 +60,7 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
       setContaining((prev) => new Set(prev).add(playlist.id));
       setNewName("");
     } catch {
-      showToast("Échec de la création de la playlist.", "error");
+      showToast(t("addToPlaylist.createError"), "error");
     }
   }
 
@@ -69,12 +71,12 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
         className="inline-flex items-center gap-1.5 rounded-lg border border-border px-3 py-2 text-sm text-ink hover:border-accent"
       >
         <ListPlus size={15} />
-        Ajouter à une playlist
+        {t("addToPlaylist.button")}
       </button>
 
-      <Modal open={open} onClose={() => setOpen(false)} title="Ajouter à une playlist">
+      <Modal open={open} onClose={() => setOpen(false)} title={t("addToPlaylist.modalTitle")}>
         <div className="space-y-3">
-          {playlists.length === 0 && <p className="text-sm text-muted">Aucune playlist pour l'instant.</p>}
+          {playlists.length === 0 && <p className="text-sm text-muted">{t("addToPlaylist.empty")}</p>}
           <div className="max-h-48 space-y-1 overflow-y-auto">
             {playlists.map((p) => (
               <button
@@ -91,7 +93,7 @@ export function AddToPlaylistButton({ songId }: { songId: string }) {
             <input
               value={newName}
               onChange={(e) => setNewName(e.target.value)}
-              placeholder="Nouvelle playlist..."
+              placeholder={t("addToPlaylist.newPlaylistPlaceholder")}
               className="flex-1 rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
             />
             <Button onClick={handleCreate} className="!px-3">

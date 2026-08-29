@@ -1,6 +1,7 @@
 import { useEffect, useState } from "react";
 import { Link, useParams } from "react-router-dom";
 import { X, ChevronLeft, ChevronRight } from "lucide-react";
+import { useTranslation } from "react-i18next";
 import { getSong } from "../../lib/catalog";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -8,6 +9,7 @@ import { Music2 } from "lucide-react";
 import type { Song } from "../../types/catalog";
 
 export function PresentMode() {
+  const { t } = useTranslation("songs");
   const { id } = useParams<{ id: string }>();
   const [song, setSong] = useState<Song | null | undefined>(undefined);
   const [sectionIdx, setSectionIdx] = useState(0);
@@ -41,9 +43,9 @@ export function PresentMode() {
   if (song === null) {
     return (
       <div className="flex min-h-screen flex-col items-center justify-center gap-4 bg-background p-6">
-        <EmptyState icon={Music2} title="Chanson introuvable" />
+        <EmptyState icon={Music2} title={t("presentMode.notFoundTitle")} />
         <Link to="/songs" className="text-sm text-accent-ink hover:underline">
-          Retour
+          {t("presentMode.back")}
         </Link>
       </div>
     );
@@ -70,7 +72,7 @@ export function PresentMode() {
             onClick={() => setSectionIdx((i) => Math.max(0, i - 1))}
             disabled={sectionIdx === 0}
             className="rounded-full border border-border p-3 text-ink hover:border-accent disabled:opacity-30"
-            aria-label="Section précédente"
+            aria-label={t("presentMode.previousSection")}
           >
             <ChevronLeft size={22} />
           </button>
@@ -81,7 +83,7 @@ export function PresentMode() {
             onClick={() => setSectionIdx((i) => Math.min(sections.length - 1, i + 1))}
             disabled={sectionIdx === sections.length - 1}
             className="rounded-full border border-border p-3 text-ink hover:border-accent disabled:opacity-30"
-            aria-label="Section suivante"
+            aria-label={t("presentMode.nextSection")}
           >
             <ChevronRight size={22} />
           </button>

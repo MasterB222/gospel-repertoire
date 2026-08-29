@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutGrid } from "lucide-react";
 import { CategoryCard } from "../../components/catalog/CategoryCard";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -9,7 +10,8 @@ import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 import type { Category, Song } from "../../types/catalog";
 
 export function CategoriesList() {
-  useDocumentTitle("Catégories");
+  const { t } = useTranslation("songs");
+  useDocumentTitle(t("categories.listTitle"));
   const [categories, setCategories] = useState<Category[]>([]);
   const [songs, setSongs] = useState<Song[]>([]);
   const [loading, setLoading] = useState(true);
@@ -37,7 +39,7 @@ export function CategoriesList() {
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Catégories</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("categories.listTitle")}</h1>
 
       {loading && (
         <div className="grid grid-cols-2 gap-4 sm:grid-cols-3 md:grid-cols-4 lg:grid-cols-5">
@@ -50,14 +52,14 @@ export function CategoriesList() {
       {!loading && error && (
         <EmptyState
           icon={LayoutGrid}
-          title="Impossible de charger les catégories"
-          description="Une erreur est survenue en contactant la base de données."
-          action={<Button onClick={load}>Réessayer</Button>}
+          title={t("categories.loadError.title")}
+          description={t("categories.loadError.description")}
+          action={<Button onClick={load}>{t("categories.loadError.retry")}</Button>}
         />
       )}
 
       {!loading && !error && categories.length === 0 && (
-        <EmptyState icon={LayoutGrid} title="Aucune catégorie pour l'instant" />
+        <EmptyState icon={LayoutGrid} title={t("categories.empty")} />
       )}
 
       {!loading && !error && categories.length > 0 && (

@@ -1,5 +1,6 @@
 import { Heart } from "lucide-react";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { useFavorites } from "../../context/FavoritesContext";
 import { useAuth } from "../../context/AuthContext";
 
@@ -15,6 +16,7 @@ export function FavoriteButton({
    * illisibles en mode clair sur ce fond qui, lui, ne change jamais. */
   onDark?: boolean;
 }) {
+  const { t } = useTranslation("songs");
   const { isAuthenticated } = useAuth();
   const { isFavorite, toggleFavorite } = useFavorites();
   if (!isAuthenticated) return null;
@@ -27,7 +29,7 @@ export function FavoriteButton({
         e.stopPropagation();
         toggleFavorite(songId);
       }}
-      aria-label={active ? "Retirer des favoris" : "Ajouter aux favoris"}
+      aria-label={active ? t("favoriteButton.removeAria") : t("favoriteButton.addAria")}
       aria-pressed={active}
       className={clsx(
         "flex items-center justify-center rounded-full transition-colors",
