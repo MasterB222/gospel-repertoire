@@ -48,8 +48,12 @@ export function Header() {
           to="/profile"
           className="flex items-center gap-2 rounded-lg px-2 py-1.5 text-sm text-ink hover:bg-surface-raised"
         >
-          <span className="flex h-8 w-8 items-center justify-center rounded-full bg-accent text-sm font-bold text-[#2A0F1E]">
-            {profile?.first_name?.[0]?.toUpperCase() ?? "?"}
+          <span className="flex h-8 w-8 shrink-0 items-center justify-center overflow-hidden rounded-full bg-accent text-sm font-bold text-[#2A0F1E]">
+            {profile?.avatar_url ? (
+              <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+            ) : (
+              profile?.first_name?.[0]?.toUpperCase() ?? "?"
+            )}
           </span>
           <span className="hidden sm:inline">{profile?.first_name ?? "Mon compte"}</span>
         </Link>

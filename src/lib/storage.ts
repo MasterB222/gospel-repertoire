@@ -1,6 +1,7 @@
 import { supabase } from "./supabaseClient";
 
 const PARTITIONS_BUCKET = "partitions";
+const AVATARS_BUCKET = "avatars";
 
 export async function uploadPartitionFile(file: File): Promise<string> {
   const ext = file.name.split(".").pop() || "pdf";
@@ -10,5 +11,16 @@ export async function uploadPartitionFile(file: File): Promise<string> {
   });
   if (error) throw error;
   const { data } = supabase.storage.from(PARTITIONS_BUCKET).getPublicUrl(path);
+  return data.publicUrl;
+}
+
+export async function uploadAvatar(userId: string, file: File): Promise<string> {
+  const ext = file.name.split(".").pop() || "jpg";
+  const path = `${userId}/${crypto.randomUUID()}.${ext}`;
+  const { error } = await supabase.storage.from(AVATARS_BUCKET).upload(path, file, {
+    contentType: file.type || "image/jpeg",
+  });
+  if (error) throw error;
+  const { data } = supabase.storage.from(AVATARS_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }

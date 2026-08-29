@@ -12,6 +12,7 @@ export interface Profile {
   role: UserRole;
   note_notation: "solfege" | "letters";
   active: boolean;
+  avatar_url: string | null;
 }
 
 interface AuthContextValue {

@@ -1,13 +1,16 @@
-import { useEffect, useState } from "react";
-import { Heart, ListMusic, Music2, Save } from "lucide-react";
+import { useEffect, useRef, useState, type ChangeEvent } from "react";
+import { Camera, Heart, ListMusic, Music2, Save } from "lucide-react";
 import { Card } from "../components/ui/Card";
 import { Button } from "../components/ui/Button";
 import { Skeleton } from "../components/ui/Skeleton";
 import { useAuth } from "../context/AuthContext";
 import { useToast } from "../context/ToastContext";
 import { updateProfile } from "../lib/profile";
+import { uploadAvatar } from "../lib/storage";
 import { listFavoriteSongs, listHistory, listPlaylists } from "../lib/library";
 import { useDocumentTitle } from "../hooks/useDocumentTitle";
+
+const MAX_AVATAR_BYTES = 5 * 1024 * 1024;
 
 const ROLE_LABELS: Record<string, string> = {
   admin: "Responsable",
@@ -25,7 +28,9 @@ export function Profile() {
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [saving, setSaving] = useState(false);
+  const [uploadingAvatar, setUploadingAvatar] = useState(false);
   const [stats, setStats] = useState<{ favorites: number; playlists: number; viewed: number } | null>(null);
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   useEffect(() => {
     if (!profile) return;
@@ -51,14 +56,63 @@ export function Profile() {
     }
   }
 
+  async function handleAvatarChange(e: ChangeEvent<HTMLInputElement>) {
+    const file = e.target.files?.[0];
+    e.target.value = "";
+    if (!file || !profile) return;
+
+    if (!file.type.startsWith("image/")) {
+      showToast("Choisis un fichier image.", "error");
+      return;
+    }
+    if (file.size > MAX_AVATAR_BYTES) {
+      showToast("Image trop lourde (5 Mo max).", "error");
+      return;
+    }
+
+    setUploadingAvatar(true);
+    try {
+      const url = await uploadAvatar(profile.id, file);
+      await updateProfile(profile.id, { avatar_url: url });
+      await refreshProfile();
+      showToast("Photo de profil mise à jour.", "success");
+    } catch {
+      showToast("Échec de l'envoi de la photo.", "error");
+    } finally {
+      setUploadingAvatar(false);
+    }
+  }
+
   return (
     <div className="max-w-xl">
       <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Profil</h1>
 
       <div className="mb-6 flex items-center gap-4">
-        <span className="flex h-16 w-16 items-center justify-center rounded-full bg-accent text-2xl font-bold text-[#2A0F1E]">
-          {profile.first_name?.[0]?.toUpperCase() ?? "?"}
-        </span>
+        <button
+          type="button"
+          onClick={() => fileInputRef.current?.click()}
+          disabled={uploadingAvatar}
+          aria-label="Changer la photo de profil"
+          className="group relative h-16 w-16 shrink-0 overflow-hidden rounded-full bg-accent text-2xl font-bold text-[#2A0F1E] focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
+        >
+          {profile.avatar_url ? (
+            <img src={profile.avatar_url} alt="" className="h-full w-full object-cover" />
+          ) : (
+            <span className="flex h-full w-full items-center justify-center">
+              {profile.first_name?.[0]?.toUpperCase() ?? "?"}
+            </span>
+          )}
+          <span className="absolute inset-0 flex items-center justify-center bg-black/50 opacity-0 transition-opacity group-hover:opacity-100">
+            <Camera size={18} className="text-white" />
+          </span>
+        </button>
+        <input
+          ref={fileInputRef}
+          type="file"
+          accept="image/*"
+          onChange={handleAvatarChange}
+          className="hidden"
+        />
         <div>
           <p className="font-serif text-lg font-semibold text-ink">
             {profile.first_name} {profile.last_name}
