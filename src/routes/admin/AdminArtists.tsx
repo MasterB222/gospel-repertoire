@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Mic2, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { EntityForm } from "../../components/admin/EntityForm";
@@ -10,6 +11,7 @@ import { listArtists } from "../../lib/catalog";
 import type { Artist } from "../../types/catalog";
 
 export function AdminArtists() {
+  const { t } = useTranslation("admin");
   const { showToast } = useToast();
   const [artists, setArtists] = useState<Artist[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,23 +28,23 @@ export function AdminArtists() {
   useEffect(load, []);
 
   async function handleDelete(id: string) {
-    if (!window.confirm("Supprimer cet artiste ?")) return;
+    if (!window.confirm(t("artists.deleteConfirm"))) return;
     try {
       await deleteArtist(id);
       setArtists((prev) => prev.filter((a) => a.id !== id));
     } catch {
-      showToast("Échec de la suppression (des chansons y sont peut-être liées).", "error");
+      showToast(t("artists.deleteFailed"), "error");
     }
   }
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Admin — Artistes</h1>
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("artists.title")}</h1>
         {!creating && (
           <Button onClick={() => setCreating(true)}>
             <Plus size={15} />
-            Nouvel artiste
+            {t("artists.new")}
           </Button>
         )}
       </div>
@@ -50,17 +52,17 @@ export function AdminArtists() {
       {creating && (
         <div className="mb-6 max-w-md">
           <EntityForm
-            nameLabel="Nom"
-            descriptionLabel="Biographie"
+            nameLabel={t("artists.nameLabel")}
+            descriptionLabel={t("artists.bioLabel")}
             onCancel={() => setCreating(false)}
             onSubmit={async (input) => {
               try {
                 const artist = await createArtist(input);
                 setArtists((prev) => [...prev, artist].sort((a, b) => a.name.localeCompare(b.name)));
                 setCreating(false);
-                showToast("Artiste créé.", "success");
+                showToast(t("artists.createSuccess"), "success");
               } catch {
-                showToast("Échec de la création.", "error");
+                showToast(t("artists.createFailed"), "error");
               }
             }}
           />
@@ -70,15 +72,15 @@ export function AdminArtists() {
       {loading ? (
         <Skeleton className="h-40 w-full max-w-md" />
       ) : artists.length === 0 ? (
-        <EmptyState icon={Mic2} title="Aucun artiste" />
+        <EmptyState icon={Mic2} title={t("artists.empty")} />
       ) : (
         <div className="max-w-md space-y-2">
           {artists.map((artist) =>
             editingId === artist.id ? (
               <EntityForm
                 key={artist.id}
-                nameLabel="Nom"
-                descriptionLabel="Biographie"
+                nameLabel={t("artists.nameLabel")}
+                descriptionLabel={t("artists.bioLabel")}
                 initial={{ name: artist.name, description: artist.biography, image_url: artist.image_url }}
                 onCancel={() => setEditingId(null)}
                 onSubmit={async (input) => {
@@ -88,9 +90,9 @@ export function AdminArtists() {
                       prev.map((a) => (a.id === artist.id ? { ...a, name: input.name, biography: input.description, image_url: input.image_url } : a))
                     );
                     setEditingId(null);
-                    showToast("Artiste mis à jour.", "success");
+                    showToast(t("artists.updateSuccess"), "success");
                   } catch {
-                    showToast("Échec de la mise à jour.", "error");
+                    showToast(t("artists.updateFailed"), "error");
                   }
                 }}
               />

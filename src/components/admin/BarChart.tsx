@@ -1,11 +1,14 @@
+import { useTranslation } from "react-i18next";
+
 export function BarChart({ title, data }: { title: string; data: { name: string; count: number }[] }) {
+  const { t } = useTranslation("admin");
   const max = Math.max(1, ...data.map((d) => d.count));
 
   return (
     <div className="rounded-2xl border border-border bg-surface p-4">
       <h3 className="mb-3 text-sm font-semibold text-muted">{title}</h3>
       {data.length === 0 ? (
-        <p className="text-xs text-muted">Aucune donnée.</p>
+        <p className="text-xs text-muted">{t("dashboard.charts.noData")}</p>
       ) : (
         <div className="space-y-2">
           {data.map((d) => (

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { LayoutGrid, Pencil, Plus, Trash2 } from "lucide-react";
 import { Button } from "../../components/ui/Button";
 import { EntityForm } from "../../components/admin/EntityForm";
@@ -10,6 +11,7 @@ import { listCategories } from "../../lib/catalog";
 import type { Category } from "../../types/catalog";
 
 export function AdminCategories() {
+  const { t } = useTranslation("admin");
   const { showToast } = useToast();
   const [categories, setCategories] = useState<Category[]>([]);
   const [loading, setLoading] = useState(true);
@@ -26,23 +28,23 @@ export function AdminCategories() {
   useEffect(load, []);
 
   async function handleDelete(id: string) {
-    if (!window.confirm("Supprimer cette catégorie ?")) return;
+    if (!window.confirm(t("categories.deleteConfirm"))) return;
     try {
       await deleteCategory(id);
       setCategories((prev) => prev.filter((c) => c.id !== id));
     } catch {
-      showToast("Échec de la suppression (des chansons y sont peut-être liées).", "error");
+      showToast(t("categories.deleteFailed"), "error");
     }
   }
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Admin — Catégories</h1>
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("categories.title")}</h1>
         {!creating && (
           <Button onClick={() => setCreating(true)}>
             <Plus size={15} />
-            Nouvelle catégorie
+            {t("categories.new")}
           </Button>
         )}
       </div>
@@ -50,17 +52,17 @@ export function AdminCategories() {
       {creating && (
         <div className="mb-6 max-w-md">
           <EntityForm
-            nameLabel="Nom"
-            descriptionLabel="Description"
+            nameLabel={t("categories.nameLabel")}
+            descriptionLabel={t("categories.descriptionLabel")}
             onCancel={() => setCreating(false)}
             onSubmit={async (input) => {
               try {
                 const category = await createCategory(input);
                 setCategories((prev) => [...prev, category].sort((a, b) => a.name.localeCompare(b.name)));
                 setCreating(false);
-                showToast("Catégorie créée.", "success");
+                showToast(t("categories.createSuccess"), "success");
               } catch {
-                showToast("Échec de la création.", "error");
+                showToast(t("categories.createFailed"), "error");
               }
             }}
           />
@@ -70,15 +72,15 @@ export function AdminCategories() {
       {loading ? (
         <Skeleton className="h-40 w-full max-w-md" />
       ) : categories.length === 0 ? (
-        <EmptyState icon={LayoutGrid} title="Aucune catégorie" />
+        <EmptyState icon={LayoutGrid} title={t("categories.empty")} />
       ) : (
         <div className="max-w-md space-y-2">
           {categories.map((category) =>
             editingId === category.id ? (
               <EntityForm
                 key={category.id}
-                nameLabel="Nom"
-                descriptionLabel="Description"
+                nameLabel={t("categories.nameLabel")}
+                descriptionLabel={t("categories.descriptionLabel")}
                 initial={{ name: category.name, description: category.description, image_url: category.image_url }}
                 onCancel={() => setEditingId(null)}
                 onSubmit={async (input) => {
@@ -88,9 +90,9 @@ export function AdminCategories() {
                       prev.map((c) => (c.id === category.id ? { ...c, name: input.name, description: input.description, image_url: input.image_url } : c))
                     );
                     setEditingId(null);
-                    showToast("Catégorie mise à jour.", "success");
+                    showToast(t("categories.updateSuccess"), "success");
                   } catch {
-                    showToast("Échec de la mise à jour.", "error");
+                    showToast(t("categories.updateFailed"), "error");
                   }
                 }}
               />

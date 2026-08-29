@@ -1,4 +1,5 @@
 import { useEffect, useRef, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { FileText, Save, Upload, X } from "lucide-react";
 import { Button } from "../ui/Button";
 import { listArtists, listCategories } from "../../lib/catalog";
@@ -34,6 +35,7 @@ function toInput(song?: Song): SongInput {
 }
 
 export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: SongInput) => Promise<void> }) {
+  const { t } = useTranslation("admin");
   const { showToast } = useToast();
   const [input, setInput] = useState<SongInput>(() => toInput(song));
   const [tagsText, setTagsText] = useState(song?.tags.join(", ") ?? "");
@@ -47,16 +49,16 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
   async function handlePartitionFile(file: File | undefined) {
     if (!file) return;
     if (file.type !== "application/pdf") {
-      showToast("Seuls les fichiers PDF sont acceptés.", "error");
+      showToast(t("songForm.onlyPdf"), "error");
       return;
     }
     setUploadingPartition(true);
     try {
       const url = await uploadPartitionFile(file);
       set("partition_url", url);
-      showToast("Partition importée.", "success");
+      showToast(t("songForm.partitionImported"), "success");
     } catch {
-      showToast("Échec de l'import du fichier. Vérifie que le bucket 'partitions' existe (migration 011).", "error");
+      showToast(t("songForm.partitionImportFailed"), "error");
     } finally {
       setUploadingPartition(false);
     }
@@ -90,14 +92,14 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div className="sm:col-span-2">
           <label htmlFor="song-title" className={labelClasses}>
-            Titre *
+            {t("songForm.titleLabel")}
           </label>
           <input id="song-title" value={input.title} onChange={(e) => set("title", e.target.value)} className={fieldClasses} />
         </div>
 
         <div>
           <label htmlFor="song-artist" className={labelClasses}>
-            Artiste
+            {t("songForm.artistLabel")}
           </label>
           <select
             id="song-artist"
@@ -116,7 +118,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
 
         <div>
           <label htmlFor="song-category" className={labelClasses}>
-            Catégorie
+            {t("songForm.categoryLabel")}
           </label>
           <select
             id="song-category"
@@ -135,13 +137,13 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
 
         <div>
           <label htmlFor="song-album" className={labelClasses}>
-            Album
+            {t("songForm.albumLabel")}
           </label>
           <input id="song-album" value={input.album} onChange={(e) => set("album", e.target.value)} className={fieldClasses} />
         </div>
         <div>
           <label htmlFor="song-year" className={labelClasses}>
-            Année
+            {t("songForm.yearLabel")}
           </label>
           <input
             id="song-year"
@@ -154,32 +156,32 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
 
         <div>
           <label htmlFor="song-language" className={labelClasses}>
-            Langue
+            {t("songForm.languageLabel")}
           </label>
           <input id="song-language" value={input.language} onChange={(e) => set("language", e.target.value)} className={fieldClasses} />
         </div>
         <div>
           <label htmlFor="song-key" className={labelClasses}>
-            Tonalité
+            {t("songForm.keyLabel")}
           </label>
           <input
             id="song-key"
             value={input.original_key}
             onChange={(e) => set("original_key", e.target.value)}
             className={fieldClasses}
-            placeholder="ex. Sol majeur"
+            placeholder={t("songForm.keyPlaceholder")}
           />
         </div>
 
         <div>
           <label htmlFor="song-tempo" className={labelClasses}>
-            Tempo (BPM)
+            {t("songForm.tempoLabel")}
           </label>
           <input id="song-tempo" value={input.tempo} onChange={(e) => set("tempo", e.target.value)} className={fieldClasses} />
         </div>
         <div>
           <label htmlFor="song-difficulty" className={labelClasses}>
-            Difficulté
+            {t("songForm.difficultyLabel")}
           </label>
           <select
             id="song-difficulty"
@@ -196,7 +198,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
 
       <div>
         <label htmlFor="song-description" className={labelClasses}>
-          Description
+          {t("songForm.descriptionLabel")}
         </label>
         <textarea
           id="song-description"
@@ -209,14 +211,14 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
 
       <div>
         <label htmlFor="song-lyrics" className={labelClasses}>
-          Paroles
+          {t("songForm.lyricsLabel")}
         </label>
         <textarea id="song-lyrics" rows={6} value={input.lyrics} onChange={(e) => set("lyrics", e.target.value)} className={fieldClasses} />
       </div>
 
       <div>
         <label htmlFor="song-chords" className={labelClasses}>
-          Accords
+          {t("songForm.chordsLabel")}
         </label>
         <textarea id="song-chords" rows={3} value={input.chords} onChange={(e) => set("chords", e.target.value)} className={fieldClasses} />
       </div>
@@ -224,7 +226,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
         <div>
           <label htmlFor="song-youtube" className={labelClasses}>
-            URL YouTube
+            {t("songForm.youtubeLabel")}
           </label>
           <input
             id="song-youtube"
@@ -236,7 +238,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
         </div>
         <div>
           <label htmlFor="song-cover" className={labelClasses}>
-            URL image (pochette)
+            {t("songForm.coverLabel")}
           </label>
           <input
             id="song-cover"
@@ -247,7 +249,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
           />
         </div>
         <div>
-          <label className={labelClasses}>Partition (PDF)</label>
+          <label className={labelClasses}>{t("songForm.partitionLabel")}</label>
           <input
             ref={partitionFileInput}
             type="file"
@@ -263,7 +265,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
               className="flex items-center gap-1.5 rounded-lg border border-border px-2.5 py-1.5 text-xs font-semibold text-ink hover:border-accent disabled:opacity-50"
             >
               <Upload size={13} />
-              {uploadingPartition ? "Import..." : "Choisir un fichier PDF"}
+              {uploadingPartition ? t("songForm.importing") : t("songForm.choosePdf")}
             </button>
             {input.partition_url && (
               <>
@@ -274,12 +276,12 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
                   className="flex min-w-0 items-center gap-1 truncate text-xs text-accent-ink underline"
                 >
                   <FileText size={12} className="shrink-0" />
-                  Fichier actuel
+                  {t("songForm.currentFile")}
                 </a>
                 <button
                   type="button"
                   onClick={() => set("partition_url", "")}
-                  title="Retirer la partition"
+                  title={t("songForm.removePartition")}
                   className="text-muted hover:text-danger"
                 >
                   <X size={13} />
@@ -292,7 +294,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
             onClick={() => setShowManualPartitionUrl((v) => !v)}
             className="mt-1.5 text-xs text-muted underline hover:text-ink"
           >
-            Ou coller un lien externe
+            {t("songForm.orPasteLink")}
           </button>
           {showManualPartitionUrl && (
             <input
@@ -305,20 +307,26 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
         </div>
         <div>
           <label htmlFor="song-tags" className={labelClasses}>
-            Tags (séparés par des virgules)
+            {t("songForm.tagsLabel")}
           </label>
-          <input id="song-tags" value={tagsText} onChange={(e) => setTagsText(e.target.value)} className={fieldClasses} placeholder="louange, dimanche, chorale" />
+          <input
+            id="song-tags"
+            value={tagsText}
+            onChange={(e) => setTagsText(e.target.value)}
+            className={fieldClasses}
+            placeholder={t("songForm.tagsPlaceholder")}
+          />
         </div>
       </div>
 
       <div className="flex flex-wrap gap-2 border-t border-border pt-4">
         <Button onClick={() => handleSubmit("brouillon")} variant="secondary" disabled={saving}>
           <Save size={15} />
-          Enregistrer en brouillon
+          {t("songForm.saveDraft")}
         </Button>
         <Button onClick={() => handleSubmit("publie")} disabled={saving}>
           <Save size={15} />
-          Publier
+          {t("songForm.publish")}
         </Button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useId, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
 import type { EntityInput } from "../../lib/admin";
 
@@ -14,6 +15,7 @@ interface EntityFormProps {
 }
 
 export function EntityForm({ initial, nameLabel, descriptionLabel, onSubmit, onCancel }: EntityFormProps) {
+  const { t } = useTranslation("admin");
   const uid = useId();
   const [name, setName] = useState(initial?.name ?? "");
   const [description, setDescription] = useState(initial?.description ?? "");
@@ -52,16 +54,16 @@ export function EntityForm({ initial, nameLabel, descriptionLabel, onSubmit, onC
       </div>
       <div>
         <label htmlFor={`${uid}-image`} className="mb-1 block text-xs font-semibold text-muted">
-          URL image (optionnel)
+          {t("entityForm.imageUrlLabel")}
         </label>
         <input id={`${uid}-image`} value={imageUrl} onChange={(e) => setImageUrl(e.target.value)} className={fieldClasses} placeholder="https://..." />
       </div>
       <div className="flex gap-2">
         <Button onClick={handleSubmit} disabled={saving}>
-          {saving ? "Enregistrement..." : "Enregistrer"}
+          {saving ? t("entityForm.saving") : t("entityForm.save")}
         </Button>
         <Button variant="ghost" onClick={onCancel}>
-          Annuler
+          {t("entityForm.cancel")}
         </Button>
       </div>
     </div>

@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Users, Plus, Copy, Check, UserX, UserCheck, Trash2, RefreshCw, KeyRound } from "lucide-react";
 import { EmptyState } from "../../components/ui/EmptyState";
 import { Skeleton } from "../../components/ui/Skeleton";
@@ -10,14 +11,6 @@ import { listAllProfiles, updateUserRole, setUserActive, deleteUserAccount, type
 import { adminCreateUser, generatePassword } from "../../lib/adminAuth";
 
 const ROLES: UserRole[] = ["admin", "chef_choeur", "musicien", "chanteur", "choriste", "utilisateur"];
-const ROLE_LABELS: Record<UserRole, string> = {
-  admin: "Responsable",
-  chef_choeur: "Chef de chœur",
-  musicien: "Musicien",
-  chanteur: "Chanteur",
-  choriste: "Choriste",
-  utilisateur: "Utilisateur",
-};
 
 const EMAIL_PATTERN = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/;
 
@@ -37,6 +30,7 @@ function CreateUserForm({
   onCreated: (creds: CreatedCredentials) => void;
   onCancel: () => void;
 }) {
+  const { t } = useTranslation(["admin", "common"]);
   const { showToast } = useToast();
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
@@ -48,15 +42,13 @@ function CreateUserForm({
   async function handleSubmit() {
     const trimmedEmail = email.trim();
     if (!firstName.trim() || !lastName.trim() || !trimmedEmail || password.length < 6) {
-      showToast("Remplis tous les champs (mot de passe : 6 caractères minimum).", "error");
+      showToast(t("users.fillAllFields"), "error");
       return;
     }
     if (!EMAIL_PATTERN.test(trimmedEmail)) {
       showToast(
         // eslint-disable-next-line no-control-regex
-        /[^\x00-\x7F]/.test(trimmedEmail)
-          ? "L'email contient des caractères stylisés (police fantaisie) qui ne sont pas de vraies lettres. Retape-le avec un clavier normal."
-          : "Adresse email invalide (ex : nom@domaine.com).",
+        /[^\x00-\x7F]/.test(trimmedEmail) ? t("users.stylizedEmail") : t("users.invalidEmail"),
         "error"
       );
       return;
@@ -77,12 +69,7 @@ function CreateUserForm({
       setPassword(generatePassword());
     } catch (err) {
       const message = err instanceof Error ? err.message : "";
-      showToast(
-        message.toLowerCase().includes("invalid format")
-          ? "Adresse email invalide (ex : nom@domaine.com)."
-          : message || "Échec de la création du compte.",
-        "error"
-      );
+      showToast(message.toLowerCase().includes("invalid format") ? t("users.invalidEmail") : message || t("users.createFailed"), "error");
     } finally {
       setSaving(false);
     }
@@ -91,19 +78,19 @@ function CreateUserForm({
   return (
     <Card className="mb-4 space-y-3 p-4">
       <div className="grid grid-cols-1 gap-3 sm:grid-cols-2">
-        <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder="Prénom" className={fieldClasses} />
-        <input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder="Nom" className={fieldClasses} />
+        <input value={firstName} onChange={(e) => setFirstName(e.target.value)} placeholder={t("users.firstNamePlaceholder")} className={fieldClasses} />
+        <input value={lastName} onChange={(e) => setLastName(e.target.value)} placeholder={t("users.lastNamePlaceholder")} className={fieldClasses} />
         <input
           type="email"
           value={email}
           onChange={(e) => setEmail(e.target.value)}
-          placeholder="Email"
+          placeholder={t("users.emailPlaceholder")}
           className={fieldClasses}
         />
         <select value={role} onChange={(e) => setRole(e.target.value as UserRole)} className={fieldClasses}>
           {ROLES.map((r) => (
             <option key={r} value={r}>
-              {ROLE_LABELS[r]}
+              {t(`roles.${r}`, { ns: "common" })}
             </option>
           ))}
         </select>
@@ -113,17 +100,17 @@ function CreateUserForm({
         <button
           type="button"
           onClick={() => setPassword(generatePassword())}
-          title="Générer un mot de passe"
+          title={t("users.generatePasswordTitle")}
           className="flex shrink-0 items-center gap-1.5 rounded-lg border border-border px-3 text-xs text-ink hover:border-accent"
         >
           <RefreshCw size={13} />
-          Générer
+          {t("users.generate")}
         </button>
       </div>
       <div className="flex gap-2">
         <Button onClick={handleSubmit} disabled={saving}>
           <KeyRound size={15} />
-          {saving ? "Création..." : "Créer le compte"}
+          {saving ? t("users.creating") : t("users.create")}
         </Button>
         <button
           type="button"
@@ -131,7 +118,7 @@ function CreateUserForm({
           disabled={saving}
           className="rounded-lg border border-border px-4 text-sm text-ink hover:border-accent disabled:opacity-50"
         >
-          Annuler
+          {t("users.cancel")}
         </button>
       </div>
     </Card>
@@ -139,33 +126,29 @@ function CreateUserForm({
 }
 
 function CredentialsPanel({ creds, onClose }: { creds: CreatedCredentials; onClose: () => void }) {
+  const { t } = useTranslation("admin");
   const [copied, setCopied] = useState(false);
 
   async function handleCopy() {
-    await navigator.clipboard.writeText(`Email : ${creds.email}\nMot de passe : ${creds.password}`);
+    await navigator.clipboard.writeText(`${t("users.copyEmailLabel")} : ${creds.email}\n${t("users.copyPasswordLabel")} : ${creds.password}`);
     setCopied(true);
     setTimeout(() => setCopied(false), 2000);
   }
 
   return (
     <Card className="mb-4 space-y-2 border-accent/40 bg-accent/5 p-4">
-      <p className="text-sm font-semibold text-ink">Compte créé — transmets ces identifiants :</p>
+      <p className="text-sm font-semibold text-ink">{t("users.credentialsTitle")}</p>
       <p className="font-mono text-sm text-ink">
         {creds.email} / {creds.password}
       </p>
-      {creds.needsEmailConfirmation && (
-        <p className="text-xs text-muted">
-          La confirmation par email est activée sur ce projet : la personne devra cliquer le lien reçu par email
-          avant de pouvoir se connecter.
-        </p>
-      )}
+      {creds.needsEmailConfirmation && <p className="text-xs text-muted">{t("users.confirmationNotice")}</p>}
       <div className="flex gap-2 pt-1">
         <Button variant="secondary" onClick={handleCopy}>
           {copied ? <Check size={15} /> : <Copy size={15} />}
-          {copied ? "Copié" : "Copier"}
+          {copied ? t("users.copied") : t("users.copy")}
         </Button>
         <Button variant="ghost" onClick={onClose}>
-          Fermer
+          {t("users.close")}
         </Button>
       </div>
     </Card>
@@ -173,6 +156,7 @@ function CredentialsPanel({ creds, onClose }: { creds: CreatedCredentials; onClo
 }
 
 export function AdminUsers() {
+  const { t } = useTranslation(["admin", "common"]);
   const { profile: currentProfile } = useAuth();
   const { showToast } = useToast();
   const [profiles, setProfiles] = useState<AdminProfile[]>([]);
@@ -194,10 +178,10 @@ export function AdminUsers() {
     setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, role } : p)));
     try {
       await updateUserRole(id, role);
-      showToast("Rôle mis à jour.", "success");
+      showToast(t("users.roleUpdated"), "success");
     } catch {
       setProfiles(previous);
-      showToast("Échec de la mise à jour du rôle.", "error");
+      showToast(t("users.roleUpdateFailed"), "error");
     }
   }
 
@@ -206,28 +190,28 @@ export function AdminUsers() {
     setProfiles((prev) => prev.map((p) => (p.id === id ? { ...p, active } : p)));
     try {
       await setUserActive(id, active);
-      showToast(active ? "Compte réactivé." : "Compte désactivé.", "success");
+      showToast(active ? t("users.accountReactivated") : t("users.accountDeactivated"), "success");
     } catch {
       setProfiles(previous);
-      showToast("Échec de la mise à jour.", "error");
+      showToast(t("users.updateFailed"), "error");
     }
   }
 
   async function handleDelete(id: string, name: string) {
-    if (!window.confirm(`Supprimer définitivement le compte de ${name} ? Cette action est irréversible.`)) return;
+    if (!window.confirm(t("users.deleteConfirm", { name }))) return;
     try {
       await deleteUserAccount(id);
       setProfiles((prev) => prev.filter((p) => p.id !== id));
-      showToast("Compte supprimé.", "success");
+      showToast(t("users.accountDeleted"), "success");
     } catch (err) {
-      showToast(err instanceof Error ? err.message : "Échec de la suppression.", "error");
+      showToast(err instanceof Error ? err.message : t("users.deleteFailed"), "error");
     }
   }
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Admin — Utilisateurs</h1>
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("users.title")}</h1>
         {!showCreateForm && (
           <Button
             onClick={() => {
@@ -236,7 +220,7 @@ export function AdminUsers() {
             }}
           >
             <Plus size={15} />
-            Nouvel utilisateur
+            {t("users.new")}
           </Button>
         )}
       </div>
@@ -258,7 +242,7 @@ export function AdminUsers() {
       {loading ? (
         <Skeleton className="h-60 w-full max-w-2xl" />
       ) : profiles.length === 0 ? (
-        <EmptyState icon={Users} title="Aucun utilisateur" />
+        <EmptyState icon={Users} title={t("users.empty")} />
       ) : (
         <div className="max-w-2xl space-y-2">
           {profiles.map((p) => {
@@ -271,7 +255,7 @@ export function AdminUsers() {
                 <div className="min-w-0">
                   <p className="truncate text-sm font-semibold text-ink">
                     {p.first_name} {p.last_name}
-                    {!p.active && <span className="ml-2 rounded-full bg-danger/15 px-2 py-0.5 text-[10px] text-danger">Désactivé</span>}
+                    {!p.active && <span className="ml-2 rounded-full bg-danger/15 px-2 py-0.5 text-[10px] text-danger">{t("users.disabled")}</span>}
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2">
@@ -283,14 +267,14 @@ export function AdminUsers() {
                   >
                     {ROLES.map((r) => (
                       <option key={r} value={r}>
-                        {ROLE_LABELS[r]}
+                        {t(`roles.${r}`, { ns: "common" })}
                       </option>
                     ))}
                   </select>
                   <button
                     onClick={() => handleToggleActive(p.id, !p.active)}
                     disabled={isSelf}
-                    title={p.active ? "Désactiver" : "Réactiver"}
+                    title={p.active ? t("users.deactivate") : t("users.reactivate")}
                     className="rounded-lg p-1.5 text-muted hover:text-ink disabled:opacity-30"
                   >
                     {p.active ? <UserX size={15} /> : <UserCheck size={15} />}
@@ -298,7 +282,7 @@ export function AdminUsers() {
                   <button
                     onClick={() => handleDelete(p.id, `${p.first_name} ${p.last_name}`)}
                     disabled={isSelf}
-                    title="Supprimer définitivement"
+                    title={t("users.deleteForever")}
                     className="rounded-lg p-1.5 text-muted hover:text-danger disabled:opacity-30"
                   >
                     <Trash2 size={15} />
