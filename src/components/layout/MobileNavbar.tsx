@@ -1,17 +1,19 @@
 import { useState } from "react";
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { Home, BookOpen, Star, User, Menu as MenuIcon, type LucideIcon } from "lucide-react";
 import { MobileMenu } from "./MobileMenu";
 
-const LINKS: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
-  { to: "/", label: "Accueil", icon: Home, end: true },
-  { to: "/songs", label: "Répertoire", icon: BookOpen },
-  { to: "/favorites", label: "Favoris", icon: Star },
-  { to: "/profile", label: "Profil", icon: User },
+const LINKS: { to: string; labelKey: string; icon: LucideIcon; end?: boolean }[] = [
+  { to: "/", labelKey: "nav.home", icon: Home, end: true },
+  { to: "/songs", labelKey: "nav.songs", icon: BookOpen },
+  { to: "/favorites", labelKey: "nav.favorites", icon: Star },
+  { to: "/profile", labelKey: "nav.profile", icon: User },
 ];
 
 export function MobileNavbar() {
+  const { t } = useTranslation();
   const [menuOpen, setMenuOpen] = useState(false);
 
   return (
@@ -30,17 +32,17 @@ export function MobileNavbar() {
             }
           >
             <link.icon size={20} strokeWidth={1.8} aria-hidden="true" />
-            {link.label}
+            {t(link.labelKey)}
           </NavLink>
         ))}
         <button
           type="button"
           onClick={() => setMenuOpen(true)}
-          aria-label="Ouvrir le menu"
+          aria-label={t("nav.openMenu")}
           className="flex flex-1 flex-col items-center gap-1 py-2.5 text-[11px] text-muted"
         >
           <MenuIcon size={20} strokeWidth={1.8} aria-hidden="true" />
-          Menu
+          {t("nav.menu")}
         </button>
       </nav>
       <MobileMenu open={menuOpen} onClose={() => setMenuOpen(false)} />

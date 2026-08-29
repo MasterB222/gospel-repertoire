@@ -1,11 +1,13 @@
 import { type FormEvent, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Search, Sun, Moon } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { Button } from "../ui/Button";
 
 export function Header() {
+  const { t } = useTranslation();
   const { isAuthenticated, profile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const navigate = useNavigate();
@@ -30,14 +32,14 @@ export function Header() {
           type="search"
           value={query}
           onChange={(e) => setQuery(e.target.value)}
-          placeholder="Rechercher une chanson, un artiste..."
+          placeholder={t("search.placeholder")}
           className="w-full max-w-md rounded-lg border border-border bg-surface-raised py-2 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
       </form>
 
       <button
         onClick={toggleTheme}
-        aria-label="Changer de thème"
+        aria-label={t("nav.toggleTheme")}
         className="rounded-lg p-2 text-muted hover:bg-surface-raised hover:text-ink md:hidden"
       >
         <ThemeIcon size={18} strokeWidth={1.8} />
@@ -55,11 +57,11 @@ export function Header() {
               profile?.first_name?.[0]?.toUpperCase() ?? "?"
             )}
           </span>
-          <span className="hidden sm:inline">{profile?.first_name ?? "Mon compte"}</span>
+          <span className="hidden sm:inline">{profile?.first_name ?? t("nav.account")}</span>
         </Link>
       ) : (
         <Button variant="secondary" onClick={() => navigate("/login")}>
-          Connexion
+          {t("nav.login")}
         </Button>
       )}
     </header>

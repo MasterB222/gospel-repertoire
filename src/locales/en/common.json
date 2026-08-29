@@ -1,0 +1,66 @@
+{
+  "app": {
+    "name": "Gospel Répertoire"
+  },
+  "nav": {
+    "home": "Home",
+    "songs": "Repertoire",
+    "explore": "Explore",
+    "categories": "Categories",
+    "artists": "Artists",
+    "playlists": "Playlists",
+    "favorites": "Favorites",
+    "partitions": "Sheet music",
+    "calendar": "Calendar",
+    "library": "My library",
+    "history": "History",
+    "profile": "Profile",
+    "myPlaylists": "My playlists",
+    "mySongs": "My songs",
+    "settings": "Settings",
+    "mySpace": "My space",
+    "admin": "Administration",
+    "adminDashboard": "Admin dashboard",
+    "menu": "Menu",
+    "openMenu": "Open menu",
+    "closeMenu": "Close menu",
+    "lightTheme": "Light theme",
+    "darkTheme": "Dark theme",
+    "toggleTheme": "Toggle theme",
+    "help": "Help",
+    "logout": "Log out",
+    "account": "My account",
+    "login": "Log in"
+  },
+  "adminNav": {
+    "dashboard": "Dashboard",
+    "songs": "Songs",
+    "artists": "Artists",
+    "categories": "Categories",
+    "users": "Users"
+  },
+  "search": {
+    "placeholder": "Search for a song, an artist..."
+  },
+  "roles": {
+    "admin": "Leader",
+    "chef_choeur": "Choir director",
+    "musicien": "Musician",
+    "chanteur": "Singer",
+    "choriste": "Choir member",
+    "utilisateur": "User"
+  },
+  "actions": {
+    "save": "Save",
+    "cancel": "Cancel",
+    "close": "Close",
+    "loading": "Loading...",
+    "search": "Search",
+    "reset": "Reset"
+  },
+  "language": {
+    "label": "Language",
+    "fr": "Français",
+    "en": "English"
+  }
+}

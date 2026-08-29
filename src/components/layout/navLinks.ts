@@ -18,30 +18,30 @@ import {
 
 export interface NavItem {
   to: string;
-  label: string;
+  labelKey: string;
   icon: LucideIcon;
   end?: boolean;
 }
 
 export const MAIN_LINKS: NavItem[] = [
-  { to: "/", label: "Accueil", icon: Home, end: true },
-  { to: "/songs", label: "Répertoire", icon: BookOpen },
-  { to: "/explore", label: "Explorer", icon: Compass },
-  { to: "/categories", label: "Catégories", icon: LayoutGrid },
-  { to: "/artists", label: "Artistes", icon: Mic2 },
-  { to: "/playlists", label: "Playlists", icon: ListMusic },
-  { to: "/favorites", label: "Favoris", icon: Star },
-  { to: "/partitions", label: "Partitions", icon: FileMusic },
-  { to: "/calendar", label: "Calendrier", icon: CalendarDays },
-  { to: "/library", label: "Ma bibliothèque", icon: Library },
-  { to: "/history", label: "Historique", icon: History },
+  { to: "/", labelKey: "nav.home", icon: Home, end: true },
+  { to: "/songs", labelKey: "nav.songs", icon: BookOpen },
+  { to: "/explore", labelKey: "nav.explore", icon: Compass },
+  { to: "/categories", labelKey: "nav.categories", icon: LayoutGrid },
+  { to: "/artists", labelKey: "nav.artists", icon: Mic2 },
+  { to: "/playlists", labelKey: "nav.playlists", icon: ListMusic },
+  { to: "/favorites", labelKey: "nav.favorites", icon: Star },
+  { to: "/partitions", labelKey: "nav.partitions", icon: FileMusic },
+  { to: "/calendar", labelKey: "nav.calendar", icon: CalendarDays },
+  { to: "/library", labelKey: "nav.library", icon: Library },
+  { to: "/history", labelKey: "nav.history", icon: History },
 ];
 
 export const SPACE_LINKS: NavItem[] = [
-  { to: "/profile", label: "Profil", icon: User },
-  { to: "/playlists", label: "Mes playlists", icon: ListMusic },
-  { to: "/library", label: "Mes chansons", icon: BookOpen },
-  { to: "/settings", label: "Paramètres", icon: Settings },
+  { to: "/profile", labelKey: "nav.profile", icon: User },
+  { to: "/playlists", labelKey: "nav.myPlaylists", icon: ListMusic },
+  { to: "/library", labelKey: "nav.mySongs", icon: BookOpen },
+  { to: "/settings", labelKey: "nav.settings", icon: Settings },
 ];
 
 export function linkClasses(isActive: boolean) {

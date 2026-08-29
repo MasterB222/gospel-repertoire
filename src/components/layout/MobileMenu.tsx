@@ -1,10 +1,12 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { X, Sun, Moon, HelpCircle, LogOut, ShieldCheck } from "lucide-react";
 import { useAuth } from "../../context/AuthContext";
 import { useTheme } from "../../context/ThemeContext";
 import { supabase } from "../../lib/supabaseClient";
 import { MAIN_LINKS, SPACE_LINKS, linkClasses } from "./navLinks";
+import { LanguageToggle } from "./LanguageToggle";
 
 interface MobileMenuProps {
   open: boolean;
@@ -12,6 +14,7 @@ interface MobileMenuProps {
 }
 
 export function MobileMenu({ open, onClose }: MobileMenuProps) {
+  const { t } = useTranslation();
   const { isAuthenticated, profile } = useAuth();
   const { theme, toggleTheme } = useTheme();
   const ThemeIcon = theme === "dark" ? Sun : Moon;
@@ -23,10 +26,10 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
       <div className="absolute inset-0 bg-black/40" onClick={onClose} aria-hidden="true" />
       <div className="relative ml-auto flex h-full w-72 max-w-[85vw] flex-col overflow-y-auto bg-surface shadow-xl">
         <div className="flex items-center justify-between px-4 py-4">
-          <span className="font-serif text-lg font-semibold text-ink">Menu</span>
+          <span className="font-serif text-lg font-semibold text-ink">{t("nav.menu")}</span>
           <button
             onClick={onClose}
-            aria-label="Fermer le menu"
+            aria-label={t("nav.closeMenu")}
             className="rounded-lg p-1.5 text-muted hover:bg-surface-raised hover:text-ink"
           >
             <X size={20} />
@@ -43,17 +46,17 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               className={({ isActive }) => linkClasses(isActive)}
             >
               <link.icon size={18} strokeWidth={1.8} aria-hidden="true" />
-              {link.label}
+              {t(link.labelKey)}
             </NavLink>
           ))}
 
           {isAuthenticated && (
             <div className="mt-6">
-              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">Mon espace</p>
+              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">{t("nav.mySpace")}</p>
               {SPACE_LINKS.map((link) => (
-                <NavLink key={link.label} to={link.to} onClick={onClose} className={({ isActive }) => linkClasses(isActive)}>
+                <NavLink key={link.labelKey} to={link.to} onClick={onClose} className={({ isActive }) => linkClasses(isActive)}>
                   <link.icon size={18} strokeWidth={1.8} aria-hidden="true" />
-                  {link.label}
+                  {t(link.labelKey)}
                 </NavLink>
               ))}
             </div>
@@ -61,10 +64,10 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
 
           {profile?.role === "admin" && (
             <div className="mt-6">
-              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">Administration</p>
+              <p className="px-3 pb-2 text-xs font-semibold uppercase tracking-wide text-muted">{t("nav.admin")}</p>
               <NavLink to="/admin" end onClick={onClose} className={({ isActive }) => linkClasses(isActive)}>
                 <ShieldCheck size={18} strokeWidth={1.8} aria-hidden="true" />
-                Dashboard admin
+                {t("nav.adminDashboard")}
               </NavLink>
             </div>
           )}
@@ -73,11 +76,12 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
         <div className="space-y-1 border-t border-border px-3 py-4">
           <button onClick={toggleTheme} className={clsx(linkClasses(false), "w-full")}>
             <ThemeIcon size={18} strokeWidth={1.8} aria-hidden="true" />
-            {theme === "dark" ? "Thème clair" : "Thème sombre"}
+            {theme === "dark" ? t("nav.lightTheme") : t("nav.darkTheme")}
           </button>
+          <LanguageToggle />
           <NavLink to="/help" onClick={onClose} className={({ isActive }) => linkClasses(isActive)}>
             <HelpCircle size={18} strokeWidth={1.8} aria-hidden="true" />
-            Aide
+            {t("nav.help")}
           </NavLink>
           {isAuthenticated && (
             <button
@@ -88,7 +92,7 @@ export function MobileMenu({ open, onClose }: MobileMenuProps) {
               className={clsx(linkClasses(false), "w-full")}
             >
               <LogOut size={18} strokeWidth={1.8} aria-hidden="true" />
-              Déconnexion
+              {t("nav.logout")}
             </button>
           )}
         </div>

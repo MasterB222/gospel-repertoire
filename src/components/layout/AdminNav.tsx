@@ -1,16 +1,19 @@
 import { NavLink } from "react-router-dom";
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { LayoutDashboard, Music2, Mic2, LayoutGrid, Users, type LucideIcon } from "lucide-react";
 
-const LINKS: { to: string; label: string; icon: LucideIcon; end?: boolean }[] = [
-  { to: "/admin", label: "Dashboard", icon: LayoutDashboard, end: true },
-  { to: "/admin/songs", label: "Chansons", icon: Music2 },
-  { to: "/admin/artists", label: "Artistes", icon: Mic2 },
-  { to: "/admin/categories", label: "Catégories", icon: LayoutGrid },
-  { to: "/admin/users", label: "Utilisateurs", icon: Users },
+const LINKS: { to: string; labelKey: string; icon: LucideIcon; end?: boolean }[] = [
+  { to: "/admin", labelKey: "adminNav.dashboard", icon: LayoutDashboard, end: true },
+  { to: "/admin/songs", labelKey: "adminNav.songs", icon: Music2 },
+  { to: "/admin/artists", labelKey: "adminNav.artists", icon: Mic2 },
+  { to: "/admin/categories", labelKey: "adminNav.categories", icon: LayoutGrid },
+  { to: "/admin/users", labelKey: "adminNav.users", icon: Users },
 ];
 
 export function AdminNav() {
+  const { t } = useTranslation();
+
   return (
     <div className="mb-6 flex gap-1 overflow-x-auto border-b border-border pb-px">
       {LINKS.map((link) => (
@@ -26,7 +29,7 @@ export function AdminNav() {
           }
         >
           <link.icon size={15} strokeWidth={1.8} />
-          {link.label}
+          {t(link.labelKey)}
         </NavLink>
       ))}
     </div>

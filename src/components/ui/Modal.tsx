@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
 import { createPortal } from "react-dom";
+import { useTranslation } from "react-i18next";
 
 interface ModalProps {
   open: boolean;
@@ -9,6 +10,7 @@ interface ModalProps {
 }
 
 export function Modal({ open, onClose, title, children }: ModalProps) {
+  const { t } = useTranslation();
   if (!open) return null;
 
   return createPortal(
@@ -26,7 +28,7 @@ export function Modal({ open, onClose, title, children }: ModalProps) {
           </h2>
           <button
             onClick={onClose}
-            aria-label="Fermer"
+            aria-label={t("actions.close")}
             className="rounded-full p-1 text-muted hover:bg-surface hover:text-ink"
           >
             ✕
