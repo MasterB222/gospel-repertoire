@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link } from "react-router-dom";
 import { ListMusic, Plus, Trash2 } from "lucide-react";
 import { Card } from "../../components/ui/Card";
@@ -12,7 +13,8 @@ import type { Playlist } from "../../types/library";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function PlaylistsList() {
-  useDocumentTitle("Playlists");
+  const { t } = useTranslation("playlists");
+  useDocumentTitle(t("list.title"));
   const { profile } = useAuth();
   const { showToast } = useToast();
   const [playlists, setPlaylists] = useState<Playlist[]>([]);
@@ -36,7 +38,7 @@ export function PlaylistsList() {
       setPlaylists((prev) => [playlist, ...prev]);
       setName("");
     } catch {
-      showToast("Échec de la création de la playlist.", "error");
+      showToast(t("list.errors.createFailed"), "error");
     }
   }
 
@@ -45,25 +47,25 @@ export function PlaylistsList() {
       await deletePlaylist(id);
       setPlaylists((prev) => prev.filter((p) => p.id !== id));
     } catch {
-      showToast("Échec de la suppression.", "error");
+      showToast(t("list.errors.deleteFailed"), "error");
     }
   }
 
   return (
     <div>
-      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">Playlists</h1>
+      <h1 className="mb-6 font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("list.title")}</h1>
 
       <div className="mb-6 flex max-w-md gap-2">
         <input
           value={name}
           onChange={(e) => setName(e.target.value)}
           onKeyDown={(e) => e.key === "Enter" && handleCreate()}
-          placeholder="Nom de la nouvelle playlist..."
+          placeholder={t("list.newPlaylistPlaceholder")}
           className="flex-1 rounded-lg border border-border bg-surface-raised px-3 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
         />
         <Button onClick={handleCreate}>
           <Plus size={15} />
-          Créer
+          {t("list.create")}
         </Button>
       </div>
 
@@ -74,14 +76,14 @@ export function PlaylistsList() {
           ))}
         </div>
       ) : playlists.length === 0 ? (
-        <EmptyState icon={ListMusic} title="Aucune playlist pour l'instant" />
+        <EmptyState icon={ListMusic} title={t("list.empty.title")} />
       ) : (
         <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
           {playlists.map((p) => (
             <Card key={p.id} className="flex items-center justify-between p-4">
               <Link to={`/playlists/${p.id}`} className="min-w-0 flex-1">
                 <p className="truncate font-semibold text-ink">{p.name}</p>
-                <p className="text-xs text-muted">Ouvrir</p>
+                <p className="text-xs text-muted">{t("list.open")}</p>
               </Link>
               <button onClick={() => handleDelete(p.id)} className="ml-2 shrink-0 rounded-lg p-1.5 text-muted hover:text-danger">
                 <Trash2 size={15} />

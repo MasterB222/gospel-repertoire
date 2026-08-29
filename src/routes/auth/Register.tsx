@@ -1,27 +1,22 @@
 import { useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { useToast } from "../../context/ToastContext";
 import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
-const ROLES = [
-  { value: "chanteur", label: "Chanteur" },
-  { value: "musicien", label: "Musicien" },
-  { value: "choriste", label: "Choriste" },
-  { value: "chef_choeur", label: "Chef de chœur" },
-  { value: "admin", label: "Responsable" },
-  { value: "utilisateur", label: "Simple utilisateur" },
-] as const;
+const ROLE_VALUES = ["chanteur", "musicien", "choriste", "chef_choeur", "admin", "utilisateur"] as const;
 
 export function Register() {
-  useDocumentTitle("Inscription");
+  const { t } = useTranslation("auth");
+  useDocumentTitle(t("register.documentTitle"));
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState<(typeof ROLES)[number]["value"]>("chanteur");
+  const [role, setRole] = useState<(typeof ROLE_VALUES)[number]>("chanteur");
   const [error, setError] = useState("");
   const [loading, setLoading] = useState(false);
   const navigate = useNavigate();
@@ -44,16 +39,16 @@ export function Register() {
       setError(signUpError.message);
       return;
     }
-    showToast("Compte créé. Vérifiez votre email si une confirmation est requise.", "success");
+    showToast(t("register.success"), "success");
     navigate("/", { replace: true });
   }
 
   return (
-    <AuthLayout title="Créer un compte" subtitle="Rejoignez le répertoire gospel du groupe.">
+    <AuthLayout title={t("register.title")} subtitle={t("register.subtitle")}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div className="grid grid-cols-2 gap-3">
           <div>
-            <FieldLabel htmlFor="firstName">Prénom</FieldLabel>
+            <FieldLabel htmlFor="firstName">{t("register.firstNameLabel")}</FieldLabel>
             <input
               id="firstName"
               required
@@ -63,7 +58,7 @@ export function Register() {
             />
           </div>
           <div>
-            <FieldLabel htmlFor="lastName">Nom</FieldLabel>
+            <FieldLabel htmlFor="lastName">{t("register.lastNameLabel")}</FieldLabel>
             <input
               id="lastName"
               required
@@ -75,7 +70,7 @@ export function Register() {
         </div>
 
         <div>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <FieldLabel htmlFor="email">{t("register.emailLabel")}</FieldLabel>
           <input
             id="email"
             type="email"
@@ -87,7 +82,7 @@ export function Register() {
         </div>
 
         <div>
-          <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
+          <FieldLabel htmlFor="password">{t("register.passwordLabel")}</FieldLabel>
           <input
             id="password"
             type="password"
@@ -100,16 +95,16 @@ export function Register() {
         </div>
 
         <div>
-          <FieldLabel htmlFor="role">Rôle déclaré</FieldLabel>
+          <FieldLabel htmlFor="role">{t("register.roleLabel")}</FieldLabel>
           <select
             id="role"
             value={role}
             onChange={(e) => setRole(e.target.value as typeof role)}
             className={inputClasses}
           >
-            {ROLES.map((r) => (
-              <option key={r.value} value={r.value}>
-                {r.label}
+            {ROLE_VALUES.map((r) => (
+              <option key={r} value={r}>
+                {t(`register.roles.${r}`)}
               </option>
             ))}
           </select>
@@ -118,14 +113,14 @@ export function Register() {
         {error && <p className="text-xs text-danger">{error}</p>}
 
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Création..." : "Créer mon compte"}
+          {loading ? t("register.submitLoading") : t("register.submit")}
         </Button>
       </form>
 
       <p className="mt-5 text-center text-xs text-muted">
-        Déjà un compte ?{" "}
+        {t("register.alreadyAccountPrefix")}{" "}
         <Link to="/login" className="text-accent-ink hover:underline">
-          Connectez-vous
+          {t("register.loginLink")}
         </Link>
       </p>
     </AuthLayout>

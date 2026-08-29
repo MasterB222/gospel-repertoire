@@ -1,5 +1,6 @@
 import { useEffect, useState, type FormEvent } from "react";
 import { Link, useNavigate } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { useToast } from "../../context/ToastContext";
@@ -7,7 +8,8 @@ import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function ResetPassword() {
-  useDocumentTitle("Nouveau mot de passe");
+  const { t } = useTranslation("auth");
+  useDocumentTitle(t("resetPassword.documentTitle"));
   const [ready, setReady] = useState(false);
   const [password, setPassword] = useState("");
   const [confirm, setConfirm] = useState("");
@@ -36,11 +38,11 @@ export function ResetPassword() {
     e.preventDefault();
     setError("");
     if (password.length < 6) {
-      setError("Le mot de passe doit contenir au moins 6 caractères.");
+      setError(t("resetPassword.errors.tooShort"));
       return;
     }
     if (password !== confirm) {
-      setError("Les deux mots de passe ne correspondent pas.");
+      setError(t("resetPassword.errors.mismatch"));
       return;
     }
     setLoading(true);
@@ -51,14 +53,14 @@ export function ResetPassword() {
       return;
     }
     setDone(true);
-    showToast("Mot de passe mis à jour.", "success");
+    showToast(t("resetPassword.success"), "success");
   }
 
   if (done) {
     return (
-      <AuthLayout title="Mot de passe mis à jour" subtitle="Tu peux maintenant continuer avec ton nouveau mot de passe.">
+      <AuthLayout title={t("resetPassword.doneTitle")} subtitle={t("resetPassword.doneSubtitle")}>
         <Button className="w-full" onClick={() => navigate("/", { replace: true })}>
-          Continuer
+          {t("resetPassword.continueButton")}
         </Button>
       </AuthLayout>
     );
@@ -66,23 +68,23 @@ export function ResetPassword() {
 
   if (!ready) {
     return (
-      <AuthLayout title="Lien invalide ou expiré" subtitle="Ce lien de réinitialisation n'est plus valide.">
+      <AuthLayout title={t("resetPassword.invalidTitle")} subtitle={t("resetPassword.invalidSubtitle")}>
         <p className="text-sm text-ink">
-          Demande un nouveau lien depuis la page{" "}
-          <Link to="/forgot-password" className="text-accent-ink hover:underline">
-            mot de passe oublié
-          </Link>
-          .
+          <Trans
+            t={t}
+            i18nKey="resetPassword.expiredMessage"
+            components={{ 1: <Link to="/forgot-password" className="text-accent-ink hover:underline" /> }}
+          />
         </p>
       </AuthLayout>
     );
   }
 
   return (
-    <AuthLayout title="Nouveau mot de passe" subtitle="Choisis un nouveau mot de passe pour ton compte.">
+    <AuthLayout title={t("resetPassword.title")} subtitle={t("resetPassword.subtitle")}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <FieldLabel htmlFor="password">Nouveau mot de passe</FieldLabel>
+          <FieldLabel htmlFor="password">{t("resetPassword.newPasswordLabel")}</FieldLabel>
           <input
             id="password"
             type="password"
@@ -94,7 +96,7 @@ export function ResetPassword() {
           />
         </div>
         <div>
-          <FieldLabel htmlFor="confirm">Confirmer le mot de passe</FieldLabel>
+          <FieldLabel htmlFor="confirm">{t("resetPassword.confirmPasswordLabel")}</FieldLabel>
           <input
             id="confirm"
             type="password"
@@ -107,7 +109,7 @@ export function ResetPassword() {
         </div>
         {error && <p className="text-xs text-danger">{error}</p>}
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Mise à jour..." : "Mettre à jour le mot de passe"}
+          {loading ? t("resetPassword.submitLoading") : t("resetPassword.submit")}
         </Button>
       </form>
     </AuthLayout>

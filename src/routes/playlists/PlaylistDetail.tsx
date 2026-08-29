@@ -1,4 +1,5 @@
 import { useEffect, useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Link, useNavigate, useParams } from "react-router-dom";
 import { ArrowDown, ArrowLeft, ArrowUp, ListMusic, Pencil, Play, Plus, Search, Trash2 } from "lucide-react";
 import { CoverPlaceholder } from "../../components/catalog/CoverPlaceholder";
@@ -23,6 +24,7 @@ import { Music2 } from "lucide-react";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function PlaylistDetail() {
+  const { t } = useTranslation("playlists");
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { playSong } = usePlayer();
@@ -65,7 +67,7 @@ export function PlaylistDetail() {
       load();
       setSearch("");
     } catch {
-      showToast("Échec de l'ajout de la chanson.", "error");
+      showToast(t("detail.errors.addFailed"), "error");
     }
   }
 
@@ -75,7 +77,7 @@ export function PlaylistDetail() {
       await removeSongFromPlaylist(id, songId);
       setSongs((prev) => prev.filter((s) => s.song_id !== songId));
     } catch {
-      showToast("Échec du retrait.", "error");
+      showToast(t("detail.errors.removeFailed"), "error");
     }
   }
 
@@ -96,7 +98,7 @@ export function PlaylistDetail() {
       setPlaylist((p) => (p ? { ...p, name: draftName.trim() } : p));
       setEditingName(false);
     } catch {
-      showToast("Échec du renommage.", "error");
+      showToast(t("detail.errors.renameFailed"), "error");
     }
   }
 
@@ -106,7 +108,7 @@ export function PlaylistDetail() {
       await deletePlaylist(id);
       navigate("/playlists");
     } catch {
-      showToast("Échec de la suppression.", "error");
+      showToast(t("detail.errors.deleteFailed"), "error");
     }
   }
 
@@ -123,10 +125,10 @@ export function PlaylistDetail() {
     return (
       <EmptyState
         icon={ListMusic}
-        title="Playlist introuvable"
+        title={t("detail.notFound.title")}
         action={
           <Link to="/playlists" className="text-sm font-semibold text-accent-ink hover:underline">
-            Retour aux playlists
+            {t("detail.back")}
           </Link>
         }
       />
@@ -137,7 +139,7 @@ export function PlaylistDetail() {
     <div>
       <Link to="/playlists" className="mb-4 inline-flex items-center gap-1.5 text-sm text-muted hover:text-ink">
         <ArrowLeft size={16} strokeWidth={1.8} />
-        Retour aux playlists
+        {t("detail.back")}
       </Link>
 
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
@@ -163,12 +165,12 @@ export function PlaylistDetail() {
           {songs.length > 0 && (
             <Button onClick={() => playSong(songs[0].song, songs.map((s) => s.song))}>
               <Play size={15} className="ml-0.5" />
-              Lire tout
+              {t("detail.playAll")}
             </Button>
           )}
           <Button variant="danger" onClick={handleDelete}>
             <Trash2 size={15} />
-            Supprimer
+            {t("detail.delete")}
           </Button>
         </div>
       </div>
@@ -179,14 +181,14 @@ export function PlaylistDetail() {
           <input
             value={search}
             onChange={(e) => setSearch(e.target.value)}
-            placeholder="Chercher une chanson à ajouter..."
+            placeholder={t("detail.searchPlaceholder")}
             className="w-full rounded-xl border border-border bg-surface-raised py-2.5 pl-9 pr-3 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background"
           />
         </div>
         {search.trim() && (
           <div className="mt-1.5 space-y-1 rounded-xl border border-border bg-surface p-1.5">
             {searchResults.length === 0 ? (
-              <p className="px-2 py-1.5 text-xs text-muted">Aucun résultat.</p>
+              <p className="px-2 py-1.5 text-xs text-muted">{t("detail.noResults")}</p>
             ) : (
               searchResults.map((s) => (
                 <button
@@ -195,7 +197,7 @@ export function PlaylistDetail() {
                   className="flex w-full items-center justify-between rounded-lg px-2.5 py-1.5 text-left text-sm text-ink hover:bg-surface-raised"
                 >
                   <span className="min-w-0 truncate">
-                    {s.title} <span className="text-muted">— {s.artist?.name ?? "Artiste inconnu"}</span>
+                    {s.title} <span className="text-muted">— {s.artist?.name ?? t("detail.unknownArtist")}</span>
                   </span>
                   <Plus size={14} className="shrink-0 text-accent-ink" />
                 </button>
@@ -208,8 +210,8 @@ export function PlaylistDetail() {
       {songs.length === 0 ? (
         <EmptyState
           icon={ListMusic}
-          title="Playlist vide"
-          description="Cherche une chanson ci-dessus pour l'ajouter."
+          title={t("detail.empty.title")}
+          description={t("detail.empty.description")}
         />
       ) : (
         <div className="max-w-xl space-y-2">
@@ -220,7 +222,7 @@ export function PlaylistDetail() {
               </div>
               <Link to={`/songs/${item.song_id}`} className="min-w-0 flex-1">
                 <p className="truncate text-sm font-semibold text-ink">{item.song.title}</p>
-                <p className="truncate text-xs text-muted">{item.song.artist?.name ?? "Artiste inconnu"}</p>
+                <p className="truncate text-xs text-muted">{item.song.artist?.name ?? t("detail.unknownArtist")}</p>
               </Link>
               <div className="flex shrink-0 items-center gap-0.5">
                 <button onClick={() => handleMove(i, -1)} disabled={i === 0} className="rounded p-1 text-muted hover:text-ink disabled:opacity-30">

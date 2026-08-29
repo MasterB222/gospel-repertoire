@@ -1,5 +1,6 @@
 import { useEffect, useMemo, useState } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { CalendarDays, MapPin, Plus } from "lucide-react";
 import { MonthCalendar } from "../../components/events/MonthCalendar";
 import { EventForm } from "../../components/events/EventForm";
@@ -11,18 +12,21 @@ import { EmptyState } from "../../components/ui/EmptyState";
 import { useAuth } from "../../context/AuthContext";
 import { useToast } from "../../context/ToastContext";
 import { createEvent, listEvents, type EventInput } from "../../lib/events";
-import { EVENT_TYPE_LABELS, type AppEvent } from "../../types/events";
+import { type AppEvent } from "../../types/events";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 function sameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
 }
 
-const DATE_FMT = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long" });
-const TIME_FMT = new Intl.DateTimeFormat("fr-FR", { hour: "2-digit", minute: "2-digit" });
+const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US" };
 
 export function CalendarPage() {
-  useDocumentTitle("Calendrier");
+  const { t, i18n } = useTranslation("calendar");
+  const locale = LOCALE_MAP[i18n.language] ?? "fr-FR";
+  const DATE_FMT = useMemo(() => new Intl.DateTimeFormat(locale, { weekday: "long", day: "numeric", month: "long" }), [locale]);
+  const TIME_FMT = useMemo(() => new Intl.DateTimeFormat(locale, { hour: "2-digit", minute: "2-digit" }), [locale]);
+  useDocumentTitle(t("calendar.title"));
   const { profile } = useAuth();
   const canManageEvents = profile?.role === "admin" || profile?.role === "chef_choeur";
   const { showToast } = useToast();
@@ -56,20 +60,20 @@ export function CalendarPage() {
       const created = await createEvent(input);
       setEvents((prev) => [...prev, created]);
       setShowForm(false);
-      showToast("Événement créé.", "success");
+      showToast(t("calendar.toast.createSuccess"), "success");
     } catch {
-      showToast("Échec de la création de l'événement.", "error");
+      showToast(t("calendar.toast.createError"), "error");
     }
   }
 
   return (
     <div>
       <div className="mb-6 flex flex-wrap items-center justify-between gap-3">
-        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">Calendrier</h1>
+        <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{t("calendar.title")}</h1>
         {canManageEvents && (
           <Button onClick={() => setShowForm(true)}>
             <Plus size={15} />
-            Nouvel événement
+            {t("calendar.newEvent")}
           </Button>
         )}
       </div>
@@ -89,16 +93,16 @@ export function CalendarPage() {
           <div className="space-y-4">
             <div>
               <h2 className="mb-2 font-serif text-base font-semibold text-ink">
-                {selectedDate ? DATE_FMT.format(selectedDate) : "Prochains événements"}
+                {selectedDate ? DATE_FMT.format(selectedDate) : t("calendar.upcomingEvents")}
               </h2>
               {(selectedDate ? dayEvents : upcoming).length === 0 ? (
-                <EmptyState icon={CalendarDays} title="Aucun événement" />
+                <EmptyState icon={CalendarDays} title={t("calendar.noEvents")} />
               ) : (
                 <div className="space-y-2">
                   {(selectedDate ? dayEvents : upcoming).map((e) => (
                     <Link key={e.id} to={`/events/${e.id}`}>
                       <Card className="p-3 hover:border-accent/40">
-                        <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-accent-ink">{EVENT_TYPE_LABELS[e.type]}</p>
+                        <p className="mb-0.5 text-xs font-semibold uppercase tracking-wide text-accent-ink">{t(`eventTypes.${e.type}`)}</p>
                         <p className="truncate font-semibold text-ink">{e.name}</p>
                         <p className="text-xs text-muted">
                           {DATE_FMT.format(new Date(e.event_date))} · {TIME_FMT.format(new Date(e.event_date))}
@@ -118,7 +122,7 @@ export function CalendarPage() {
         </div>
       )}
 
-      <Modal open={showForm} onClose={() => setShowForm(false)} title="Nouvel événement">
+      <Modal open={showForm} onClose={() => setShowForm(false)} title={t("calendar.newEvent")}>
         <EventForm onSubmit={handleCreate} onCancel={() => setShowForm(false)} />
       </Modal>
     </div>

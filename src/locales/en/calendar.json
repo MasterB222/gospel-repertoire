@@ -1,1 +1,71 @@
-{}
+{
+  "calendar": {
+    "title": "Calendar",
+    "newEvent": "New event",
+    "upcomingEvents": "Upcoming events",
+    "noEvents": "No events",
+    "toast": {
+      "createSuccess": "Event created.",
+      "createError": "Failed to create the event."
+    }
+  },
+  "eventDetail": {
+    "documentTitle": "Event",
+    "notFound": "Event not found",
+    "back": "Calendar",
+    "statusOptions": {
+      "brouillon": "Draft",
+      "publie": "Published",
+      "termine": "Completed",
+      "annule": "Cancelled"
+    },
+    "deleteEvent": "Delete event",
+    "deleteConfirm": "Permanently delete this event?",
+    "program": {
+      "title": "Program",
+      "addPlaceholder": "Add a song to the program...",
+      "empty": "No songs in the program yet."
+    },
+    "checklist": {
+      "title": "Checklist",
+      "newItemPlaceholder": "New task (e.g. Check the sound system)...",
+      "assigneePlaceholder": "Assign to (optional)...",
+      "add": "Add",
+      "empty": "No tasks yet."
+    },
+    "toast": {
+      "addSongError": "Failed to add to the program.",
+      "removeError": "Failed to remove.",
+      "addChecklistError": "Failed to add to the checklist.",
+      "updateError": "Failed to update.",
+      "statusUpdateError": "Failed to update the status."
+    }
+  },
+  "eventTypes": {
+    "repetition": "Rehearsal",
+    "concert": "Concert",
+    "culte": "Service",
+    "autre": "Other"
+  },
+  "checklistStatuses": {
+    "a_faire": "To do",
+    "en_cours": "In progress",
+    "fait": "Done"
+  },
+  "eventForm": {
+    "nameLabel": "Event name",
+    "namePlaceholder": "Easter service",
+    "dateLabel": "Date and time",
+    "locationLabel": "Location",
+    "locationPlaceholder": "Main hall",
+    "typeLabel": "Type",
+    "statusLabel": "Status",
+    "descriptionLabel": "Description",
+    "saving": "Saving..."
+  },
+  "monthCalendar": {
+    "weekdays": ["Mon", "Tue", "Wed", "Thu", "Fri", "Sat", "Sun"],
+    "prevMonth": "Previous month",
+    "nextMonth": "Next month"
+  }
+}

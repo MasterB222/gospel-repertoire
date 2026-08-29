@@ -1,5 +1,6 @@
 import { useState, type FormEvent } from "react";
 import { Link, useLocation, useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { supabase, setRememberMe as persistRememberMe } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { useToast } from "../../context/ToastContext";
@@ -7,7 +8,8 @@ import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function Login() {
-  useDocumentTitle("Connexion");
+  const { t } = useTranslation("auth");
+  useDocumentTitle(t("login.documentTitle"));
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [rememberMe, setRememberMe] = useState(true);
@@ -40,19 +42,19 @@ export function Login() {
 
     if (profileRow?.active === false) {
       await supabase.auth.signOut();
-      setError("Ce compte a été désactivé. Contacte un responsable de ton groupe.");
+      setError(t("login.errors.accountDisabled"));
       return;
     }
 
-    showToast("Connexion réussie.", "success");
+    showToast(t("login.success"), "success");
     navigate(redirectTo, { replace: true });
   }
 
   return (
-    <AuthLayout title="Connexion" subtitle="Accédez à votre espace du répertoire gospel.">
+    <AuthLayout title={t("login.title")} subtitle={t("login.subtitle")}>
       <form onSubmit={handleSubmit} className="space-y-4">
         <div>
-          <FieldLabel htmlFor="email">Email</FieldLabel>
+          <FieldLabel htmlFor="email">{t("login.emailLabel")}</FieldLabel>
           <input
             id="email"
             type="email"
@@ -63,7 +65,7 @@ export function Login() {
           />
         </div>
         <div>
-          <FieldLabel htmlFor="password">Mot de passe</FieldLabel>
+          <FieldLabel htmlFor="password">{t("login.passwordLabel")}</FieldLabel>
           <input
             id="password"
             type="password"
@@ -82,34 +84,34 @@ export function Login() {
               onChange={(e) => setRememberMe(e.target.checked)}
               className="rounded border-border"
             />
-            Se souvenir de moi
+            {t("login.rememberMe")}
           </label>
           <Link to="/forgot-password" className="text-accent-ink hover:underline">
-            Mot de passe oublié ?
+            {t("login.forgotPasswordLink")}
           </Link>
         </div>
 
         {error && <p className="text-xs text-danger">{error}</p>}
 
         <Button type="submit" disabled={loading} className="w-full">
-          {loading ? "Connexion..." : "Se connecter"}
+          {loading ? t("login.submitLoading") : t("login.submit")}
         </Button>
 
         <button
           type="button"
           disabled
-          title="Bientôt disponible — provider Google à configurer côté Supabase"
+          title={t("login.googleComingSoonTitle")}
           className="flex w-full items-center justify-center gap-2 rounded-lg border border-border px-4 py-2.5 text-sm text-muted opacity-60"
         >
-          Continuer avec Google
-          <span className="rounded-full bg-surface px-2 py-0.5 text-[10px]">Bientôt disponible</span>
+          {t("login.googleButton")}
+          <span className="rounded-full bg-surface px-2 py-0.5 text-[10px]">{t("login.comingSoonBadge")}</span>
         </button>
       </form>
 
       <p className="mt-5 text-center text-xs text-muted">
-        Pas encore de compte ?{" "}
+        {t("login.noAccountPrefix")}{" "}
         <Link to="/register" className="text-accent-ink hover:underline">
-          Inscrivez-vous
+          {t("login.registerLink")}
         </Link>
       </p>
     </AuthLayout>

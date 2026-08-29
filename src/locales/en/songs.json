@@ -1,1 +1,196 @@
-{}
+{
+  "list": {
+    "title": "Repertoire",
+    "resultsCount_one": "{{count}} song",
+    "resultsCount_other": "{{count}} songs",
+    "searchPlaceholder": "Search by title, artist, lyrics...",
+    "filters": {
+      "allArtists": "All artists",
+      "allCategories": "All categories",
+      "allLanguages": "All languages",
+      "allKeys": "All keys",
+      "allDifficulties": "Any difficulty",
+      "allYears": "Any year",
+      "chordsIndifferent": "Chords: any",
+      "chordsWith": "With chords",
+      "chordsWithout": "Without chords",
+      "videoIndifferent": "Video: any",
+      "videoWith": "With video",
+      "videoWithout": "Without video",
+      "sortRecent": "Sort: recent",
+      "sortAz": "Sort: A-Z",
+      "sortArtist": "Sort: artist",
+      "reset": "Reset"
+    },
+    "loadError": {
+      "title": "Unable to load the repertoire",
+      "description": "An error occurred while contacting the database.",
+      "retry": "Retry"
+    },
+    "empty": {
+      "title": "No songs found",
+      "description": "Try a different search or reset the filters.",
+      "resetFilters": "Reset filters"
+    },
+    "loadMore": "Load more ({{count}} remaining)"
+  },
+  "detail": {
+    "backToRepertoire": "Back to repertoire",
+    "edit": "Edit",
+    "unknownArtist": "Unknown artist",
+    "key": "Key: {{value}}",
+    "tempo": "Tempo: {{value}} BPM",
+    "difficulty": "Difficulty: {{value}}",
+    "year": "Year: {{value}}",
+    "language": "Language: {{value}}",
+    "version": "Version {{value}}",
+    "listen": "Listen",
+    "rehearseMode": "Rehearse mode",
+    "presentMode": "Present mode",
+    "notFound": {
+      "title": "Song not found",
+      "description": "It may have been removed from the repertoire."
+    },
+    "tabs": {
+      "presentation": "Overview",
+      "lyrics": "Lyrics",
+      "chords": "Chords",
+      "structure": "Structure",
+      "assignments": "Assignments",
+      "history": "History",
+      "sheet": "Sheet music",
+      "learning": "Learning"
+    },
+    "assignmentsPanel": {
+      "title": "Assignments",
+      "empty": "No assignments yet.",
+      "commentsTitle": "Comments",
+      "statusUpdateError": "Failed to update the status.",
+      "createSuccess": "Assignment created.",
+      "createError": "Failed to create the assignment.",
+      "commentError": "Failed to send the comment."
+    },
+    "learningPanel": {
+      "title": "Learning mode",
+      "description": "Accessible from a specific assignment: open \"My assignments\" on your dashboard, then \"Open in Learning mode\".",
+      "goToDashboard": "Go to dashboard"
+    },
+    "presentation": {
+      "album": "Album: {{value}}",
+      "partOfRepertoire": "{{title}} is part of the {{category}} repertoire.",
+      "generalCategory": "general",
+      "noVideo": "No video available for this song.",
+      "watchOnYoutube": "Watch on YouTube"
+    },
+    "lyricsUnavailable": "Lyrics not available for this song.",
+    "chordsUnavailable": "Chords not available for this song.",
+    "sheet": {
+      "notAvailableTitle": "Sheet music not available for this song",
+      "notAvailableDescription": "No sheet music has been added for this song yet.",
+      "fullscreen": "Fullscreen",
+      "download": "Download",
+      "previewHint": "Preview not showing? Use \"Download\" above to open it directly."
+    },
+    "structure": {
+      "notDefinedTitle": "Structure not defined",
+      "notDefinedDescription": "Open the editor to create the sections and measures for this song.",
+      "assignedTo": "Assigned: {{value}}"
+    },
+    "history": {
+      "emptyTitle": "No history yet",
+      "emptyDescription": "Changes will appear here after a pass through the editor."
+    }
+  },
+  "editor": {
+    "notFoundTitle": "Song not found",
+    "backToRepertoire": "Back to repertoire",
+    "structureModalTitle": "Structure",
+    "propertiesModalTitle": "Properties",
+    "sections": "Sections",
+    "gridView": "Grid",
+    "scoreView": "Score",
+    "propertiesButton": "Properties",
+    "duplicateSuffix": "(copy)",
+    "autosaveError": "Autosave failed.",
+    "publishSuccess": "Song published as version {{version}}.",
+    "publishError": "Failed to publish.",
+    "noNotesInSection": "No notes entered in this section.",
+    "anonymous": "Anonymous"
+  },
+  "learnMode": {
+    "modeLabel": "Learning mode",
+    "notFoundTitle": "Assignment not found",
+    "backToDashboard": "Back to dashboard",
+    "wholeSong": "Whole song",
+    "measure": "Measure {{number}}",
+    "notes": "Notes: {{value}}",
+    "chefComments": "Choir director's comments",
+    "understood": "Got it",
+    "markComplete": "Mark as complete",
+    "commentError": "Failed to send the comment.",
+    "completeSuccess": "Assignment marked as complete!",
+    "completeError": "Failed to update."
+  },
+  "rehearseMode": {
+    "modeLabel": "Rehearse mode",
+    "nothingToRehearseTitle": "Nothing to rehearse",
+    "nothingToRehearseDescription": "This song doesn't have a structure yet.",
+    "back": "Back",
+    "measureCount": "Measure {{current}} / {{total}}",
+    "previous": "Previous",
+    "next": "Next",
+    "pause": "Pause",
+    "autoPlay": "Auto-play",
+    "repeatSection": "Repeat section"
+  },
+  "presentMode": {
+    "notFoundTitle": "Song not found",
+    "back": "Back",
+    "previousSection": "Previous section",
+    "nextSection": "Next section"
+  },
+  "artists": {
+    "listTitle": "Artists",
+    "notFoundTitle": "Artist not found",
+    "backToArtists": "Back to artists",
+    "songCount_one": "{{count}} song",
+    "songCount_other": "{{count}} songs",
+    "noSongsForArtist": "No songs for this artist yet",
+    "loadError": {
+      "title": "Unable to load artists",
+      "description": "An error occurred while contacting the database.",
+      "retry": "Retry"
+    },
+    "empty": "No artists yet"
+  },
+  "categories": {
+    "listTitle": "Categories",
+    "notFoundTitle": "Category not found",
+    "backToCategories": "Back to categories",
+    "songCount_one": "{{count}} song",
+    "songCount_other": "{{count}} songs",
+    "noSongsInCategory": "No songs in this category yet",
+    "loadError": {
+      "title": "Unable to load categories",
+      "description": "An error occurred while contacting the database.",
+      "retry": "Retry"
+    },
+    "empty": "No categories yet"
+  },
+  "addToPlaylist": {
+    "button": "Add to playlist",
+    "modalTitle": "Add to playlist",
+    "empty": "No playlists yet.",
+    "newPlaylistPlaceholder": "New playlist...",
+    "updateError": "Failed to update the playlist.",
+    "createError": "Failed to create the playlist."
+  },
+  "songCard": {
+    "unknownArtist": "Unknown artist",
+    "play": "Play {{title}}"
+  },
+  "favoriteButton": {
+    "addAria": "Add to favorites",
+    "removeAria": "Remove from favorites"
+  }
+}

@@ -1,5 +1,6 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArrowLeft, CheckCircle2, Circle, CircleDashed, MapPin, Plus, Trash2, Music2 } from "lucide-react";
 import clsx from "clsx";
 import { Card } from "../../components/ui/Card";
@@ -22,14 +23,14 @@ import {
   updateChecklistItemStatus,
   updateEvent,
 } from "../../lib/events";
-import { CHECKLIST_STATUS_LABELS, EVENT_TYPE_LABELS, type AppEvent, type ChecklistItem, type ChecklistStatus, type EventProgramItem } from "../../types/events";
+import { type AppEvent, type ChecklistItem, type ChecklistStatus, type EventProgramItem } from "../../types/events";
 import type { Song } from "../../types/catalog";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 const fieldClasses =
   "w-full rounded-lg border border-border bg-surface-raised px-2.5 py-2 text-sm text-ink placeholder:text-muted focus:border-accent focus:outline-none focus-visible:ring-2 focus-visible:ring-accent/50 focus-visible:ring-offset-2 focus-visible:ring-offset-background";
 
-const DATE_FMT = new Intl.DateTimeFormat("fr-FR", { weekday: "long", day: "numeric", month: "long", year: "numeric", hour: "2-digit", minute: "2-digit" });
+const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US" };
 
 const CHECKLIST_ORDER: ChecklistStatus[] = ["a_faire", "en_cours", "fait"];
 const CHECKLIST_ICON: Record<ChecklistStatus, typeof Circle> = { a_faire: Circle, en_cours: CircleDashed, fait: CheckCircle2 };
@@ -40,11 +41,20 @@ function nextStatus(status: ChecklistStatus): ChecklistStatus {
 }
 
 export function EventDetail() {
+  const { t, i18n } = useTranslation("calendar");
+  const DATE_FMT = new Intl.DateTimeFormat(LOCALE_MAP[i18n.language] ?? "fr-FR", {
+    weekday: "long",
+    day: "numeric",
+    month: "long",
+    year: "numeric",
+    hour: "2-digit",
+    minute: "2-digit",
+  });
   const { id } = useParams<{ id: string }>();
   const navigate = useNavigate();
   const { profile } = useAuth();
   const { showToast } = useToast();
-  useDocumentTitle("Événement");
+  useDocumentTitle(t("eventDetail.documentTitle"));
   const canManage = profile?.role === "admin" || profile?.role === "chef_choeur";
 
   const [event, setEvent] = useState<AppEvent | null>(null);
@@ -96,7 +106,7 @@ export function EventDetail() {
       setProgram((prev) => [...prev, { id: crypto.randomUUID(), event_id: id, song_id: song.id, position: prev.length, key_signature: "", stage_notes: "", song: { id: song.id, title: song.title, original_key: song.original_key } }]);
       setSongQuery("");
     } catch {
-      showToast("Échec de l'ajout au programme.", "error");
+      showToast(t("eventDetail.toast.addSongError"), "error");
     }
   }
 
@@ -105,7 +115,7 @@ export function EventDetail() {
       await removeSongFromProgram(programItemId);
       setProgram((prev) => prev.filter((p) => p.id !== programItemId));
     } catch {
-      showToast("Échec de la suppression.", "error");
+      showToast(t("eventDetail.toast.removeError"), "error");
     }
   }
 
@@ -118,7 +128,7 @@ export function EventDetail() {
       setAssigneeId(null);
       load();
     } catch {
-      showToast("Échec de l'ajout à la checklist.", "error");
+      showToast(t("eventDetail.toast.addChecklistError"), "error");
     }
   }
 
@@ -128,7 +138,7 @@ export function EventDetail() {
     try {
       await updateChecklistItemStatus(item.id, status);
     } catch {
-      showToast("Échec de la mise à jour.", "error");
+      showToast(t("eventDetail.toast.updateError"), "error");
     }
   }
 
@@ -137,17 +147,17 @@ export function EventDetail() {
       await deleteChecklistItem(itemId);
       setChecklist((prev) => prev.filter((c) => c.id !== itemId));
     } catch {
-      showToast("Échec de la suppression.", "error");
+      showToast(t("eventDetail.toast.removeError"), "error");
     }
   }
 
   async function handleDeleteEvent() {
-    if (!id || !window.confirm("Supprimer définitivement cet événement ?")) return;
+    if (!id || !window.confirm(t("eventDetail.deleteConfirm"))) return;
     try {
       await deleteEvent(id);
       navigate("/calendar");
     } catch {
-      showToast("Échec de la suppression.", "error");
+      showToast(t("eventDetail.toast.removeError"), "error");
     }
   }
 
@@ -157,7 +167,7 @@ export function EventDetail() {
     try {
       await updateEvent(id, { status });
     } catch {
-      showToast("Échec de la mise à jour du statut.", "error");
+      showToast(t("eventDetail.toast.statusUpdateError"), "error");
     }
   }
 
@@ -171,18 +181,18 @@ export function EventDetail() {
   }
 
   if (!event) {
-    return <EmptyState icon={Music2} title="Événement introuvable" />;
+    return <EmptyState icon={Music2} title={t("eventDetail.notFound")} />;
   }
 
   return (
     <div className="max-w-3xl space-y-6">
       <button onClick={() => navigate("/calendar")} className="flex items-center gap-1.5 text-sm text-muted hover:text-ink">
         <ArrowLeft size={15} />
-        Calendrier
+        {t("eventDetail.back")}
       </button>
 
       <div>
-        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent-ink">{EVENT_TYPE_LABELS[event.type]}</p>
+        <p className="mb-1 text-xs font-semibold uppercase tracking-wide text-accent-ink">{t(`eventTypes.${event.type}`)}</p>
         <h1 className="font-serif text-2xl font-semibold text-ink sm:text-3xl">{event.name}</h1>
         <p className="mt-1 text-sm capitalize text-muted">{DATE_FMT.format(new Date(event.event_date))}</p>
         {event.location && (
@@ -199,27 +209,27 @@ export function EventDetail() {
               onChange={(e) => handleStatusChange(e.target.value as AppEvent["status"])}
               className="rounded-lg border border-border bg-surface-raised px-2 py-1 text-xs font-semibold text-ink focus:border-accent focus:outline-none"
             >
-              <option value="brouillon">Brouillon</option>
-              <option value="publie">Publié</option>
-              <option value="termine">Terminé</option>
-              <option value="annule">Annulé</option>
+              <option value="brouillon">{t("eventDetail.statusOptions.brouillon")}</option>
+              <option value="publie">{t("eventDetail.statusOptions.publie")}</option>
+              <option value="termine">{t("eventDetail.statusOptions.termine")}</option>
+              <option value="annule">{t("eventDetail.statusOptions.annule")}</option>
             </select>
             <button onClick={handleDeleteEvent} className="flex items-center gap-1 rounded-lg border border-border px-2.5 py-1 text-xs text-danger hover:border-danger">
               <Trash2 size={13} />
-              Supprimer l'événement
+              {t("eventDetail.deleteEvent")}
             </button>
           </div>
         )}
       </div>
 
       <Card className="p-4">
-        <h2 className="mb-3 font-serif text-lg font-semibold text-ink">Programme</h2>
+        <h2 className="mb-3 font-serif text-lg font-semibold text-ink">{t("eventDetail.program.title")}</h2>
         {canManage && (
           <div className="relative mb-3">
             <input
               value={songQuery}
               onChange={(e) => setSongQuery(e.target.value)}
-              placeholder="Ajouter un chant au programme..."
+              placeholder={t("eventDetail.program.addPlaceholder")}
               className={fieldClasses}
             />
             {songResults.length > 0 && (
@@ -239,7 +249,7 @@ export function EventDetail() {
         )}
 
         {program.length === 0 ? (
-          <p className="text-sm text-muted">Aucun chant dans le programme pour l'instant.</p>
+          <p className="text-sm text-muted">{t("eventDetail.program.empty")}</p>
         ) : (
           <ol className="space-y-1.5">
             {program.map((p, i) => (
@@ -261,13 +271,13 @@ export function EventDetail() {
       </Card>
 
       <Card className="p-4">
-        <h2 className="mb-3 font-serif text-lg font-semibold text-ink">Checklist</h2>
+        <h2 className="mb-3 font-serif text-lg font-semibold text-ink">{t("eventDetail.checklist.title")}</h2>
         {canManage && (
           <div className="mb-3 space-y-2">
             <input
               value={newItem}
               onChange={(e) => setNewItem(e.target.value)}
-              placeholder="Nouvelle tâche (ex. Vérifier la sono)..."
+              placeholder={t("eventDetail.checklist.newItemPlaceholder")}
               className={fieldClasses}
             />
             <div className="relative">
@@ -277,7 +287,7 @@ export function EventDetail() {
                   setAssigneeQuery(e.target.value);
                   setAssigneeId(null);
                 }}
-                placeholder="Assigner à (optionnel)..."
+                placeholder={t("eventDetail.checklist.assigneePlaceholder")}
                 className={fieldClasses}
               />
               {assigneeResults.length > 0 && !assigneeId && (
@@ -300,13 +310,13 @@ export function EventDetail() {
             </div>
             <Button onClick={handleAddChecklistItem}>
               <Plus size={15} />
-              Ajouter
+              {t("eventDetail.checklist.add")}
             </Button>
           </div>
         )}
 
         {checklist.length === 0 ? (
-          <p className="text-sm text-muted">Aucune tâche pour l'instant.</p>
+          <p className="text-sm text-muted">{t("eventDetail.checklist.empty")}</p>
         ) : (
           <ul className="space-y-1.5">
             {checklist.map((item) => {
@@ -319,7 +329,7 @@ export function EventDetail() {
                   </button>
                   <span className="flex shrink-0 items-center gap-2">
                     {item.assignee && <span className="text-xs text-muted">{item.assignee.first_name}</span>}
-                    <span className="text-xs text-muted">{CHECKLIST_STATUS_LABELS[item.status]}</span>
+                    <span className="text-xs text-muted">{t(`checklistStatuses.${item.status}`)}</span>
                     {canManage && (
                       <button onClick={() => handleDeleteChecklistItem(item.id)} className="text-muted hover:text-danger">
                         <Trash2 size={13} />

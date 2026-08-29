@@ -1,1 +1,163 @@
-{}
+{
+  "home": {
+    "eyebrow": "Gospel music workshop",
+    "welcome": "Welcome, {{name}}",
+    "title": "Your group's gospel repertoire",
+    "subtitle": "Create, structure, and rehearse your songs together — lyrics, chords, notes and assignments, from first draft to stage performance.",
+    "createAccount": "Create an account",
+    "login": "Log in"
+  },
+  "dashboard": {
+    "chef": {
+      "title": "Choir director dashboard",
+      "stats": {
+        "toRevisit": "Assignments to review",
+        "inProgress": "Songs in progress",
+        "done": "Songs completed"
+      },
+      "recentActivity": "Recent activity",
+      "noActivity": "No activity yet",
+      "defaultSongTitle": "Song",
+      "assignmentUpdated": " — assignment updated ({{date}})",
+      "commentActivity": " — comment: \"{{text}}\" ({{date}})",
+      "defaultGroupName": "Group",
+      "noMembers": "No members yet"
+    },
+    "member": {
+      "title": "My assignments",
+      "noAssignmentsTitle": "No assignments yet",
+      "noAssignmentsDescription": "Your choir director will assign you parts from a song's page.",
+      "openLearnMode": "Open in Learning mode →",
+      "statusUpdated": "Status updated.",
+      "statusUpdateFailed": "Update failed."
+    }
+  },
+  "explore": {
+    "title": "Explore",
+    "subtitle": "Discover the repertoire through new additions, artists and categories.",
+    "emptyTitle": "Nothing to explore yet",
+    "emptyDescription": "The repertoire is still empty.",
+    "newSongs": "New additions",
+    "viewAllSongs": "Full repertoire",
+    "noSongsYet": "No songs yet.",
+    "artists": "Artists",
+    "viewAllArtists": "All artists",
+    "noArtistsYet": "No artists yet.",
+    "categories": "Categories",
+    "viewAllCategories": "All categories",
+    "noCategoriesYet": "No categories yet."
+  },
+  "favorites": {
+    "title": "Favorites",
+    "emptyTitle": "No favorites yet",
+    "emptyDescription": "Add songs to your favorites from the repertoire."
+  },
+  "help": {
+    "title": "Help",
+    "contact": "Have a question that isn't covered here? Contact your group's director.",
+    "sections": [
+      {
+        "title": "Finding a song",
+        "items": [
+          "The search bar at the top of the screen searches by title or artist and takes you straight to the filtered repertoire.",
+          "In \"Repertoire\", refine with filters: artist, category, language, key, difficulty, year, presence of chords or video.",
+          "\"Explore\" offers an overview by new additions, artists and categories."
+        ]
+      },
+      {
+        "title": "Editing a song",
+        "items": [
+          "From a song's page, the \"Edit\" button opens the section-and-measure editor.",
+          "Keyboard shortcuts in the editor: Ctrl/Cmd+Z (undo), Ctrl/Cmd+Shift+Z (redo), Ctrl/Cmd+D (duplicate the selected section), Delete (clear the selected measure).",
+          "Saving happens automatically — the status is shown at the top of the editor."
+        ]
+      },
+      {
+        "title": "Assignments and tracking",
+        "items": [
+          "A choir director assigns a section, a measure or an entire song to a member or a group from the \"Assignments\" tab of the song page.",
+          "Each member tracks their tasks in \"My space\" (dashboard), with a status of to-do / in progress / done / to review.",
+          "Learning mode guides a member through their assigned part, along with the director's comments."
+        ]
+      },
+      {
+        "title": "Rehearsal modes",
+        "items": [
+          "Rehearsal mode: navigate measure by measure with optional auto-playback.",
+          "Presentation mode: full screen, large text, designed to be projected during a rehearsal or a service."
+        ]
+      }
+    ]
+  },
+  "history": {
+    "title": "History",
+    "emptyTitle": "No recent views",
+    "emptyDescription": "Songs you open will appear here.",
+    "unknownArtist": "Unknown artist"
+  },
+  "library": {
+    "title": "My library",
+    "favorites": "Favorites",
+    "viewAll": "View all",
+    "noFavorites": "No favorites yet.",
+    "playlists": "Playlists",
+    "noPlaylists": "No playlists yet.",
+    "recentlyViewed": "Recently viewed",
+    "noRecentlyViewed": "No recent views.",
+    "myPartitions": "My sheet music",
+    "partitionsComingSoon": "Not available yet — coming with sheet music management (media module)."
+  },
+  "notFound": {
+    "title": "Page not found",
+    "description": "This address doesn't match any page on the site.",
+    "backHome": "Back to home"
+  },
+  "partitions": {
+    "title": "Sheet music",
+    "subtitle": "Repertoire songs that have sheet music available.",
+    "emptyTitle": "No sheet music available",
+    "emptyDescription": "Songs with sheet music will appear here."
+  },
+  "profile": {
+    "title": "Profile",
+    "changeAvatar": "Change profile photo",
+    "removeAvatar": "Remove profile photo",
+    "stats": {
+      "favorites": "Favorites",
+      "playlists": "Playlists",
+      "viewed": "Viewed"
+    },
+    "firstName": "First name",
+    "lastName": "Last name",
+    "save": "Save",
+    "saving": "Saving...",
+    "toasts": {
+      "avatarUpdated": "Profile photo updated.",
+      "avatarRemoved": "Profile photo removed.",
+      "avatarUploadFailed": "Failed to upload photo.",
+      "avatarRemoveFailed": "Failed to remove photo.",
+      "chooseImageFile": "Choose an image file.",
+      "imageTooLarge": "Image too large (5 MB max).",
+      "profileUpdated": "Profile updated.",
+      "updateFailed": "Update failed."
+    }
+  },
+  "settings": {
+    "title": "Settings",
+    "appearance": "Appearance",
+    "themeDark": "Dark theme",
+    "themeLight": "Light theme",
+    "change": "Change",
+    "musicNotation": "Music notation",
+    "solfege": "Solfège (do re mi)",
+    "letters": "Letters (C D E)",
+    "account": "Account",
+    "logout": "Log out",
+    "preferenceSaved": "Preference saved.",
+    "updateFailed": "Update failed."
+  },
+  "requireAdmin": {
+    "title": "Access restricted to administrators",
+    "description": "This section is only accessible to accounts with the {{role}} role."
+  }
+}

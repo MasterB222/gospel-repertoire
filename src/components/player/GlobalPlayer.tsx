@@ -1,4 +1,5 @@
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { Play, Pause, SkipBack, SkipForward, Shuffle, Repeat, Repeat1, Volume2, VolumeX } from "lucide-react";
 import { usePlayer } from "../../context/PlayerContext";
 import { CoverPlaceholder } from "../catalog/CoverPlaceholder";
@@ -12,6 +13,7 @@ function formatTime(seconds: number): string {
 }
 
 export function GlobalPlayer() {
+  const { t } = useTranslation("playlists");
   const {
     currentSong,
     isPlaying,
@@ -44,27 +46,27 @@ export function GlobalPlayer() {
         </div>
         <div className="min-w-0 flex-1 sm:w-40 sm:flex-none">
           <p className="truncate text-sm font-semibold text-ink">{currentSong.title}</p>
-          <p className="truncate text-xs text-muted">{currentSong.artist?.name ?? "Artiste inconnu"}</p>
+          <p className="truncate text-xs text-muted">{currentSong.artist?.name ?? t("player.unknownArtist")}</p>
         </div>
 
         <div className="flex flex-1 items-center justify-center gap-1 sm:gap-2">
-          <button onClick={toggleShuffle} className={clsx("hidden rounded-lg p-1.5 sm:block", shuffle ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label="Aléatoire">
+          <button onClick={toggleShuffle} className={clsx("hidden rounded-lg p-1.5 sm:block", shuffle ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label={t("player.shuffle")}>
             <Shuffle size={16} />
           </button>
-          <button onClick={prev} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label="Précédent">
+          <button onClick={prev} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label={t("player.previous")}>
             <SkipBack size={18} />
           </button>
           <button
             onClick={togglePlay}
             className="flex h-9 w-9 items-center justify-center rounded-full bg-accent text-[#2A0F1E] hover:bg-accent-soft"
-            aria-label={isPlaying ? "Pause" : "Lecture"}
+            aria-label={isPlaying ? t("player.pause") : t("player.play")}
           >
             {isPlaying ? <Pause size={18} /> : <Play size={18} className="ml-0.5" />}
           </button>
-          <button onClick={next} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label="Suivant">
+          <button onClick={next} className="rounded-lg p-1.5 text-ink hover:text-accent-ink" aria-label={t("player.next")}>
             <SkipForward size={18} />
           </button>
-          <button onClick={cycleRepeat} className={clsx("hidden rounded-lg p-1.5 sm:block", repeatMode !== "off" ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label="Répétition">
+          <button onClick={cycleRepeat} className={clsx("hidden rounded-lg p-1.5 sm:block", repeatMode !== "off" ? "text-accent-ink" : "text-muted hover:text-ink")} aria-label={t("player.repeat")}>
             <RepeatIcon size={16} />
           </button>
         </div>

@@ -1,9 +1,11 @@
 import type { ReactNode } from "react";
 import { Link } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { ArtisticBackdrop } from "../../components/brand/ArtisticBackdrop";
 import { Logo } from "../../components/brand/Logo";
 
 export function AuthLayout({ title, subtitle, children }: { title: string; subtitle: string; children: ReactNode }) {
+  const { t } = useTranslation(["auth", "common"]);
   return (
     <div className="flex min-h-screen flex-col bg-background md:flex-row">
       {/* ArtisticBackdrop reste sombre dans les deux thèmes : couleurs de texte
@@ -12,16 +14,13 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
         <div className="flex h-full flex-col justify-between p-10 lg:p-14">
           <Link to="/" className="flex w-fit items-center gap-2.5">
             <Logo className="h-9 w-9" />
-            <span className="font-serif text-lg font-semibold text-[#F6E9DC]">Gospel Répertoire</span>
+            <span className="font-serif text-lg font-semibold text-[#F6E9DC]">{t("app.name", { ns: "common" })}</span>
           </Link>
           <div className="max-w-md">
             <h2 className="font-serif text-3xl font-semibold leading-tight text-[#F6E9DC] lg:text-4xl">
-              Un répertoire vivant, pensé pour chanter ensemble.
+              {t("layout.tagline")}
             </h2>
-            <p className="mt-3 text-sm text-[#F6E9DC]/75">
-              Structurez vos chansons, assignez les parties, suivez l'apprentissage du groupe — tout au même
-              endroit.
-            </p>
+            <p className="mt-3 text-sm text-[#F6E9DC]/75">{t("layout.taglineDetail")}</p>
           </div>
         </div>
       </ArtisticBackdrop>
@@ -29,7 +28,7 @@ export function AuthLayout({ title, subtitle, children }: { title: string; subti
       <ArtisticBackdrop className="flex h-36 items-end p-6 md:hidden">
         <Link to="/" className="flex items-center gap-2.5">
           <Logo className="h-8 w-8" />
-          <span className="font-serif text-base font-semibold text-[#F6E9DC]">Gospel Répertoire</span>
+          <span className="font-serif text-base font-semibold text-[#F6E9DC]">{t("app.name", { ns: "common" })}</span>
         </Link>
       </ArtisticBackdrop>
 

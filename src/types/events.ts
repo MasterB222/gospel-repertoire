@@ -37,22 +37,6 @@ export interface ChecklistItem {
   assignee?: { id: string; first_name: string; last_name: string } | null;
 }
 
-export const EVENT_TYPE_LABELS: Record<EventType, string> = {
-  repetition: "Répétition",
-  concert: "Concert",
-  culte: "Culte",
-  autre: "Autre",
-};
-
-export const EVENT_STATUS_LABELS: Record<EventStatus, string> = {
-  brouillon: "Brouillon",
-  publie: "Publié",
-  termine: "Terminé",
-  annule: "Annulé",
-};
-
-export const CHECKLIST_STATUS_LABELS: Record<ChecklistStatus, string> = {
-  a_faire: "À faire",
-  en_cours: "En cours",
-  fait: "Fait",
-};
+export const EVENT_TYPES: EventType[] = ["repetition", "concert", "culte", "autre"];
+export const EVENT_STATUSES: EventStatus[] = ["brouillon", "publie", "termine", "annule"];
+export const CHECKLIST_STATUSES: ChecklistStatus[] = ["a_faire", "en_cours", "fait"];

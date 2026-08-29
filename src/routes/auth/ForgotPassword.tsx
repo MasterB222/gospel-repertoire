@@ -1,12 +1,14 @@
 import { useState, type FormEvent } from "react";
 import { Link } from "react-router-dom";
+import { Trans, useTranslation } from "react-i18next";
 import { supabase } from "../../lib/supabaseClient";
 import { Button } from "../../components/ui/Button";
 import { AuthLayout, FieldLabel, inputClasses } from "./AuthLayout";
 import { useDocumentTitle } from "../../hooks/useDocumentTitle";
 
 export function ForgotPassword() {
-  useDocumentTitle("Mot de passe oublié");
+  const { t } = useTranslation("auth");
+  useDocumentTitle(t("forgotPassword.documentTitle"));
   const [email, setEmail] = useState("");
   const [error, setError] = useState("");
   const [sent, setSent] = useState(false);
@@ -28,15 +30,15 @@ export function ForgotPassword() {
   }
 
   return (
-    <AuthLayout title="Mot de passe oublié" subtitle="Recevez un lien de réinitialisation par email.">
+    <AuthLayout title={t("forgotPassword.title")} subtitle={t("forgotPassword.subtitle")}>
       {sent ? (
         <p className="text-sm text-ink">
-          Si un compte existe pour <strong>{email}</strong>, un email de réinitialisation vient d'être envoyé.
+          <Trans t={t} i18nKey="forgotPassword.sentMessage" values={{ email }} components={{ 1: <strong /> }} />
         </p>
       ) : (
         <form onSubmit={handleSubmit} className="space-y-4">
           <div>
-            <FieldLabel htmlFor="email">Email</FieldLabel>
+            <FieldLabel htmlFor="email">{t("forgotPassword.emailLabel")}</FieldLabel>
             <input
               id="email"
               type="email"
@@ -48,14 +50,14 @@ export function ForgotPassword() {
           </div>
           {error && <p className="text-xs text-danger">{error}</p>}
           <Button type="submit" disabled={loading} className="w-full">
-            {loading ? "Envoi..." : "Envoyer le lien"}
+            {loading ? t("forgotPassword.submitLoading") : t("forgotPassword.submit")}
           </Button>
         </form>
       )}
 
       <p className="mt-5 text-center text-xs text-muted">
         <Link to="/login" className="text-accent-ink hover:underline">
-          Retour à la connexion
+          {t("forgotPassword.backToLogin")}
         </Link>
       </p>
     </AuthLayout>

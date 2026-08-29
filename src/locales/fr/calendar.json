@@ -1,1 +1,71 @@
-{}
+{
+  "calendar": {
+    "title": "Calendrier",
+    "newEvent": "Nouvel événement",
+    "upcomingEvents": "Prochains événements",
+    "noEvents": "Aucun événement",
+    "toast": {
+      "createSuccess": "Événement créé.",
+      "createError": "Échec de la création de l'événement."
+    }
+  },
+  "eventDetail": {
+    "documentTitle": "Événement",
+    "notFound": "Événement introuvable",
+    "back": "Calendrier",
+    "statusOptions": {
+      "brouillon": "Brouillon",
+      "publie": "Publié",
+      "termine": "Terminé",
+      "annule": "Annulé"
+    },
+    "deleteEvent": "Supprimer l'événement",
+    "deleteConfirm": "Supprimer définitivement cet événement ?",
+    "program": {
+      "title": "Programme",
+      "addPlaceholder": "Ajouter un chant au programme...",
+      "empty": "Aucun chant dans le programme pour l'instant."
+    },
+    "checklist": {
+      "title": "Checklist",
+      "newItemPlaceholder": "Nouvelle tâche (ex. Vérifier la sono)...",
+      "assigneePlaceholder": "Assigner à (optionnel)...",
+      "add": "Ajouter",
+      "empty": "Aucune tâche pour l'instant."
+    },
+    "toast": {
+      "addSongError": "Échec de l'ajout au programme.",
+      "removeError": "Échec de la suppression.",
+      "addChecklistError": "Échec de l'ajout à la checklist.",
+      "updateError": "Échec de la mise à jour.",
+      "statusUpdateError": "Échec de la mise à jour du statut."
+    }
+  },
+  "eventTypes": {
+    "repetition": "Répétition",
+    "concert": "Concert",
+    "culte": "Culte",
+    "autre": "Autre"
+  },
+  "checklistStatuses": {
+    "a_faire": "À faire",
+    "en_cours": "En cours",
+    "fait": "Fait"
+  },
+  "eventForm": {
+    "nameLabel": "Nom de l'événement",
+    "namePlaceholder": "Culte de Pâques",
+    "dateLabel": "Date et heure",
+    "locationLabel": "Lieu",
+    "locationPlaceholder": "Salle principale",
+    "typeLabel": "Type",
+    "statusLabel": "Statut",
+    "descriptionLabel": "Description",
+    "saving": "Enregistrement..."
+  },
+  "monthCalendar": {
+    "weekdays": ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"],
+    "prevMonth": "Mois précédent",
+    "nextMonth": "Mois suivant"
+  }
+}

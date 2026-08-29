@@ -1,1 +1,196 @@
-{}
+{
+  "list": {
+    "title": "Répertoire",
+    "resultsCount_one": "{{count}} chanson",
+    "resultsCount_other": "{{count}} chansons",
+    "searchPlaceholder": "Rechercher par titre, artiste, paroles...",
+    "filters": {
+      "allArtists": "Tous les artistes",
+      "allCategories": "Toutes les catégories",
+      "allLanguages": "Toutes les langues",
+      "allKeys": "Toutes les tonalités",
+      "allDifficulties": "Toute difficulté",
+      "allYears": "Toute année",
+      "chordsIndifferent": "Accords : indifférent",
+      "chordsWith": "Avec accords",
+      "chordsWithout": "Sans accords",
+      "videoIndifferent": "Vidéo : indifférent",
+      "videoWith": "Avec vidéo",
+      "videoWithout": "Sans vidéo",
+      "sortRecent": "Trier : récent",
+      "sortAz": "Trier : A-Z",
+      "sortArtist": "Trier : artiste",
+      "reset": "Réinitialiser"
+    },
+    "loadError": {
+      "title": "Impossible de charger le répertoire",
+      "description": "Une erreur est survenue en contactant la base de données.",
+      "retry": "Réessayer"
+    },
+    "empty": {
+      "title": "Aucune chanson trouvée",
+      "description": "Essaie une autre recherche ou réinitialise les filtres.",
+      "resetFilters": "Réinitialiser les filtres"
+    },
+    "loadMore": "Charger plus ({{count}} restantes)"
+  },
+  "detail": {
+    "backToRepertoire": "Retour au répertoire",
+    "edit": "Éditer",
+    "unknownArtist": "Artiste inconnu",
+    "key": "Tonalité : {{value}}",
+    "tempo": "Tempo : {{value}} BPM",
+    "difficulty": "Difficulté : {{value}}",
+    "year": "Année : {{value}}",
+    "language": "Langue : {{value}}",
+    "version": "Version {{value}}",
+    "listen": "Écouter",
+    "rehearseMode": "Mode Répétition",
+    "presentMode": "Mode Présentation",
+    "notFound": {
+      "title": "Chanson introuvable",
+      "description": "Elle a peut-être été retirée du répertoire."
+    },
+    "tabs": {
+      "presentation": "Présentation",
+      "lyrics": "Paroles",
+      "chords": "Accords",
+      "structure": "Structure",
+      "assignments": "Assignations",
+      "history": "Historique",
+      "sheet": "Partition",
+      "learning": "Apprentissage"
+    },
+    "assignmentsPanel": {
+      "title": "Assignations",
+      "empty": "Aucune assignation pour l'instant.",
+      "commentsTitle": "Commentaires",
+      "statusUpdateError": "Échec de la mise à jour du statut.",
+      "createSuccess": "Assignation créée.",
+      "createError": "Échec de la création de l'assignation.",
+      "commentError": "Échec de l'envoi du commentaire."
+    },
+    "learningPanel": {
+      "title": "Mode Apprentissage",
+      "description": "Accessible depuis une assignation précise : ouvre « Mes assignations » sur ton dashboard, puis « Ouvrir en mode Apprentissage ».",
+      "goToDashboard": "Aller au dashboard"
+    },
+    "presentation": {
+      "album": "Album : {{value}}",
+      "partOfRepertoire": "{{title}} fait partie du répertoire {{category}}.",
+      "generalCategory": "général",
+      "noVideo": "Aucune vidéo disponible pour cette chanson.",
+      "watchOnYoutube": "Regarder sur YouTube"
+    },
+    "lyricsUnavailable": "Paroles non disponibles pour cette chanson.",
+    "chordsUnavailable": "Accords non disponibles pour cette chanson.",
+    "sheet": {
+      "notAvailableTitle": "Partition non disponible pour ce chant",
+      "notAvailableDescription": "Aucune partition n'a encore été ajoutée pour cette chanson.",
+      "fullscreen": "Plein écran",
+      "download": "Télécharger",
+      "previewHint": "L'aperçu ne s'affiche pas ? Utilise « Télécharger » ci-dessus pour l'ouvrir directement."
+    },
+    "structure": {
+      "notDefinedTitle": "Structure non définie",
+      "notDefinedDescription": "Ouvre l'éditeur pour créer les sections et mesures de cette chanson.",
+      "assignedTo": "Assigné : {{value}}"
+    },
+    "history": {
+      "emptyTitle": "Aucun historique pour l'instant",
+      "emptyDescription": "Les modifications apparaîtront ici après un passage dans l'éditeur."
+    }
+  },
+  "editor": {
+    "notFoundTitle": "Chanson introuvable",
+    "backToRepertoire": "Retour au répertoire",
+    "structureModalTitle": "Structure",
+    "propertiesModalTitle": "Propriétés",
+    "sections": "Sections",
+    "gridView": "Grille",
+    "scoreView": "Portée",
+    "propertiesButton": "Propriétés",
+    "duplicateSuffix": "(copie)",
+    "autosaveError": "Échec de la sauvegarde automatique.",
+    "publishSuccess": "Chanson publiée en version {{version}}.",
+    "publishError": "Échec de la publication.",
+    "noNotesInSection": "Aucune note saisie dans cette section.",
+    "anonymous": "Anonyme"
+  },
+  "learnMode": {
+    "modeLabel": "Mode Apprentissage",
+    "notFoundTitle": "Assignation introuvable",
+    "backToDashboard": "Retour au dashboard",
+    "wholeSong": "Chanson entière",
+    "measure": "Mesure {{number}}",
+    "notes": "Notes : {{value}}",
+    "chefComments": "Commentaires du chef",
+    "understood": "J'ai compris",
+    "markComplete": "Marquer comme terminé",
+    "commentError": "Échec de l'envoi du commentaire.",
+    "completeSuccess": "Assignation marquée comme terminée !",
+    "completeError": "Échec de la mise à jour."
+  },
+  "rehearseMode": {
+    "modeLabel": "Mode Répétition",
+    "nothingToRehearseTitle": "Rien à répéter",
+    "nothingToRehearseDescription": "Cette chanson n'a pas encore de structure.",
+    "back": "Retour",
+    "measureCount": "Mesure {{current}} / {{total}}",
+    "previous": "Précédent",
+    "next": "Suivant",
+    "pause": "Pause",
+    "autoPlay": "Lecture automatique",
+    "repeatSection": "Répéter la section"
+  },
+  "presentMode": {
+    "notFoundTitle": "Chanson introuvable",
+    "back": "Retour",
+    "previousSection": "Section précédente",
+    "nextSection": "Section suivante"
+  },
+  "artists": {
+    "listTitle": "Artistes",
+    "notFoundTitle": "Artiste introuvable",
+    "backToArtists": "Retour aux artistes",
+    "songCount_one": "{{count}} chanson",
+    "songCount_other": "{{count}} chansons",
+    "noSongsForArtist": "Aucune chanson pour cet artiste pour l'instant",
+    "loadError": {
+      "title": "Impossible de charger les artistes",
+      "description": "Une erreur est survenue en contactant la base de données.",
+      "retry": "Réessayer"
+    },
+    "empty": "Aucun artiste pour l'instant"
+  },
+  "categories": {
+    "listTitle": "Catégories",
+    "notFoundTitle": "Catégorie introuvable",
+    "backToCategories": "Retour aux catégories",
+    "songCount_one": "{{count}} chanson",
+    "songCount_other": "{{count}} chansons",
+    "noSongsInCategory": "Aucune chanson dans cette catégorie pour l'instant",
+    "loadError": {
+      "title": "Impossible de charger les catégories",
+      "description": "Une erreur est survenue en contactant la base de données.",
+      "retry": "Réessayer"
+    },
+    "empty": "Aucune catégorie pour l'instant"
+  },
+  "addToPlaylist": {
+    "button": "Ajouter à une playlist",
+    "modalTitle": "Ajouter à une playlist",
+    "empty": "Aucune playlist pour l'instant.",
+    "newPlaylistPlaceholder": "Nouvelle playlist...",
+    "updateError": "Échec de la mise à jour de la playlist.",
+    "createError": "Échec de la création de la playlist."
+  },
+  "songCard": {
+    "unknownArtist": "Artiste inconnu",
+    "play": "Écouter {{title}}"
+  },
+  "favoriteButton": {
+    "addAria": "Ajouter aux favoris",
+    "removeAria": "Retirer des favoris"
+  }
+}

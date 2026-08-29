@@ -1,1 +1,163 @@
-{}
+{
+  "home": {
+    "eyebrow": "Atelier musical gospel",
+    "welcome": "Bienvenue, {{name}}",
+    "title": "Le répertoire gospel de votre groupe",
+    "subtitle": "Créez, structurez et répétez vos chansons ensemble — paroles, accords, notes et assignations, du premier brouillon à la présentation sur scène.",
+    "createAccount": "Créer un compte",
+    "login": "Connexion"
+  },
+  "dashboard": {
+    "chef": {
+      "title": "Dashboard chef de chœur",
+      "stats": {
+        "toRevisit": "Assignations à revoir",
+        "inProgress": "Chansons en cours",
+        "done": "Chansons terminées"
+      },
+      "recentActivity": "Activité récente",
+      "noActivity": "Aucune activité pour l'instant",
+      "defaultSongTitle": "Chanson",
+      "assignmentUpdated": " — assignation mise à jour ({{date}})",
+      "commentActivity": " — commentaire : \"{{text}}\" ({{date}})",
+      "defaultGroupName": "Groupe",
+      "noMembers": "Aucun membre pour l'instant"
+    },
+    "member": {
+      "title": "Mes assignations",
+      "noAssignmentsTitle": "Aucune assignation pour l'instant",
+      "noAssignmentsDescription": "Ton chef de chœur t'assignera des parties depuis la fiche d'une chanson.",
+      "openLearnMode": "Ouvrir en mode Apprentissage →",
+      "statusUpdated": "Statut mis à jour.",
+      "statusUpdateFailed": "Échec de la mise à jour."
+    }
+  },
+  "explore": {
+    "title": "Explorer",
+    "subtitle": "Découvre le répertoire par nouveautés, artistes et catégories.",
+    "emptyTitle": "Rien à explorer pour l'instant",
+    "emptyDescription": "Le répertoire est encore vide.",
+    "newSongs": "Nouveautés",
+    "viewAllSongs": "Tout le répertoire",
+    "noSongsYet": "Aucune chanson pour l'instant.",
+    "artists": "Artistes",
+    "viewAllArtists": "Tous les artistes",
+    "noArtistsYet": "Aucun artiste pour l'instant.",
+    "categories": "Catégories",
+    "viewAllCategories": "Toutes les catégories",
+    "noCategoriesYet": "Aucune catégorie pour l'instant."
+  },
+  "favorites": {
+    "title": "Favoris",
+    "emptyTitle": "Aucun favori pour l'instant",
+    "emptyDescription": "Ajoute des chansons à tes favoris depuis le répertoire."
+  },
+  "help": {
+    "title": "Aide",
+    "contact": "Une question qui n'est pas couverte ici ? Contacte le responsable de ton groupe.",
+    "sections": [
+      {
+        "title": "Trouver une chanson",
+        "items": [
+          "La barre de recherche en haut de l'écran cherche par titre ou artiste et t'emmène directement dans le répertoire filtré.",
+          "Dans « Répertoire », affine avec les filtres : artiste, catégorie, langue, tonalité, difficulté, année, présence d'accords ou de vidéo.",
+          "« Explorer » propose un aperçu par nouveautés, artistes et catégories."
+        ]
+      },
+      {
+        "title": "Éditer une chanson",
+        "items": [
+          "Depuis la fiche d'une chanson, le bouton « Éditer » ouvre l'éditeur par sections et mesures.",
+          "Raccourcis clavier dans l'éditeur : Ctrl/Cmd+Z (annuler), Ctrl/Cmd+Maj+Z (rétablir), Ctrl/Cmd+D (dupliquer la section sélectionnée), Suppr (vider la mesure sélectionnée).",
+          "La sauvegarde est automatique — le statut s'affiche en haut de l'éditeur."
+        ]
+      },
+      {
+        "title": "Assignations et suivi",
+        "items": [
+          "Un chef de chœur assigne une section, une mesure ou une chanson entière à un membre ou un groupe depuis l'onglet « Assignations » de la fiche chanson.",
+          "Chaque membre suit ses tâches dans « Mon espace » (dashboard), avec un statut à faire / en cours / terminé / à revoir.",
+          "Le Mode Apprentissage guide un membre à travers sa partie assignée, avec les commentaires du chef."
+        ]
+      },
+      {
+        "title": "Modes de répétition",
+        "items": [
+          "Mode Répétition : navigue mesure par mesure avec lecture automatique optionnelle.",
+          "Mode Présentation : plein écran, grand texte, pensé pour être projeté pendant une répétition ou un culte."
+        ]
+      }
+    ]
+  },
+  "history": {
+    "title": "Historique",
+    "emptyTitle": "Aucune consultation récente",
+    "emptyDescription": "Les chansons que tu ouvres apparaîtront ici.",
+    "unknownArtist": "Artiste inconnu"
+  },
+  "library": {
+    "title": "Ma bibliothèque",
+    "favorites": "Favoris",
+    "viewAll": "Tout voir",
+    "noFavorites": "Aucun favori pour l'instant.",
+    "playlists": "Playlists",
+    "noPlaylists": "Aucune playlist pour l'instant.",
+    "recentlyViewed": "Récemment consultés",
+    "noRecentlyViewed": "Aucune consultation récente.",
+    "myPartitions": "Mes partitions",
+    "partitionsComingSoon": "Pas encore disponible — arrivera avec la gestion des partitions (module multimédia)."
+  },
+  "notFound": {
+    "title": "Page introuvable",
+    "description": "Cette adresse ne correspond à aucune page du site.",
+    "backHome": "Retour à l'accueil"
+  },
+  "partitions": {
+    "title": "Partitions",
+    "subtitle": "Chansons du répertoire disposant d'une partition.",
+    "emptyTitle": "Aucune partition disponible",
+    "emptyDescription": "Les chansons avec une partition renseignée apparaîtront ici."
+  },
+  "profile": {
+    "title": "Profil",
+    "changeAvatar": "Changer la photo de profil",
+    "removeAvatar": "Supprimer la photo de profil",
+    "stats": {
+      "favorites": "Favoris",
+      "playlists": "Playlists",
+      "viewed": "Consultées"
+    },
+    "firstName": "Prénom",
+    "lastName": "Nom",
+    "save": "Enregistrer",
+    "saving": "Enregistrement...",
+    "toasts": {
+      "avatarUpdated": "Photo de profil mise à jour.",
+      "avatarRemoved": "Photo de profil supprimée.",
+      "avatarUploadFailed": "Échec de l'envoi de la photo.",
+      "avatarRemoveFailed": "Échec de la suppression.",
+      "chooseImageFile": "Choisis un fichier image.",
+      "imageTooLarge": "Image trop lourde (5 Mo max).",
+      "profileUpdated": "Profil mis à jour.",
+      "updateFailed": "Échec de la mise à jour."
+    }
+  },
+  "settings": {
+    "title": "Paramètres",
+    "appearance": "Apparence",
+    "themeDark": "Thème sombre",
+    "themeLight": "Thème clair",
+    "change": "Changer",
+    "musicNotation": "Notation musicale",
+    "solfege": "Solfège (do ré mi)",
+    "letters": "Lettres (C D E)",
+    "account": "Compte",
+    "logout": "Déconnexion",
+    "preferenceSaved": "Préférence enregistrée.",
+    "updateFailed": "Échec de la mise à jour."
+  },
+  "requireAdmin": {
+    "title": "Accès réservé aux administrateurs",
+    "description": "Cette section n'est accessible qu'aux comptes ayant le rôle {{role}}."
+  }
+}

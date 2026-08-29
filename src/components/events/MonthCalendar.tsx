@@ -1,9 +1,7 @@
 import clsx from "clsx";
+import { useTranslation } from "react-i18next";
 import { ChevronLeft, ChevronRight } from "lucide-react";
 import type { AppEvent } from "../../types/events";
-
-const WEEKDAYS = ["Lun", "Mar", "Mer", "Jeu", "Ven", "Sam", "Dim"];
-const MONTH_LABEL = new Intl.DateTimeFormat("fr-FR", { month: "long", year: "numeric" });
 
 function sameDay(a: Date, b: Date): boolean {
   return a.getFullYear() === b.getFullYear() && a.getMonth() === b.getMonth() && a.getDate() === b.getDate();
@@ -32,7 +30,12 @@ interface MonthCalendarProps {
   onChangeMonth: (direction: 1 | -1) => void;
 }
 
+const LOCALE_MAP: Record<string, string> = { fr: "fr-FR", en: "en-US" };
+
 export function MonthCalendar({ month, events, selectedDate, onSelectDay, onChangeMonth }: MonthCalendarProps) {
+  const { t, i18n } = useTranslation("calendar");
+  const weekdays = t("monthCalendar.weekdays", { returnObjects: true }) as string[];
+  const monthLabel = new Intl.DateTimeFormat(LOCALE_MAP[i18n.language] ?? "fr-FR", { month: "long", year: "numeric" });
   const days = buildGrid(month);
   const today = new Date();
 
@@ -43,18 +46,18 @@ export function MonthCalendar({ month, events, selectedDate, onSelectDay, onChan
   return (
     <div className="rounded-xl border border-border bg-surface-raised p-3">
       <div className="mb-3 flex items-center justify-between">
-        <h2 className="font-serif text-lg font-semibold capitalize text-ink">{MONTH_LABEL.format(month)}</h2>
+        <h2 className="font-serif text-lg font-semibold capitalize text-ink">{monthLabel.format(month)}</h2>
         <div className="flex gap-1">
           <button
             onClick={() => onChangeMonth(-1)}
-            aria-label="Mois précédent"
+            aria-label={t("monthCalendar.prevMonth")}
             className="rounded-lg border border-border p-1.5 text-ink hover:border-accent"
           >
             <ChevronLeft size={16} />
           </button>
           <button
             onClick={() => onChangeMonth(1)}
-            aria-label="Mois suivant"
+            aria-label={t("monthCalendar.nextMonth")}
             className="rounded-lg border border-border p-1.5 text-ink hover:border-accent"
           >
             <ChevronRight size={16} />
@@ -63,7 +66,7 @@ export function MonthCalendar({ month, events, selectedDate, onSelectDay, onChan
       </div>
 
       <div className="grid grid-cols-7 gap-1 text-center text-[11px] font-semibold uppercase text-muted">
-        {WEEKDAYS.map((w) => (
+        {weekdays.map((w) => (
           <div key={w} className="py-1">
             {w}
           </div>

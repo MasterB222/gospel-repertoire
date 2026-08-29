@@ -1,1 +1,45 @@
-{}
+{
+  "list": {
+    "title": "Playlists",
+    "newPlaylistPlaceholder": "New playlist name...",
+    "create": "Create",
+    "open": "Open",
+    "empty": {
+      "title": "No playlists yet"
+    },
+    "errors": {
+      "createFailed": "Failed to create the playlist.",
+      "deleteFailed": "Failed to delete."
+    }
+  },
+  "detail": {
+    "back": "Back to playlists",
+    "notFound": {
+      "title": "Playlist not found"
+    },
+    "playAll": "Play all",
+    "delete": "Delete",
+    "searchPlaceholder": "Search for a song to add...",
+    "noResults": "No results.",
+    "unknownArtist": "Unknown artist",
+    "empty": {
+      "title": "Empty playlist",
+      "description": "Search for a song above to add it."
+    },
+    "errors": {
+      "addFailed": "Failed to add the song.",
+      "removeFailed": "Failed to remove.",
+      "renameFailed": "Failed to rename.",
+      "deleteFailed": "Failed to delete."
+    }
+  },
+  "player": {
+    "unknownArtist": "Unknown artist",
+    "shuffle": "Shuffle",
+    "previous": "Previous",
+    "next": "Next",
+    "repeat": "Repeat",
+    "play": "Play",
+    "pause": "Pause"
+  }
+}
