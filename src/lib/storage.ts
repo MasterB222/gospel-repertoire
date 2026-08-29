@@ -24,3 +24,12 @@ export async function uploadAvatar(userId: string, file: File): Promise<string> 
   const { data } = supabase.storage.from(AVATARS_BUCKET).getPublicUrl(path);
   return data.publicUrl;
 }
+
+export async function deleteAvatar(url: string): Promise<void> {
+  const marker = `/${AVATARS_BUCKET}/`;
+  const idx = url.indexOf(marker);
+  if (idx === -1) return;
+  const path = url.slice(idx + marker.length);
+  const { error } = await supabase.storage.from(AVATARS_BUCKET).remove([path]);
+  if (error) throw error;
+}
