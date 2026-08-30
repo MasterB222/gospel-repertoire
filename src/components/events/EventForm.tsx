@@ -1,6 +1,7 @@
 import { useId, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { Button } from "../ui/Button";
+import { DateTimePicker } from "../ui/DateTimePicker";
 import { EVENT_TYPES, EVENT_STATUSES, type EventStatus, type EventType } from "../../types/events";
 import type { EventInput } from "../../lib/events";
 
@@ -69,7 +70,7 @@ export function EventForm({ initial, onSubmit, onCancel }: EventFormProps) {
           <label htmlFor={`${uid}-date`} className={labelClasses}>
             {t("eventForm.dateLabel")}
           </label>
-          <input id={`${uid}-date`} type="datetime-local" value={eventDate} onChange={(e) => setEventDate(e.target.value)} className={fieldClasses} />
+          <DateTimePicker id={`${uid}-date`} value={eventDate} onChange={setEventDate} />
         </div>
         <div>
           <label htmlFor={`${uid}-location`} className={labelClasses}>

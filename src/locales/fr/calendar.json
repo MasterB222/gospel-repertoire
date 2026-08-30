@@ -56,6 +56,8 @@
     "nameLabel": "Nom de l'événement",
     "namePlaceholder": "Culte de Pâques",
     "dateLabel": "Date et heure",
+    "pickDateTime": "Choisir une date et une heure",
+    "timeLabel": "Heure",
     "locationLabel": "Lieu",
     "locationPlaceholder": "Salle principale",
     "typeLabel": "Type",
