@@ -80,6 +80,8 @@
     "createCategory": "Create \"{{name}}\"",
     "albumLabel": "Album",
     "yearLabel": "Year",
+    "pickYear": "Pick a year",
+    "clearYear": "Clear",
     "languageLabel": "Language",
     "keyLabel": "Key",
     "keyPlaceholder": "e.g. G major",

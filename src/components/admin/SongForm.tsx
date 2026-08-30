@@ -2,6 +2,7 @@ import { useEffect, useRef, useState } from "react";
 import { useTranslation } from "react-i18next";
 import { FileText, Save, Upload, X } from "lucide-react";
 import { Button } from "../ui/Button";
+import { YearPicker } from "../ui/YearPicker";
 import { listArtists, listCategories } from "../../lib/catalog";
 import { uploadPartitionFile } from "../../lib/storage";
 import { useToast } from "../../context/ToastContext";
@@ -237,13 +238,7 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
           <label htmlFor="song-year" className={labelClasses}>
             {t("songForm.yearLabel")}
           </label>
-          <input
-            id="song-year"
-            type="number"
-            value={input.year ?? ""}
-            onChange={(e) => set("year", e.target.value ? Number(e.target.value) : null)}
-            className={fieldClasses}
-          />
+          <YearPicker id="song-year" value={input.year} onChange={(year) => set("year", year)} />
         </div>
 
         <div>

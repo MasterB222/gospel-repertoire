@@ -80,6 +80,8 @@
     "createCategory": "Créer « {{name}} »",
     "albumLabel": "Album",
     "yearLabel": "Année",
+    "pickYear": "Choisir une année",
+    "clearYear": "Effacer",
     "languageLabel": "Langue",
     "keyLabel": "Tonalité",
     "keyPlaceholder": "ex. Sol majeur",
