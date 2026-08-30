@@ -5,7 +5,7 @@ import { Button } from "../ui/Button";
 import { listArtists, listCategories } from "../../lib/catalog";
 import { uploadPartitionFile } from "../../lib/storage";
 import { useToast } from "../../context/ToastContext";
-import type { SongInput } from "../../lib/admin";
+import { createArtist, createCategory, type SongInput } from "../../lib/admin";
 import type { Artist, Category, Difficulty, Song, SongStatus } from "../../types/catalog";
 
 const fieldClasses =
@@ -40,7 +40,9 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
   const [input, setInput] = useState<SongInput>(() => toInput(song));
   const [tagsText, setTagsText] = useState(song?.tags.join(", ") ?? "");
   const [artists, setArtists] = useState<Artist[]>([]);
+  const [artistQuery, setArtistQuery] = useState(song?.artist?.name ?? "");
   const [categories, setCategories] = useState<Category[]>([]);
+  const [categoryQuery, setCategoryQuery] = useState(song?.category?.name ?? "");
   const [saving, setSaving] = useState(false);
   const [uploadingPartition, setUploadingPartition] = useState(false);
   const [showManualPartitionUrl, setShowManualPartitionUrl] = useState(false);
@@ -73,6 +75,54 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
     setInput((prev) => ({ ...prev, [key]: value }));
   }
 
+  function selectArtist(artist: Artist) {
+    set("artist_id", artist.id);
+    setArtistQuery(artist.name);
+  }
+
+  async function handleCreateArtist() {
+    const name = artistQuery.trim();
+    if (!name) return;
+    try {
+      const created = await createArtist({ name, description: "", image_url: "" });
+      setArtists((prev) => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+      selectArtist(created);
+      showToast(t("artists.createSuccess"), "success");
+    } catch {
+      showToast(t("artists.createFailed"), "error");
+    }
+  }
+
+  const hasExactArtistMatch = artists.some((a) => a.name.toLowerCase() === artistQuery.trim().toLowerCase());
+  const artistMatches =
+    !input.artist_id && artistQuery.trim()
+      ? artists.filter((a) => a.name.toLowerCase().includes(artistQuery.trim().toLowerCase())).slice(0, 8)
+      : [];
+
+  function selectCategory(category: Category) {
+    set("category_id", category.id);
+    setCategoryQuery(category.name);
+  }
+
+  async function handleCreateCategory() {
+    const name = categoryQuery.trim();
+    if (!name) return;
+    try {
+      const created = await createCategory({ name, description: "", image_url: "" });
+      setCategories((prev) => [...prev, created].sort((a, b) => a.name.localeCompare(b.name)));
+      selectCategory(created);
+      showToast(t("categories.createSuccess"), "success");
+    } catch {
+      showToast(t("categories.createFailed"), "error");
+    }
+  }
+
+  const hasExactCategoryMatch = categories.some((c) => c.name.toLowerCase() === categoryQuery.trim().toLowerCase());
+  const categoryMatches =
+    !input.category_id && categoryQuery.trim()
+      ? categories.filter((c) => c.name.toLowerCase().includes(categoryQuery.trim().toLowerCase())).slice(0, 8)
+      : [];
+
   async function handleSubmit(status: SongStatus) {
     if (!input.title.trim()) return;
     setSaving(true);
@@ -97,42 +147,84 @@ export function SongForm({ song, onSubmit }: { song?: Song; onSubmit: (input: So
           <input id="song-title" value={input.title} onChange={(e) => set("title", e.target.value)} className={fieldClasses} />
         </div>
 
-        <div>
+        <div className="relative">
           <label htmlFor="song-artist" className={labelClasses}>
             {t("songForm.artistLabel")}
           </label>
-          <select
+          <input
             id="song-artist"
-            value={input.artist_id ?? ""}
-            onChange={(e) => set("artist_id", e.target.value || null)}
+            value={artistQuery}
+            onChange={(e) => {
+              setArtistQuery(e.target.value);
+              set("artist_id", null);
+            }}
+            placeholder={t("songForm.artistPlaceholder")}
             className={fieldClasses}
-          >
-            <option value="">—</option>
-            {artists.map((a) => (
-              <option key={a.id} value={a.id}>
-                {a.name}
-              </option>
-            ))}
-          </select>
+            autoComplete="off"
+          />
+          {(artistMatches.length > 0 || (artistQuery.trim() && !hasExactArtistMatch && !input.artist_id)) && (
+            <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
+              {artistMatches.map((a) => (
+                <button
+                  key={a.id}
+                  type="button"
+                  onClick={() => selectArtist(a)}
+                  className="block w-full truncate rounded px-2 py-1.5 text-left text-sm text-ink hover:bg-surface-raised"
+                >
+                  {a.name}
+                </button>
+              ))}
+              {artistQuery.trim() && !hasExactArtistMatch && (
+                <button
+                  type="button"
+                  onClick={handleCreateArtist}
+                  className="block w-full truncate rounded px-2 py-1.5 text-left text-sm font-semibold text-accent-ink hover:bg-surface-raised"
+                >
+                  {t("songForm.createArtist", { name: artistQuery.trim() })}
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
-        <div>
+        <div className="relative">
           <label htmlFor="song-category" className={labelClasses}>
             {t("songForm.categoryLabel")}
           </label>
-          <select
+          <input
             id="song-category"
-            value={input.category_id ?? ""}
-            onChange={(e) => set("category_id", e.target.value || null)}
+            value={categoryQuery}
+            onChange={(e) => {
+              setCategoryQuery(e.target.value);
+              set("category_id", null);
+            }}
+            placeholder={t("songForm.categoryPlaceholder")}
             className={fieldClasses}
-          >
-            <option value="">—</option>
-            {categories.map((c) => (
-              <option key={c.id} value={c.id}>
-                {c.name}
-              </option>
-            ))}
-          </select>
+            autoComplete="off"
+          />
+          {(categoryMatches.length > 0 || (categoryQuery.trim() && !hasExactCategoryMatch && !input.category_id)) && (
+            <div className="absolute z-10 mt-1 w-full space-y-0.5 rounded-lg border border-border bg-surface p-1 shadow-lg">
+              {categoryMatches.map((c) => (
+                <button
+                  key={c.id}
+                  type="button"
+                  onClick={() => selectCategory(c)}
+                  className="block w-full truncate rounded px-2 py-1.5 text-left text-sm text-ink hover:bg-surface-raised"
+                >
+                  {c.name}
+                </button>
+              ))}
+              {categoryQuery.trim() && !hasExactCategoryMatch && (
+                <button
+                  type="button"
+                  onClick={handleCreateCategory}
+                  className="block w-full truncate rounded px-2 py-1.5 text-left text-sm font-semibold text-accent-ink hover:bg-surface-raised"
+                >
+                  {t("songForm.createCategory", { name: categoryQuery.trim() })}
+                </button>
+              )}
+            </div>
+          )}
         </div>
 
         <div>

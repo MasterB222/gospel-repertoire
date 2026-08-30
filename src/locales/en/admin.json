@@ -73,7 +73,11 @@
   "songForm": {
     "titleLabel": "Title *",
     "artistLabel": "Artist",
+    "artistPlaceholder": "Type or pick an artist name...",
+    "createArtist": "Create \"{{name}}\"",
     "categoryLabel": "Category",
+    "categoryPlaceholder": "Type or pick a category...",
+    "createCategory": "Create \"{{name}}\"",
     "albumLabel": "Album",
     "yearLabel": "Year",
     "languageLabel": "Language",

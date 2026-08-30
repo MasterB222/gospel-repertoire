@@ -73,7 +73,11 @@
   "songForm": {
     "titleLabel": "Titre *",
     "artistLabel": "Artiste",
+    "artistPlaceholder": "Tape ou choisis un nom d'artiste...",
+    "createArtist": "Créer « {{name}} »",
     "categoryLabel": "Catégorie",
+    "categoryPlaceholder": "Tape ou choisis une catégorie...",
+    "createCategory": "Créer « {{name}} »",
     "albumLabel": "Album",
     "yearLabel": "Année",
     "languageLabel": "Langue",
